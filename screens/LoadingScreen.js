@@ -19,9 +19,9 @@ const LoadingScreen = props =>  {
 	const checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged(function(user){
 			if(user){
-				props.navigation.navigate('DashboardScreen');
+				props.goHere(3);
 			} else {
-				props.navigation.navigate('LoginScreen');
+				props.goHere(2);
 			}
 		}); // to use component u have to add .bind(this) and also make it this.props.blabla
 	}

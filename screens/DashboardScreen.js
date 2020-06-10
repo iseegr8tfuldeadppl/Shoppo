@@ -1,29 +1,29 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 
-import 'react-native-gesture-handler';
+//import 'react-native-gesture-handler';
 import React from 'react';
 import { Button, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+	DrawerContentScrollView,
+	DrawerItemList,
+	DrawerItem,
+	createDrawerNavigator
+} from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import MainMenu from '../Tabs/MainMenu';
-import Cart from '../Tabs/Cart';
-import Profile from '../Tabs/Profile';
-import Categories from '../Tabs/Categories';
+import MainMenu from './Tabs/MainMenu';
+import Cart from './Tabs/Cart';
+import Profile from './Tabs/Profile';
+import Categories from './Tabs/Categories';
 
+import Colors from './constants/colors';
 
 import firebase from 'firebase';
 
-
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-  createDrawerNavigator
-} from '@react-navigation/drawer';
 
 
 const Tab = createBottomTabNavigator();
@@ -35,7 +35,7 @@ function logOut(props){
 	// Check if logged 
 	firebase.auth().onAuthStateChanged(function(user){
 		if(!user){
-			props.navigation.navigate('LoginScreen');
+			props.goHere(2);
 		}
 	});
 }
@@ -43,46 +43,47 @@ function logOut(props){
 function MainMenuPage(){
 	return(
 		<Tab.Navigator
-        initialRouteName="MainMenu"
-        tabBarOptions={{
-          activeTintColor: '#000000',
-        }}>
-        <Tab.Screen
-          name="MainMenu"
-          component={MainMenu}
-          options={{
-            tabBarLabel: 'Main Menu',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
-          }} />
-        <Tab.Screen
-          name="Categories"
-          component={Categories}
-          options={{
-            tabBarLabel: 'Categories',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="menu" color={color} size={size} />
-            ),
-          }} />
-        <Tab.Screen
-          name="Cart"
-          component={Cart}
-          options={{
-            tabBarLabel: 'Cart',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="cart" color={color} size={size} />
-            ),
-          }} />
-        <Tab.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            tabBarLabel: 'Profile',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="account" color={color} size={size} />
-            ),
-          }} />
+			initialRouteName="MainMenu"
+			tabBarOptions={{
+			  activeTintColor: Colors.Primary,
+			  inactiveTintColor: Colors.Accent,
+			}}>
+			<Tab.Screen
+			  name="MainMenu"
+			  component={MainMenu}
+			  options={{
+				tabBarLabel: 'Main Menu',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="home" color={color} size={size} />
+				),
+			  }} />
+			<Tab.Screen
+			  name="Categories"
+			  component={Categories}
+			  options={{
+				tabBarLabel: 'Categories',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="menu" color={color} size={size} />
+				),
+			  }} />
+			<Tab.Screen
+			  name="Cart"
+			  component={Cart}
+			  options={{
+				tabBarLabel: 'Cart',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="cart" color={color} size={size} />
+				),
+			  }} />
+			<Tab.Screen
+			  name="Profile"
+			  component={Profile}
+			  options={{
+				tabBarLabel: 'Profile',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="account" color={color} size={size} />
+				),
+			  }} />
       </Tab.Navigator>
 	);
 }
@@ -90,59 +91,61 @@ function MainMenuPage(){
 function CategoriesPage(){
 	return(
 		<Tab.Navigator
-        initialRouteName="Categories"
-        tabBarOptions={{
-          activeTintColor: '#000000',
-        }}>
-        <Tab.Screen
-          name="MainMenu"
-          component={MainMenu}
-          options={{
-            tabBarLabel: 'Main Menu',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
-          }} />
-        <Tab.Screen
-          name="Categories"
-          component={Categories}
-          options={{
-            tabBarLabel: 'Categories',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="menu" color={color} size={size} />
-            ),
-          }} />
-        <Tab.Screen
-          name="Cart"
-          component={Cart}
-          options={{
-            tabBarLabel: 'Cart',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="cart" color={color} size={size} />
-            ),
-          }} />
-        <Tab.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            tabBarLabel: 'Profile',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="account" color={color} size={size} />
-            ),
-          }} />
+			initialRouteName="Categories"
+			tabBarOptions={{
+			  activeTintColor: Colors.Primary,
+			  inactiveTintColor: Colors.Accent,
+			}}>
+			<Tab.Screen
+			  name="MainMenu"
+			  component={MainMenu}
+			  options={{
+				tabBarLabel: 'Main Menu',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="home" color={color} size={size} />
+				),
+			  }} />
+			<Tab.Screen
+			  name="Categories"
+			  component={Categories}
+			  options={{
+				tabBarLabel: 'Categories',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="menu" color={color} size={size} />
+				),
+			  }} />
+			<Tab.Screen
+			  name="Cart"
+			  component={Cart}
+			  options={{
+				tabBarLabel: 'Cart',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="cart" color={color} size={size} />
+				),
+			  }} />
+			<Tab.Screen
+			  name="Profile"
+			  component={Profile}
+			  options={{
+				tabBarLabel: 'Profile',
+				tabBarIcon: ({ color, size }) => (
+				  <MaterialCommunityIcons name="account" color={color} size={size} />
+				),
+			  }} />
       </Tab.Navigator>
 	);
 }
 function CartPage(){
 	return(
 		<Tab.Navigator
-        initialRouteName="Cart"
-        tabBarOptions={{
-          activeTintColor: '#000000',
-        }}>
+			initialRouteName="Cart"
+			tabBarOptions={{
+				  activeTintColor: Colors.Primary,
+				  inactiveTintColor: Colors.Accent,
+			}}>
         <Tab.Screen
           name="MainMenu"
-          component={MainMenu}
+			  component={MainMenu}
           options={{
             tabBarLabel: 'Main Menu',
             tabBarIcon: ({ color, size }) => (
@@ -184,11 +187,12 @@ function ProfilePage(){
 		<Tab.Navigator
         initialRouteName="Profile"
         tabBarOptions={{
-          activeTintColor: '#000000',
+			  activeTintColor: Colors.Primary,
+			  inactiveTintColor: Colors.Accent,
         }}>
         <Tab.Screen
           name="MainMenu"
-          component={MainMenu}
+			  component={MainMenu}
           options={{
             tabBarLabel: 'Main Menu',
             tabBarIcon: ({ color, size }) => (
@@ -228,6 +232,7 @@ function ProfilePage(){
 
 const DashboardScreen = props =>  {
   return (
+    <NavigationContainer>
 	<Drawer.Navigator initialRouteName="Main Page" drawerContent={propss => {
 			return (
 			  <DrawerContentScrollView {...propss}>
@@ -248,6 +253,7 @@ const DashboardScreen = props =>  {
         <Drawer.Screen name="Cart" component={CartPage} />
         <Drawer.Screen name="Profile" component={ProfilePage} />
   </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 export default DashboardScreen;

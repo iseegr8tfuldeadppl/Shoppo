@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { TouchableOpacity, StyleSheet, View, Text, SafeAreaView } from 'react-native';
 
-const Categories = ({ navigation }) => {
+const Categories = props => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 16 }}>
@@ -23,12 +23,12 @@ const Categories = ({ navigation }) => {
           </Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('SettingsStack', { screen: 'Settings' })}>
+            onPress={() => props.navigation.navigate('MainMenu', { screen: 'Settings' })}>
             <Text>Go to settng Tab</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('Details')}>
+            onPress={() => props.	navigation.navigate('Details')}>
             <Text>Open Details Screen</Text>
           </TouchableOpacity>
         </View>

@@ -1,15 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, Alert, Button} from 'react-native';
-import firebaseConfig from './constants/ApiKeys';
+import React, { useState } from 'react';
+import { StyleSheet, View} from 'react-native';
+import firebaseConfig from './screens/constants/ApiKeys';
 import firebase from 'firebase';
-import MainStackNavigator from './navigation/MainStackNavigator'
+
+import LoginScreen from './screens/LoginScreen';
+import LoadingScreen from './screens/LoadingScreen';
+import DashboardScreen from './screens/DashboardScreen';
 
 export default function App() {
 	
+	const [page, setPage] = useState(1);
+	let content;
+
 	if(!firebase.apps.length)
 		firebase.initializeApp(firebaseConfig);
 		
-	return <MainStackNavigator />
+	const goToPage = DestinationPage => {
+		setPage(DestinationPage);
+	};
+
+	if(page===1){
+		content = <LoadingScreen goHere={goToPage}/>
+	} else if(page===2){
+		content = <LoginScreen goHere={goToPage}/>
+	} else if(page===3){
+		content = <DashboardScreen goHere={goToPage}/>
+	}
+
+	return  (
+		<View style={styles.screen}>
+			{content}
+		</View>
+	);
 }
 
 
