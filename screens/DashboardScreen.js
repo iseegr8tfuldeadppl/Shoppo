@@ -6,6 +6,7 @@ import React from 'react';
 import { Button, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import MainMenu from '../Tabs/MainMenu';
@@ -25,6 +26,7 @@ import {
 } from '@react-navigation/drawer';
 
 
+const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 function logOut(props){

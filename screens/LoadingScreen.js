@@ -19,11 +19,11 @@ const LoadingScreen = props =>  {
 	const checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged(function(user){
 			if(user){
-				this.props.navigation.navigate('DashboardScreen');
+				props.navigation.navigate('DashboardScreen');
 			} else {
-				this.props.navigation.navigate('LoginScreen');
+				props.navigation.navigate('LoginScreen');
 			}
-		}.bind(this));
+		}); // to use component u have to add .bind(this) and also make it this.props.blabla
 	}
 	
 	delayTillEnter();

@@ -4,7 +4,6 @@ import firebase from 'firebase';
 import * as Google from 'expo-google-app-auth'; // change this to 'expo-google-sign-in' to turn the window login into a popup, also remove behavior: 'web' from the google code maybe?
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Tab = createBottomTabNavigator();
 
 const LoginScreen = props => {
 
@@ -35,7 +34,7 @@ const LoginScreen = props => {
 			function(firebaseUser) {
 			unsubscribe();
 			// Check if we are already signed-in Firebase with the correct user.
-			if (!this.isUserEqual(googleUser, firebaseUser)) {
+			if (!isUserEqual(googleUser, firebaseUser)) {
 				// Build Firebase credential with the Google ID token.
 				var credential = firebase.auth.GoogleAuthProvider.credential(
 				googleUser.idToken,
@@ -78,17 +77,20 @@ const LoginScreen = props => {
 					// The firebase.auth.AuthCredential type that was used.
 					var credential = error.credential;
 				});
+				setLoading(false);
+				console.log("loading " + loading);
 			} else {
 				console.log('User already signed-in Firebase.');
-				this.props.navigation.navigate('DashboardScreen');
+				setLoading(false);
+				props.navigation.navigate('DashboardScreen');
 			}
-			}.bind(this)
+			} // to use component add .bind(this) here and make props into this.props
 		);
 	};
 
 
 	const signInWithGoogleAsync = async () => {
-		this.setState({ loading: true });
+		setLoading(true);
 		try {
 			const result = await Google.logInAsync({
 				behavior: 'web',
@@ -98,21 +100,21 @@ const LoginScreen = props => {
 			});
 
 			if (result.type === 'success') {
-				this.onSignIn(result);
+				onSignIn(result);
 				return result.accessToken;
 			} else {
-				this.setState({ loading: false });
+				setLoading(false);
 				return { cancelled: true };
 			}
 		} catch (e) {
-			this.setState({ loading: false });
+			setLoading(false);
 			return { error: true };
 		}
 	};
 
 
 	let content;
-	if(this.state.loading){
+	if(loading){
 		content = <ActivityIndicator style={{width:'80%',}} />
 	} else {
 		content = <Text style={{marginLeft: 'auto', marginRight: 'auto',}}>Sign In With Google</Text>
@@ -122,7 +124,7 @@ const LoginScreen = props => {
 		<View style={styles.container}>
 		<TouchableOpacity
 			style={styles.botton}
-			onPress={() => this.signInWithGoogleAsync()}>
+			onPress={() => signInWithGoogleAsync()}>
 			<Icon
 				style={{alignSelf:'flex-start'}}
 				name="google"
