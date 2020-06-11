@@ -18,12 +18,18 @@ const {width, height} = Dimensions.get("window");
 const MainMenu = props => {
   const [categories, setCategories] = useState([]);
   const [NewItemPage, setNewItemPage] = useState(false);
+  const [adminList, setAdminList] = useState([]);
   const [NewItem, setNewItem] = useState();
   const [finishedLoadingFromFirebase, setFinishedLoadingFromFirebase] = useState(false);
   
   const pokeFirebase = () => {
 	
-	firebase.database().ref('/categories').on('value', querySnapShot => {
+	firebase.database().ref('/admins').on('value', adminListSnapshot => {
+		let adminListData = adminListSnapshot.val() ? adminListSnapshot.val() : {};
+		let admins = {...adminListData};
+		let adminListTemp = Object.keys(admins);
+
+		firebase.database().ref('/categories').on('value', querySnapShot => {
 		let data = querySnapShot.val() ? querySnapShot.val() : {};
 		let cateogoriesSnapshot = {...data};
 		let categoriesList = [];
@@ -40,13 +46,18 @@ const MainMenu = props => {
 			}
 			
 			let nameOfCategory = Object.values(cateogoriesSnapshot)[i].name;
-			categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, products: productList });
+			if(productList.length>0 || adminListTemp.includes(props.uid))
+				categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, products: productList });
 		}
 		if(categoriesList.length>0)
 			setCategories(categoriesList);
+
+		setAdminList(adminListTemp);
 		if(!finishedLoadingFromFirebase){
 			setFinishedLoadingFromFirebase(true);
 		}
+    });
+
     });
 
   };
@@ -65,7 +76,7 @@ const MainMenu = props => {
 			.then(function(snapshot) {
 				setNewItem();
 				setAddNewProduct(false);
-				console.log('Snapshot', snapshot);
+				//console.log('Snapshot', snapshot);
 			});
 	} else {
 		firebase.database()
@@ -76,7 +87,7 @@ const MainMenu = props => {
 			.then(function(snapshot) {
 				setNewItem();
 				setNewItemPage(false);
-				console.log('Snapshot', snapshot);
+				//console.log('Snapshot', snapshot);
 			});
 	}
 
@@ -86,7 +97,7 @@ const MainMenu = props => {
   let addModal;
   let addProductButton;
   let addCategoryButton;
-  if("hv9C4ao07LgbWkNdu4R6INn3JpK2" === props.uid){
+  if(adminList.includes(props.uid)){
 	  if(NewItemPage){
   		  addModal = <AddNewItemModal 
 						data={NewItem} 
@@ -98,7 +109,7 @@ const MainMenu = props => {
 	  }
 
 		  
-	addProductButton = <Text style={{color:"blue", marginStart:5, fontSize:12}}>Add Product</Text>;
+	addProductButton = <Text style={{color:"blue", marginStart:5, fontSize:14}}>Add Product</Text>;
 	addCategoryButton = <TouchableOpacity 
 							style={{padding:10, width:"100%", justifyContent:'center', alignItems:'center'}}
 							onPress={() => {setNewItemPage(true);}}>
@@ -109,7 +120,7 @@ const MainMenu = props => {
   // show loader until we have checked firebase
   let loading;
   if(!finishedLoadingFromFirebase){
-  	  loading = <ActivityIndicator />;
+  	  loading = <View style={{marginTop:20}}><ActivityIndicator color={Colors.Accent} size="large" /></View>;
   }
 
 
