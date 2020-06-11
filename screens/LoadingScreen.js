@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import firebase from 'firebase';
 
 const LoadingScreen = props =>  {
@@ -18,6 +18,7 @@ const LoadingScreen = props =>  {
 
 	const checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged(function(user){
+			props.setCurrentUser(user.uid);
 			if(user){
 				props.goHere(3);
 			} else {

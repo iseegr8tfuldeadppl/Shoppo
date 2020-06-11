@@ -10,6 +10,7 @@ import DashboardScreen from './screens/DashboardScreen';
 export default function App() {
 	
 	const [page, setPage] = useState(1);
+	const [uid, setUID] = useState("");
 	let content;
 
 	if(!firebase.apps.length)
@@ -18,13 +19,16 @@ export default function App() {
 	const goToPage = DestinationPage => {
 		setPage(DestinationPage);
 	};
+	const setCurrentUser = uid => {
+		setUID(uid);
+	};
 
 	if(page===1){
-		content = <LoadingScreen goHere={goToPage}/>
+		content = <LoadingScreen setCurrentUser={setCurrentUser} goHere={goToPage}/>
 	} else if(page===2){
 		content = <LoginScreen goHere={goToPage}/>
 	} else if(page===3){
-		content = <DashboardScreen goHere={goToPage}/>
+		content = <DashboardScreen uid={uid} goHere={goToPage}/>
 	}
 
 	return  (
