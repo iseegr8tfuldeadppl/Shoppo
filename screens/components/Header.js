@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Colors from '../constants/colors';
+import Constants from 'expo-constants';
+
 
 const Header = props => {
 	return (
@@ -10,12 +12,11 @@ const Header = props => {
 	);
 };
 
-
 const styles = StyleSheet.create({
 	header : {
 		flexDirection: 'row',
         alignItems:'center',
-		paddingTop:20,
+		paddingTop:Constants.statusBarHeight,
 		paddingHorizontal:15,
 		width: '100%',
 		height: 90,

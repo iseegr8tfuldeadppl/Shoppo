@@ -9,7 +9,6 @@ import { DrawerActions } from '@react-navigation/native';
 import Card from '../components/Card';
 import AddNewItemModal from '../components/AddNewItemModal';
 import firebase from 'firebase';
-
 import TextStroke from '../components/TextStroke';
 import {Dimensions} from "react-native";
 
@@ -29,6 +28,7 @@ const MainMenu = props => {
 		let admins = {...adminListData};
 		let adminListTemp = Object.keys(admins);
 
+		console.log("nigga");
 		firebase.database().ref('/categories').on('value', querySnapShot => {
 		let data = querySnapShot.val() ? querySnapShot.val() : {};
 		let cateogoriesSnapshot = {...data};
@@ -41,7 +41,7 @@ const MainMenu = props => {
 				let KeysOfproductsInCategory = Object.keys(productsInCategory);
 				productsInCategory = Object.values(productsInCategory);
 				for(var j=0; j<KeysOfproductsInCategory.length; j++){
-					productList.push({ key: KeysOfproductsInCategory[j], name: productsInCategory[j].name });
+					productList.push({ key: KeysOfproductsInCategory[j], data: JSON.parse(productsInCategory[j].data) });
 				}
 			}
 			
@@ -62,7 +62,7 @@ const MainMenu = props => {
 
   };
 
-  if(categories.length===0){
+  if(categories.length===0 && !finishedLoadingFromFirebase){
 	  pokeFirebase();
   }
   
@@ -71,7 +71,7 @@ const MainMenu = props => {
 		firebase.database()
 			.ref('/categories/' + NewItem.key + "/products")
 			.push({
-				name: name,
+				data: JSON.stringify(name),
 			})
 			.then(function(snapshot) {
 				setNewItem();
@@ -112,7 +112,7 @@ const MainMenu = props => {
 	addProductButton = <Text style={{color:"blue", marginStart:5, fontSize:14}}>Add Product</Text>;
 	addCategoryButton = <TouchableOpacity 
 							style={{padding:10, width:"100%", justifyContent:'center', alignItems:'center'}}
-							onPress={() => {setNewItemPage(true);}}>
+							onPress={() => {setNewItem(); setNewItemPage(true);}}>
 							<Text style={{color:"blue", fontSize:15}}>Add Category</Text>
 						</TouchableOpacity>
   }
@@ -189,7 +189,13 @@ const MainMenu = props => {
 									<Text style={ {
 									fontSize: 21,
 									color: '#FFFFFF'
-									} }>{singleProductData.item.name}</Text>
+									} }>{singleProductData.item.data.title}</Text>
+								</TextStroke>
+								<TextStroke stroke={ 1 } color={ '#000000' } >
+									<Text style={ {
+									fontSize: 13,
+									color: '#FFFFFF'
+									} }>{singleProductData.item.data.cost} DA</Text>
 								</TextStroke>
 							</View>
 						</TouchableOpacity>
