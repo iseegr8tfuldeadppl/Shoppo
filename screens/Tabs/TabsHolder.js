@@ -1,8 +1,6 @@
-
 import React from 'react';
-
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Colors from '../constants/colors';
+import Colors from '../constants/Colors';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import MainMenu from './MainMenu';

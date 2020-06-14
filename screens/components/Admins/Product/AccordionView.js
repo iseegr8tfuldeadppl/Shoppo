@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Accordion from 'react-native-collapsible/Accordion';
 import { Text, View, StyleSheet, FlatList, TouchableOpacity, Image} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import PossibleCategories from '../constants/PossibleCategories';
+import PossibleProducts from '../../../constants/Admins/PossibleProducts';
 
 export default class AccordionView extends Component {
   state = {
@@ -69,7 +69,7 @@ export default class AccordionView extends Component {
   render() {
     return (
       <Accordion 
-        sections={PossibleCategories}
+        sections={PossibleProducts}
         activeSections={this.state.activeSections}
         renderHeader={this._renderHeader}
         renderContent={this._renderContent}

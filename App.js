@@ -9,6 +9,9 @@ import DashboardScreen from './screens/DashboardScreen';
 
 export default function App() {
 	
+	// Debugging Related
+	console.disableYellowBox = true;
+
 	const [page, setPage] = useState(1);
 	const [uid, setUID] = useState("");
 	let content;

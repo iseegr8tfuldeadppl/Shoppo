@@ -2,12 +2,12 @@
 // https://aboutreact.com/react-native-bottom-navigation //
 import React, {useState} from 'react';
 import { StyleSheet, View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import Colors from '../constants/colors';
+import Colors from '../constants/Colors';
 import Header from '../components/Header';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerActions } from '@react-navigation/native';
 import Card from '../components/Card';
-import AddNewItemModal from '../components/AddNewItemModal';
+import AddNewItemModal from '../components/Admins/AddNewItemModal';
 import firebase from 'firebase';
 import TextStroke from '../components/TextStroke';
 import {Dimensions} from "react-native";
@@ -16,9 +16,9 @@ const {width, height} = Dimensions.get("window");
 
 const MainMenu = props => {
   const [categories, setCategories] = useState([]);
+  const [data, setData] = useState();
   const [NewItemPage, setNewItemPage] = useState(false);
   const [adminList, setAdminList] = useState([]);
-  const [NewItem, setNewItem] = useState();
   const [finishedLoadingFromFirebase, setFinishedLoadingFromFirebase] = useState(false);
   
   const pokeFirebase = () => {
@@ -28,10 +28,9 @@ const MainMenu = props => {
 		let admins = {...adminListData};
 		let adminListTemp = Object.keys(admins);
 
-		console.log("nigga");
 		firebase.database().ref('/categories').on('value', querySnapShot => {
-		let data = querySnapShot.val() ? querySnapShot.val() : {};
-		let cateogoriesSnapshot = {...data};
+		let dataa = querySnapShot.val() ? querySnapShot.val() : {};
+		let cateogoriesSnapshot = {...dataa};
 		let categoriesList = [];
 		let KeysOfCategories = Object.keys(cateogoriesSnapshot);
 		for(var i=0; i<KeysOfCategories.length; i++){
@@ -66,43 +65,15 @@ const MainMenu = props => {
 	  pokeFirebase();
   }
   
-  const AddNewItem = (name, isProduct) => {
-	if(isProduct){
-		firebase.database()
-			.ref('/categories/' + NewItem.key + "/products")
-			.push({
-				data: JSON.stringify(name),
-			})
-			.then(function(snapshot) {
-				setNewItem();
-				setAddNewProduct(false);
-				//console.log('Snapshot', snapshot);
-			});
-	} else {
-		firebase.database()
-			.ref('/categories/')
-			.push({
-				name: name,
-			})
-			.then(function(snapshot) {
-				setNewItem();
-				setNewItemPage(false);
-				//console.log('Snapshot', snapshot);
-			});
-	}
-
-  };
-
-  
   let addModal;
   let addProductButton;
   let addCategoryButton;
   if(adminList.includes(props.uid)){
 	  if(NewItemPage){
   		  addModal = <AddNewItemModal 
-						data={NewItem} 
+						setData={setData} 
+						data={data} 
 						doIShowUp={NewItemPage} 
-						onAdd={AddNewItem} 
 						onCancel={() => {setNewItemPage(false);}} />;
 	  } else {
 		addModal = null;
@@ -112,7 +83,7 @@ const MainMenu = props => {
 	addProductButton = <Text style={{color:"blue", marginStart:5, fontSize:14}}>Add Product</Text>;
 	addCategoryButton = <TouchableOpacity 
 							style={{padding:10, width:"100%", justifyContent:'center', alignItems:'center'}}
-							onPress={() => {setNewItem(); setNewItemPage(true);}}>
+							onPress={() => {setNewItemPage(true);}}>
 							<Text style={{color:"blue", fontSize:15}}>Add Category</Text>
 						</TouchableOpacity>
   }
@@ -155,7 +126,7 @@ const MainMenu = props => {
 						<Text style={{color:"black", fontSize:20}}>{categoryData.item.category}</Text>
 						<TouchableOpacity 
 							style={{justifyContent:'center', alignItems:'center'}}
-							onPress={() => {setNewItemPage(true); setNewItem(categoryData.item); }}>
+							onPress={() => {setNewItemPage(true); setData(categoryData.item); }}>
 							{addProductButton}
 						</TouchableOpacity>
 					</View> 
@@ -177,13 +148,13 @@ const MainMenu = props => {
 								shadowOffset: { width: 0, height: 2},
 								shadowOpacity: 0.26,
 								shadowRadius: 0,
-								backgroundColor: 'white',
+								backgroundColor: Colors.Primary,
 								elevation: 5,}}
 							onPress={() => {}}>
 							<Image 
 								style={{width:"100%", height:"100%", borderRadius:25}}
 								source={{
-									uri:'https://i.imgur.com/wd9Yt30.jpg', }} />
+									uri:singleProductData.item.data.banner, }} />
 							<View style={{position:'absolute'}}>
 								<TextStroke stroke={ 1 } color={ '#000000' } >
 									<Text style={ {

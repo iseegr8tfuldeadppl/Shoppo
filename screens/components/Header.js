@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Colors from '../constants/colors';
+import Colors from '../constants/Colors';
 import Constants from 'expo-constants';
 
 

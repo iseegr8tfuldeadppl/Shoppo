@@ -1,4 +1,4 @@
-import Colors from '../constants/colors';
+import Colors from '../Colors';
 
 export default [
   {
@@ -14,7 +14,9 @@ export default [
 			title:"Euro Paysera", 
 			background:"#127FC4",
 			textColor:"white",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		},
 		{
 			key: "2",
@@ -22,7 +24,9 @@ export default [
 			title:"Payoneer", 
 			background:"#FE4600",
 			textColor:"white",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		},
 		{
 			key: "3",
@@ -30,7 +34,9 @@ export default [
 			title:"WebMoney", 
 			background:"#EEEEEE",
 			textColor:"black",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		},
 		{
 			key: "4",
@@ -38,7 +44,9 @@ export default [
 			title:"CashU", 
 			background:"#00AEEF",
 			textColor:"white",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		},
 		{
 			key: "5",
@@ -46,7 +54,9 @@ export default [
 			title:"Bitcoin", 
 			background:"white",
 			textColor:"orange",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		},
 		{
 			key: "6",
@@ -54,7 +64,9 @@ export default [
 			title:"Payeer", 
 			background:"#38BDF9",
 			textColor:"white",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		},
 		{
 			key: "7",
@@ -62,7 +74,9 @@ export default [
 			title:"Neteller", 
 			background:"#8BC53D",
 			textColor:"white",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		},
 		{
 			key: "8",
@@ -70,7 +84,9 @@ export default [
 			title:"PayPal", 
 			background:"white",
 			textColor:"#051467",
+			originaltype:"currency",
 			type:"currency",
+			checked:false,
 		}
 	]
   },
@@ -87,7 +103,9 @@ export default [
 			title:"GiftCard Google Play", 
 			background:"white",
 			textColor:"black",
+			originaltype:"item",
 			type:"item",
+			checked:false,
 		},
 		{
 			key: "2",
@@ -95,7 +113,9 @@ export default [
 			title:"Recharger Un Compte Google Play", 
 			background:"white",
 			textColor:"black",
+			originaltype:"account-charging",
 			type:"account-charging",
+			checked:false,
 		},
 		{
 			key: "3",
@@ -103,7 +123,9 @@ export default [
 			title:"Steam", 
 			background:"#222",
 			textColor:"white",
+			originaltype:"item",
 			type:"item",
+			checked:false,
 		}
 	]
   },
@@ -120,7 +142,9 @@ export default [
 			title:"Game Code", 
 			background:"white",
 			textColor:"black",
+			originaltype:"item",
 			type:"item",
+			checked:false,
 		},
 		{
 			key: "2",
@@ -128,7 +152,9 @@ export default [
 			title:"Game Account", 
 			background:"white",
 			textColor:"black",
+			originaltype:"item",
 			type:"item",
+			checked:false,
 		},
 		{
 			key: "3",
@@ -136,7 +162,9 @@ export default [
 			title:"Diamonds Pubg", 
 			background:"#555",
 			textColor:"white",
+			originaltype:"account-charging",
 			type:"account-charging",
+			checked:false,
 		},
 		{
 			key: "4",
@@ -144,7 +172,9 @@ export default [
 			title:"Diamonds FreeFire", 
 			background:"#555",
 			textColor:"white",
+			originaltype:"account-charging",
 			type:"account-charging",
+			checked:false,
 		}
 	]
   }
