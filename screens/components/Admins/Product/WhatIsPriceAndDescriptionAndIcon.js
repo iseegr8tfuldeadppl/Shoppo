@@ -1,12 +1,14 @@
 import React from 'react';
-import { TextInput, Button, Text, View, StyleSheet, Alert, Image} from 'react-native';
+import { TextInput, Button, Text, View, StyleSheet, Alert, Image, TouchableOpacity} from 'react-native';
 import Colors from '../../../constants/Colors';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Header from '../../Header';
 
 
 const WhatIsPriceAndDescriptionAndIcon = props => {
 
 	const submit = () => {
-		if(props.name.length===0 || (props.name2.length===0 && props.selected.type!==props.selected.originaltype)  ){
+		if(props.name.length===0 || (props.selected.originaltype==="item" && props.name5.length===0) || (props.name2.length===0 && props.selected.type!==props.selected.originaltype)  ){
 			Alert.alert(
 				'Missing Information', 
 				'Please fill the boxes.', 
@@ -16,8 +18,11 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 			return;
 		}
 
-  		props.onAdd({title:props.selected.title, cost:props.name, type:props.selected.type, description: props.name3, banner: props.name4});
-  	
+		if(props.selected.originaltype==="item"){
+  			props.onAdd({title:props.name5, cost:props.name, type:props.selected.type, description: props.name3, banner: props.name4, originaltype: props.selected.originaltype});
+		} else {
+  			props.onAdd({title:props.selected.title, cost:props.name, type:props.selected.type, description: props.name3, banner: props.name4, originaltype: props.selected.originaltype});
+		}
 		props.setName('');
 		props.onCancel();
 	};
@@ -29,7 +34,7 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 	} else {
 		question = "Price";
 
-		amountof = <View style={{flexDirection:'row',alignItems:'center'}}>
+		amountof = <View style={{flexDirection:'row',alignItems:'center', width:'95%',}}>
 						<TextInput
 							maxLength={30}
 							blurOnSubmit 
@@ -43,27 +48,42 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 						<Text style={{fontSize:20, marginStart:10,}}>{props.selected.title}</Text>
 					</View>;
 	}
+
+	let title;
+	if(props.selected.originaltype==="item"){
+		title = 
+				<TextInput
+					blurOnSubmit={true}
+					style={styles.linkinput}
+					placeholder="Title"
+					onChangeText={props.NameUpdater5}
+					value={props.name5} />;
+	}
+
 	return(
 		<View style={styles.screen}>
-			<Image 
-				style={{width:70, height:70, borderRadius:10, marginBottom:10,}}
-				source={{ uri:props.selected.image }} />
+			<View style={{...styles.screen, ...{justifyContent:"center", alignItems:"center", }}}>
+				<Image 
+					style={{width:70, height:70, borderRadius:10, }}
+					source={{ uri:props.selected.image }} />
 
-			{amountof}
+				{title}
 
-			<View style={{flexDirection:'row',alignItems:'center'}}>
-				<TextInput
-					maxLength={30}
-					blurOnSubmit 
-					autoCapitalize="none" 
-					autoCorrect={false}  
-					keyboardType="number-pad" 
-					style={styles.input}
-					placeholder={question}
-					onChangeText={props.NameUpdater}
-					value={props.name} />
-				<Text style={{fontSize:20, marginStart:10,}}>Dinar</Text>
-			</View>
+				{amountof}
+
+				<View style={{flexDirection:'row',alignItems:'center', width:'95%',}}>
+					<TextInput
+						maxLength={30}
+						blurOnSubmit 
+						autoCapitalize="none" 
+						autoCorrect={false}  
+						keyboardType="number-pad" 
+						style={styles.input}
+						placeholder={question}
+						onChangeText={props.NameUpdater}
+						value={props.name} />
+					<Text style={{fontSize:20, marginStart:10, color:Colors.Accent}}>Dinar</Text>
+				</View>
 			
 				<TextInput
 					blurOnSubmit={true}
@@ -80,28 +100,40 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 					placeholder="Write a short description (Optional)"
 					onChangeText={props.NameUpdater3}
 					value={props.name3} />
+			</View>
 					
 
+			<Header
+				style={{ paddingTop:0, paddingBottom:0, paddingHorizontal:0, backgroundColor:null, position:'absolute', justifyContent:"space-between",  }}>
+				
+				<TouchableOpacity
+					style={{backgroundColor:Colors.Primary, paddingEnd: 20, paddingStart:8, borderBottomRightRadius:20, paddingVertical:10 , flexDirection:"row", justifyContent:"center", alignItems:"center", }}
+					onPress={() => {props.unsetChecked(); props.setSelected();}}>
+					<MaterialCommunityIcons name="arrow-left" color={"white"} size={32} />
+					<Text style={{color:"white", fontSize:20, textAlign:"center", paddingStart:10}}>Back</Text>
+				</TouchableOpacity>
 
-			<View style={styles.button}>
-				<Button title="Submit" color="red" onPress={submit} />
-			</View>
-			<View style={styles.button}>
-				<Button title="Go Back" onPress={props.unsetChecked} />
-			</View>
+				<TouchableOpacity
+					style={{backgroundColor:Colors.Primary, paddingEnd: 8, paddingStart:20, borderBottomLeftRadius:20, paddingVertical:10 , flexDirection:"row", justifyContent:"center", alignItems:"center", }}
+					onPress={submit}>
+					<Text style={{color:"white", fontSize:20, textAlign:"center", paddingEnd:10}}>Next</Text>
+					<MaterialCommunityIcons name="arrow-right" color={"white"} size={32} />
+				</TouchableOpacity>
+			</Header>
+
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	input : {
-		maxWidth:"70%",
-		height: 50,
+		flex:1,
+		height: 45,
 		paddingHorizontal:8,
 		borderRadius:5,
 		borderColor:Colors.Primary,
 		fontSize:16,
-		minWidth:"3%",
+		minWidth:"30%",
 		textAlign:'center',
 		borderWidth: 1,
 		marginVertical: 10,
@@ -127,8 +159,6 @@ const styles = StyleSheet.create({
 		marginVertical: 10,
 	},
 	screen:{
-		justifyContent:'center',
-		alignItems:'center',
 		flex:1,
 	},
 	button:{

@@ -11,6 +11,7 @@ const Product = props => {
 	const [name2, setName2] = useState('');
 	const [name3, setName3] = useState('');
 	const [name4, setName4] = useState('');
+	const [name5, setName5] = useState('');
 	const [selected, setSelected] = useState();
   
 	function NameUpdater(enteredText) {
@@ -24,6 +25,9 @@ const Product = props => {
 	}
 	function NameUpdater4(enteredText) {
   		setName4(enteredText);
+	}
+	function NameUpdater5(enteredText) {
+  		setName5(enteredText);
 	}
 	
 	const submitProduct = () => {
@@ -79,10 +83,12 @@ const Product = props => {
 							NameUpdater2={NameUpdater2} 
 							NameUpdater3={NameUpdater3} 
 							NameUpdater4={NameUpdater4} 
+							NameUpdater5={NameUpdater5} 
 							name={name} 
 							name2={name2} 
 							name3={name3} 
 							name4={name4} 
+							name5={name5} 
 							setSelected={setSelected}
 							selected={selected} 
 							onAdd={props.onAdd} 
@@ -101,10 +107,12 @@ const Product = props => {
 						NameUpdater2={NameUpdater2} 
 						NameUpdater3={NameUpdater3} 
 						NameUpdater4={NameUpdater4} 
+						NameUpdater5={NameUpdater5} 
 						name={name} 
 						name2={name2} 
 						name3={name3} 
 						name4={name4} 
+							name5={name5} 
 						setSelected={setSelected}
 						selected={selected} 
 						onAdd={props.onAdd} 
@@ -124,7 +132,7 @@ const Product = props => {
 				<AccordionView checkThisOut={(itsinfo) => {setSelected(itsinfo);}} />
 				<View style={{alignItems:"center",}}>
 					<View style={styles.button}>
-						<Button title="Cancel" color="red" onPress={() => { props.onCancel();}} />
+						<Button title="Cancel" color={Colors.Accent} onPress={() => { props.onCancel();}} />
 					</View>
 				</View>
 			</ScrollView>

@@ -8,67 +8,22 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { DrawerActions } from '@react-navigation/native';
 import Card from '../components/Card';
 import AddNewItemModal from '../components/Admins/AddNewItemModal';
-import firebase from 'firebase';
-import TextStroke from '../components/TextStroke';
+import ProductPreviewModal from '../components/ProductPreviewModal';
 import {Dimensions} from "react-native";
 
 const {width, height} = Dimensions.get("window");
 
 const MainMenu = props => {
-  const [categories, setCategories] = useState([]);
+  
+  // Admin Stuff
   const [data, setData] = useState();
   const [NewItemPage, setNewItemPage] = useState(false);
-  const [adminList, setAdminList] = useState([]);
-  const [finishedLoadingFromFirebase, setFinishedLoadingFromFirebase] = useState(false);
-  
-  const pokeFirebase = () => {
-	
-	firebase.database().ref('/admins').on('value', adminListSnapshot => {
-		let adminListData = adminListSnapshot.val() ? adminListSnapshot.val() : {};
-		let admins = {...adminListData};
-		let adminListTemp = Object.keys(admins);
 
-		firebase.database().ref('/categories').on('value', querySnapShot => {
-		let dataa = querySnapShot.val() ? querySnapShot.val() : {};
-		let cateogoriesSnapshot = {...dataa};
-		let categoriesList = [];
-		let KeysOfCategories = Object.keys(cateogoriesSnapshot);
-		for(var i=0; i<KeysOfCategories.length; i++){
-			let productList = [];
-			let productsInCategory = Object.values(cateogoriesSnapshot)[i].products;
-			if(productsInCategory){
-				let KeysOfproductsInCategory = Object.keys(productsInCategory);
-				productsInCategory = Object.values(productsInCategory);
-				for(var j=0; j<KeysOfproductsInCategory.length; j++){
-					productList.push({ key: KeysOfproductsInCategory[j], data: JSON.parse(productsInCategory[j].data) });
-				}
-			}
-			
-			let nameOfCategory = Object.values(cateogoriesSnapshot)[i].name;
-			if(productList.length>0 || adminListTemp.includes(props.uid))
-				categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, products: productList });
-		}
-		if(categoriesList.length>0)
-			setCategories(categoriesList);
-
-		setAdminList(adminListTemp);
-		if(!finishedLoadingFromFirebase){
-			setFinishedLoadingFromFirebase(true);
-		}
-    });
-
-    });
-
-  };
-
-  if(categories.length===0 && !finishedLoadingFromFirebase){
-	  pokeFirebase();
-  }
   
   let addModal;
   let addProductButton;
   let addCategoryButton;
-  if(adminList.includes(props.uid)){
+  if(props.adminList.includes(props.uid)){
 	  if(NewItemPage){
   		  addModal = <AddNewItemModal 
 						setData={setData} 
@@ -90,14 +45,25 @@ const MainMenu = props => {
 
   // show loader until we have checked firebase
   let loading;
-  if(!finishedLoadingFromFirebase){
+  if(!props.finishedLoadingFromFirebase){
   	  loading = <View style={{marginTop:20}}><ActivityIndicator color={Colors.Accent} size="large" /></View>;
+  }
+
+  // productPreviewModal ---------------------------------------------------------------------------------------------------
+  let productPreviewModal;
+  if(props.productPreviewed){
+	productPreviewModal = 
+		<ProductPreviewModal 
+			buyNow={props.buyNow}
+			addToCart={props.addToCart}
+			setProductPreviewed={props.setProductPreviewed}
+			productPreviewed={props.productPreviewed}/>;
   }
 
 
   return (
     <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
-	<Header>
+	<Header style={{height: 90,}}>
         <TouchableOpacity
 			onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
 			<MaterialCommunityIcons name="menu" color={"white"} size={30} />
@@ -113,69 +79,86 @@ const MainMenu = props => {
 			<Text style={{textAlign:'center', fontSize:16, marginStart:10,}}>Search</Text>
 		</Card>
 	</Header>
-		{addCategoryButton}
-		{addModal}
-		{loading}
-		<FlatList 
-			style={{paddingHorizontal: 8, paddingTop:5}}
-			data={categories} 
-			renderItem={categoryData => 
-				<View>
+	{addCategoryButton}
+	{productPreviewModal}
+	{addModal}
+	{loading}
+	<FlatList 
+		style={{
+			paddingHorizontal: 8, 
+			paddingTop:5
+		}}
+		data={props.categories} 
+		renderItem={categoryData => 
+		<View>
 
-					<View style={{flexDirection:'row'}}>
-						<Text style={{color:"black", fontSize:20}}>{categoryData.item.category}</Text>
-						<TouchableOpacity 
-							style={{justifyContent:'center', alignItems:'center'}}
-							onPress={() => {setNewItemPage(true); setData(categoryData.item); }}>
-							{addProductButton}
-						</TouchableOpacity>
-					</View> 
+			<View style={{flexDirection:'row'}}>
+				<Text style={{color:"black", fontSize:20}}>{categoryData.item.category}</Text>
+				<TouchableOpacity 
+					style={{justifyContent:'center', alignItems:'center'}}
+					onPress={() => {setNewItemPage(true); setData(categoryData.item); }}>
+					{addProductButton}
+				</TouchableOpacity>
+			</View> 
 
-					<FlatList 
-						numColumns={2}
-						style={{paddingBottom:16}}
-						data={categoryData.item.products} 
-						renderItem={singleProductData => 
-						<TouchableOpacity 
-							activeOpacity={.7}
-							style={{
-								justifyContent:'center', marginTop:7,marginHorizontal:7,
-								alignItems:'center', 
-								flex:0.5,
-								height:100, 
-								borderRadius:25,
-								shadowColor: 'black',
-								shadowOffset: { width: 0, height: 2},
-								shadowOpacity: 0.26,
-								shadowRadius: 0,
-								backgroundColor: Colors.Primary,
-								elevation: 5,}}
-							onPress={() => {}}>
-							<Image 
-								style={{width:"100%", height:"100%", borderRadius:25}}
-								source={{
-									uri:singleProductData.item.data.banner, }} />
-							<View style={{position:'absolute'}}>
-								<TextStroke stroke={ 1 } color={ '#000000' } >
-									<Text style={ {
-									fontSize: 21,
+			<FlatList 
+				numColumns={2}
+				style={{
+					paddingBottom:16
+				}}
+				data={categoryData.item.products} 
+				renderItem={singleProductData => 
+				<TouchableOpacity 
+					onPress={() => {props.setProductPreviewed(singleProductData.item);}}
+					activeOpacity={.7}
+					style={{
+						justifyContent:'center', marginTop:7,marginHorizontal:7,
+						alignItems:'center', 
+						flex:0.5,
+						height:100, 
+						borderRadius:25,
+						shadowColor: 'black',
+						shadowOffset: { width: 0, height: 2},
+						shadowOpacity: 0.26,
+						shadowRadius: 0,
+						backgroundColor: Colors.Primary,
+						elevation: 5,
+					}}>
+
+					<Image 
+						style={{width:"100%", height:"100%", borderRadius:25}}
+						source={{
+							uri:singleProductData.item.data.banner, 
+						}} />
+
+					<View style={{position:'absolute', alignItems:"center", }}>
+						<View style={{flexDirection:'row'}}>
+							<Text  numberOfLines={2} ellipsizeMode='tail' 
+								style={{
+									flexWrap: 'wrap',
+									backgroundColor: Colors.TransBlack,
+									fontSize: 15,
+									color: '#FFFFFF'}}>
+								{singleProductData.item.data.title}</Text>
+						</View>
+						<View style={{flexDirection:'row', marginTop:3, }}>
+							<Text 
+								style={{ 
+									flexWrap: 'wrap',
+									backgroundColor: Colors.TransBlack,
+									fontSize: 17,
 									color: '#FFFFFF'
-									} }>{singleProductData.item.data.title}</Text>
-								</TextStroke>
-								<TextStroke stroke={ 1 } color={ '#000000' } >
-									<Text style={ {
-									fontSize: 13,
-									color: '#FFFFFF'
-									} }>{singleProductData.item.data.cost} DA</Text>
-								</TextStroke>
-							</View>
-						</TouchableOpacity>
-						}
-					/>
+								}}>
+								{singleProductData.item.data.cost} DA</Text>
+						</View>
+					</View>
+				</TouchableOpacity>
+				}
+			/>
 
-				</View>
-			}
-		/>
+		</View>
+		}
+	/>
     </SafeAreaView>
   );
 }

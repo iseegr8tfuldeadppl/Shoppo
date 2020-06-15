@@ -25,6 +25,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "yes.master.haver",
       "buildNumber": "1.0.0"
+
     },
 	"android":{
 		"package": "yes.master.haver",

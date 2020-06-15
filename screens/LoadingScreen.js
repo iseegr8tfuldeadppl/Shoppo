@@ -18,7 +18,8 @@ const LoadingScreen = props =>  {
 
 	const checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged(function(user){
-			props.setCurrentUser(user.uid);
+			if(user!==undefined)
+				props.setCurrentUser(user.uid);
 			if(user){
 				props.goHere(3);
 			} else {

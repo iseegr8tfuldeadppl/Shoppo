@@ -1,47 +1,84 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 import React from 'react';
-import { TouchableOpacity, StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, FlatList, Image, CheckBox } from 'react-native';
+import Header from '../components/Header';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Colors from '../constants/Colors';
 
-const Cart = ({ navigation }) => {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 16 }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 25,
-              textAlign: 'center',
-              marginBottom: 16
-            }}>
-            You are on Home Screen
-          </Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('SettingsStack', { screen: 'Settings' })}>
-            <Text>Go to settng Tab</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Details')}>
-            <Text>Open Details Screen</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={{ fontSize: 18, textAlign: 'center', color: 'grey' }}>
-          React Native Bottom Navigation
-        </Text>
-        <Text
-          style={{ fontSize: 16, textAlign: 'center', color: 'grey' }}>
-          www.aboutreact.com
-        </Text>
-      </View>
-    </SafeAreaView>
-  );
+const Cart = props => {
+
+	const update = key => {
+	
+		let cartCopy = props.cart.slice();
+		for(let i=0; i<cartCopy.length; i++){
+			if(cartCopy[i].key===key){
+				cartCopy[i].selected_in_cart = ! cartCopy[i].selected_in_cart;
+				break;
+			}
+		}
+		props.updateCart(cartCopy);
+	};
+
+	return (
+	<SafeAreaView style={{ flex: 1 }} forceInset={{ bottom: 'never' }}>
+	
+		<Header style={{height: 90,}}>
+			<TouchableOpacity
+				onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
+				<MaterialCommunityIcons name="menu" color={"white"} size={30} />
+			</TouchableOpacity>
+		</Header>
+
+		<FlatList 
+			data={props.cart} 
+			renderItem={singleProductData => 
+			<TouchableOpacity 
+				onPress={() => {}}
+				activeOpacity={.7}
+				style={{
+					width:"100%",
+					paddingVertical:10,
+					paddingHorizontal:5,
+				}}>
+				<View 
+					style={{
+						alignItems:"center", 
+						flexDirection:"row", 
+						flex:1,
+					}}>
+					<CheckBox
+						value={singleProductData.item.selected_in_cart}
+						onValueChange={() => {
+							update(singleProductData.item.key);
+						}}
+						style={{alignSelf: "center"}}
+					/>
+					<Image 
+						style={{
+							width:100, 
+							height:50, 
+							borderRadius:1,
+							marginStart:5,
+						}}
+						source={{
+							uri:singleProductData.item.data.banner, 
+						}} />
+					<Text 
+						numberOfLines={1} 
+						ellipsizeMode='tail'
+						style={{
+							marginStart: 10, 
+							fontSize: 14,
+						}}>
+						{singleProductData.item.data.title}</Text>
+				</View>
+			</TouchableOpacity>
+
+			}
+		/>
+	</SafeAreaView>
+	);
 }
 
 const styles = StyleSheet.create({

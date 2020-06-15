@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import { TextInput, Button, Text, View, StyleSheet, Alert, Image, CheckBox, TouchableOpacity} from 'react-native';
 import Colors from '../../../constants/Colors';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Header from '../../Header';
 
 const CanClientChooseQuantity = props => {
 
@@ -46,32 +48,47 @@ const CanClientChooseQuantity = props => {
 	let question = "Choose";
 	return(
 		<View style={styles.screen}>
-			<Image 
-				style={{width:70, height:70, borderRadius:10, marginBottom:10,}}
-				source={{ uri:props.selected.image }} />
-			<Text style={{fontSize:23, textAlign:"center", marginBottom:50}}>{props.selected.title}</Text>
-			<View style={{flexDirection:'row', }}>
-				<CheckBox
-					value={selection}
-					onValueChange={setSelection}
-					style={{alignSelf: "center"}}
+			<View style={{...styles.screen, ...{justifyContent:"center", alignItems:"center", }}}>
+				<Image 
+					style={{width:70, height:70, borderRadius:10, marginBottom:10,}}
+					source={{ uri:props.selected.image }} />
+				<Text style={{color:Colors.Accent,fontSize:23, textAlign:"center", marginBottom:50}}>{props.selected.title}</Text>
+				<View style={{flexDirection:'row', }}>
+					<CheckBox
+						value={selection}
+						onValueChange={setSelection}
+						style={{alignSelf: "center"}}
+						/>
+					<TouchableOpacity onPress={() => {setSelection(!selection);}}><Text style={{ color:Colors.CheckBoxTextGreen, fontSize:18, textAlign:"center"}}>Let the buyer choose quantity.</Text></TouchableOpacity>
+				</View>
+				<View style={{flexDirection:'row', }}>
+					<CheckBox
+						value={!selection}
+						onValueChange={() => {setSelection(false);}}
+						style={{alignSelf: "center"}}
 					/>
-				<TouchableOpacity onPress={() => {setSelection(!selection);}}><Text style={{fontSize:18, textAlign:"center"}}>Let the buyer choose quantity.</Text></TouchableOpacity>
+					<TouchableOpacity onPress={() => {setSelection(!selection);}}><Text style={{color:Colors.CheckBoxTextGreen,fontSize:18, textAlign:"center"}}>I want to set a fixed quantity.</Text></TouchableOpacity>
+				</View>
 			</View>
-			<View style={{flexDirection:'row', }}>
-				<CheckBox
-					value={!selection}
-					onValueChange={() => {setSelection(false);}}
-					style={{alignSelf: "center"}}
-				/>
-				<TouchableOpacity onPress={() => {setSelection(!selection);}}><Text style={{fontSize:18, textAlign:"center"}}>I want to set a fixed quantity.</Text></TouchableOpacity>
-			</View>
-			<View style={styles.button}>
-				<Button title="Continue" color="red" onPress={confimClicked} />
-			</View>
-			<View style={styles.button}>
-				<Button title="Go Back" onPress={() => { props.unsetChecked(); props.setSelected(); }} />
-			</View>
+
+			<Header
+				style={{ paddingTop:0, paddingBottom:0, paddingHorizontal:0, backgroundColor:null, position:'absolute', justifyContent:"space-between",  }}>
+				
+				<TouchableOpacity
+					style={{backgroundColor:Colors.Primary, paddingEnd: 20, paddingStart:8, borderBottomRightRadius:20, paddingVertical:10 , flexDirection:"row", justifyContent:"center", alignItems:"center", }}
+					onPress={() => {props.unsetChecked(); props.setSelected();}}>
+					<MaterialCommunityIcons name="arrow-left" color={"white"} size={32} />
+					<Text style={{color:"white", fontSize:20, textAlign:"center", paddingStart:10}}>Back</Text>
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					style={{backgroundColor:Colors.Primary, paddingEnd: 8, paddingStart:20, borderBottomLeftRadius:20, paddingVertical:10 , flexDirection:"row", justifyContent:"center", alignItems:"center", }}
+					onPress={confimClicked}>
+					<Text style={{color:"white", fontSize:20, textAlign:"center", paddingEnd:10}}>Next</Text>
+					<MaterialCommunityIcons name="arrow-right" color={"white"} size={32} />
+				</TouchableOpacity>
+			</Header>
+
 		</View>
 	);
 }
@@ -90,8 +107,6 @@ const styles = StyleSheet.create({
 		marginVertical: 10,
 	},
 	screen:{
-		justifyContent:'center',
-		alignItems:'center',
 		flex:1,
 	},
 	button:{
