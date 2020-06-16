@@ -54,8 +54,11 @@ const MainMenu = props => {
   if(props.productPreviewed){
 	productPreviewModal = 
 		<ProductPreviewModal 
+			navigation={props.navigation}
 			buyNow={props.buyNow}
 			addToCart={props.addToCart}
+			cart={props.cart}
+			updateCart={props.updateCart}
 			setProductPreviewed={props.setProductPreviewed}
 			productPreviewed={props.productPreviewed}/>;
   }

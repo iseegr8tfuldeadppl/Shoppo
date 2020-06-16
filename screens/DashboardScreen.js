@@ -108,12 +108,8 @@ const DashboardScreen = props =>  {
 		});
 	}
 
-	const buyNow = product => {
-		console.log(product);
-	};
-
 	const addToCart = product => {
-		product.selected_in_cart = false;
+		product.selected_in_cart = true;
 		updateCart(currentCart => [
 			...currentCart, product
 		]);
@@ -144,7 +140,6 @@ const DashboardScreen = props =>  {
 														productPreviewed={productPreviewed}
 														uid={props.uid} 
 														categories={categories} 
-														buyNow={buyNow} 
 														addToCart={addToCart} 
 														adminList={adminList}  
 														finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}

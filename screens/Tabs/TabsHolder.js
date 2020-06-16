@@ -29,8 +29,10 @@ const MainMenuPage = props => {
 			  {propss => <MainMenu {...propss} 
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} buyNow={props.buyNow} 
+							uid={props.uid}
+							updateCart={props.updateCart} 
 							addToCart={props.addToCart} 
+							cart={props.cart} 
 							categories={props.categories} 
 							adminList={props.adminList} 
 							finishedLoadingFromFirebase={props.finishedLoadingFromFirebase}/>}
@@ -95,8 +97,10 @@ const CategoriesPage = props => {
 			  {propss => <MainMenu {...propss} 
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} buyNow={props.buyNow} 
+							uid={props.uid}
 							addToCart={props.addToCart} 
+							updateCart={props.updateCart} 
+							cart={props.cart} 
 							categories={props.categories} 
 							adminList={props.adminList} 
 							finishedLoadingFromFirebase={props.finishedLoadingFromFirebase}/>}
@@ -161,9 +165,11 @@ const CartPage = props => {
 			  {propss => <MainMenu {...propss} 
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} buyNow={props.buyNow} 
+							uid={props.uid}
+							cart={props.cart} 
 							addToCart={props.addToCart} 
 							categories={props.categories} 
+							updateCart={props.updateCart} 
 							adminList={props.adminList} 
 							finishedLoadingFromFirebase={props.finishedLoadingFromFirebase}/>}
 			</Tab.Screen>
@@ -225,7 +231,9 @@ const ProfilePage = props => {
 			  {propss => <MainMenu {...propss} 
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} buyNow={props.buyNow} 
+							uid={props.uid}
+							cart={props.cart} 
+							updateCart={props.updateCart} 
 							addToCart={props.addToCart} 
 							categories={props.categories} 
 							adminList={props.adminList} 
