@@ -104,6 +104,7 @@ const ProductPreviewModal = props => {
 		<Modal visible={props.productPreviewed!==undefined} animationType="slide">
 			
 			<CheckOut 
+				setProductPreviewed={props.setProductPreviewed}
 				cart={props.cart}
 				updateCart={props.updateCart}
 				checkoutList={checkoutList}

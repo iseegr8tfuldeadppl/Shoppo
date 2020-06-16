@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity, FlatList, Image} from 'react-native';
+import { StyleSheet, View, Text, Modal, TouchableOpacity, FlatList, Image, Alert} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../components/Header';
 import Colors from '../constants/Colors';
@@ -45,8 +45,20 @@ const CheckOut = props => {
 
 	const Buy = () => {
 
+		Alert.alert(
+			'Ayyyyyy', 
+			'Successfully bought for just ' + calculateTotal().toString() + ' DA', 
+			[
+				{text: 'Ok', style: 'cancel'}
+			],
+			{ cancelable: true }
+		);
+
 		cleanCart();
 		props.setCheckoutList();
+
+		if(props.setProductPreviewed)
+			props.setProductPreviewed();
 	};
 
 	return(
