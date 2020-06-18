@@ -1,8 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, BackHandler } from 'react-native';
 import firebase from 'firebase';
 
 const LoadingScreen = props =>  {
+
+	BackHandler.addEventListener('hardwareBackPress', function() {
+	    return true;
+	});
 
 	const delayTillEnter = () => {
 		setTimeout(()=>{
@@ -27,7 +31,7 @@ const LoadingScreen = props =>  {
 			}
 		}); // to use component u have to add .bind(this) and also make it this.props.blabla
 	}
-	
+
 	delayTillEnter();
 	return(
 		<View style={styles.screen}>
