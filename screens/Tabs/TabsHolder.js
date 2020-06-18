@@ -26,26 +26,33 @@ const MainMenuPage = props => {
 				  <MaterialCommunityIcons name="home" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <MainMenu {...propss} 
+			  {propss => <MainMenu {...propss}
+						  	setCheckoutList={props.setCheckoutList}
+						  	checkoutList={props.checkoutList}
+  							userInfo={props.userInfo}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
 							uid={props.uid}
-							updateCart={props.updateCart} 
-							addToCart={props.addToCart} 
-							cart={props.cart} 
-							categories={props.categories} 
-							adminList={props.adminList} 
+							updateCart={props.updateCart}
+							addToCart={props.addToCart}
+							cart={props.cart}
+							categories={props.categories}
+							adminList={props.adminList}
 							finishedLoadingFromFirebase={props.finishedLoadingFromFirebase}/>}
 			  </Tab.Screen>
 			<Tab.Screen
 			  name="Categories"
-			  component={Categories}
 			  options={{
 				tabBarLabel: 'Categories',
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="menu" color={color} size={size} />
 				),
-			  }} />
+			}} >
+			{propss => <Categories {...propss}
+						  categories={props.categories}
+						  setProductPreviewed={props.setProductPreviewed}
+						  productPreviewed={props.productPreviewed}/>}
+			</Tab.Screen>
 			<Tab.Screen
 			  name="Cart"
 			  options={{
@@ -54,24 +61,31 @@ const MainMenuPage = props => {
 				  <MaterialCommunityIcons name="cart" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <Cart {...propss} 
+			  {propss => <Cart {...propss}
+						  	setCheckoutList={props.setCheckoutList}
+						  	checkoutList={props.checkoutList}
+  							userInfo={props.userInfo}
 							updateCart={props.updateCart}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} 
-							cart={props.cart} 
-							adminList={props.adminList} 
+							uid={props.uid}
+							cart={props.cart}
+							adminList={props.adminList}
 							/>}
 			  </Tab.Screen>
 			<Tab.Screen
 			  name="Profile"
-			  component={Profile}
 			  options={{
 				tabBarLabel: 'Profile',
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="account" color={color} size={size} />
 				),
-			  }} />
+			  }} >
+			  {propss => <Profile {...propss}
+  							contact={props.contact}
+  							userInfo={props.userInfo}
+							/>}
+			  </Tab.Screen>
       </Tab.Navigator>
 	);
 }
@@ -94,26 +108,34 @@ const CategoriesPage = props => {
 				  <MaterialCommunityIcons name="home" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <MainMenu {...propss} 
+			  {propss => <MainMenu {...propss}
+						  	setCheckoutList={props.setCheckoutList}
+						  	checkoutList={props.checkoutList}
+  							userInfo={props.userInfo}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
 							uid={props.uid}
-							addToCart={props.addToCart} 
-							updateCart={props.updateCart} 
-							cart={props.cart} 
-							categories={props.categories} 
-							adminList={props.adminList} 
+							addToCart={props.addToCart}
+							updateCart={props.updateCart}
+							cart={props.cart}
+							categories={props.categories}
+							adminList={props.adminList}
 							finishedLoadingFromFirebase={props.finishedLoadingFromFirebase}/>}
 			</Tab.Screen>
 			<Tab.Screen
 			  name="Categories"
-			  component={Categories}
 			  options={{
 				tabBarLabel: 'Categories',
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="menu" color={color} size={size} />
 				),
-			  }} />
+			  }} >
+  			{propss => <Categories {...propss}
+  						  categories={props.categories}
+						  setProductPreviewed={props.setProductPreviewed}
+						  productPreviewed={props.productPreviewed}/>}
+
+			</Tab.Screen>
 			<Tab.Screen
 			  name="Cart"
 			  options={{
@@ -122,15 +144,19 @@ const CategoriesPage = props => {
 				  <MaterialCommunityIcons name="cart" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <Cart {...propss} 
+			  {propss => <Cart {...propss}
+						  	setCheckoutList={props.setCheckoutList}
+						  	checkoutList={props.checkoutList}
+  							userInfo={props.userInfo}
 							updateCart={props.updateCart}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} 
-							cart={props.cart} 
-							adminList={props.adminList} 
+							uid={props.uid}
+							cart={props.cart}
+							adminList={props.adminList}
 							/>}
-			  </Tab.Screen>
+  			</Tab.Screen>
+
 			<Tab.Screen
 			  name="Profile"
 			  component={Profile}
@@ -139,7 +165,13 @@ const CategoriesPage = props => {
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="account" color={color} size={size} />
 				),
-			  }} />
+			  }} >
+			  {propss => <Profile {...propss}
+  							contact={props.contact}
+  							userInfo={props.userInfo}
+							/>}
+			</Tab.Screen>
+
       </Tab.Navigator>
 	);
 }
@@ -162,26 +194,33 @@ const CartPage = props => {
 				  <MaterialCommunityIcons name="home" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <MainMenu {...propss} 
+			  {propss => <MainMenu {...propss}
+						  	setCheckoutList={props.setCheckoutList}
+						  	checkoutList={props.checkoutList}
+  							userInfo={props.userInfo}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
 							uid={props.uid}
-							cart={props.cart} 
-							addToCart={props.addToCart} 
-							categories={props.categories} 
-							updateCart={props.updateCart} 
-							adminList={props.adminList} 
+							cart={props.cart}
+							addToCart={props.addToCart}
+							categories={props.categories}
+							updateCart={props.updateCart}
+							adminList={props.adminList}
 							finishedLoadingFromFirebase={props.finishedLoadingFromFirebase}/>}
 			</Tab.Screen>
 			<Tab.Screen
 			  name="Categories"
-			  component={Categories}
 			  options={{
 				tabBarLabel: 'Categories',
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="menu" color={color} size={size} />
 				),
-			  }} />
+			  }} >
+  			{propss => <Categories {...propss}
+  						  categories={props.categories}
+						  setProductPreviewed={props.setProductPreviewed}
+						  productPreviewed={props.productPreviewed}/>}
+			</Tab.Screen>
 			<Tab.Screen
 			  name="Cart"
 			  options={{
@@ -190,24 +229,31 @@ const CartPage = props => {
 				  <MaterialCommunityIcons name="cart" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <Cart {...propss} 
+			  {propss => <Cart {...propss}
+						  	setCheckoutList={props.setCheckoutList}
+						  	checkoutList={props.checkoutList}
+  							userInfo={props.userInfo}
 							updateCart={props.updateCart}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} 
-							cart={props.cart} 
-							adminList={props.adminList} 
+							uid={props.uid}
+							cart={props.cart}
+							adminList={props.adminList}
 							/>}
 			  </Tab.Screen>
 			<Tab.Screen
 			  name="Profile"
-			  component={Profile}
 			  options={{
 				tabBarLabel: 'Profile',
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="account" color={color} size={size} />
 				),
-			  }} />
+			  }}  >
+			  {propss => <Profile {...propss}
+  							contact={props.contact}
+  							userInfo={props.userInfo}
+							/>}
+			</Tab.Screen>
       </Tab.Navigator>
 	);
 }
@@ -228,26 +274,33 @@ const ProfilePage = props => {
 				  <MaterialCommunityIcons name="home" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <MainMenu {...propss} 
+			  {propss => <MainMenu {...propss}
+						  	setCheckoutList={props.setCheckoutList}
+						  	checkoutList={props.checkoutList}
+  							userInfo={props.userInfo}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
 							uid={props.uid}
-							cart={props.cart} 
-							updateCart={props.updateCart} 
-							addToCart={props.addToCart} 
-							categories={props.categories} 
-							adminList={props.adminList} 
+							cart={props.cart}
+							updateCart={props.updateCart}
+							addToCart={props.addToCart}
+							categories={props.categories}
+							adminList={props.adminList}
 							finishedLoadingFromFirebase={props.finishedLoadingFromFirebase}/>}
 			</Tab.Screen>
 			<Tab.Screen
 			  name="Categories"
-			  component={Categories}
 			  options={{
 				tabBarLabel: 'Categories',
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="menu" color={color} size={size} />
 				),
-			  }} />
+			  }} >
+  			{propss => <Categories {...propss}
+  						  categories={props.categories}
+						  setProductPreviewed={props.setProductPreviewed}
+						  productPreviewed={props.productPreviewed}/>}
+			</Tab.Screen>
 			<Tab.Screen
 			  name="Cart"
 			  options={{
@@ -256,24 +309,31 @@ const ProfilePage = props => {
 				  <MaterialCommunityIcons name="cart" color={color} size={size} />
 				),
 			  }} >
-			  {propss => <Cart {...propss} 
+			  {propss => <Cart {...propss}
+  							userInfo={props.userInfo}
+							setCheckoutList={props.setCheckoutList}
+							checkoutList={props.checkoutList}
 							updateCart={props.updateCart}
 							setProductPreviewed={props.setProductPreviewed}
 							productPreviewed={props.productPreviewed}
-							uid={props.uid} 
-							cart={props.cart} 
-							adminList={props.adminList} 
+							uid={props.uid}
+							cart={props.cart}
+							adminList={props.adminList}
 							/>}
 			  </Tab.Screen>
 			<Tab.Screen
 			  name="Profile"
-			  component={Profile}
 			  options={{
 				tabBarLabel: 'Profile',
 				tabBarIcon: ({ color, size }) => (
 				  <MaterialCommunityIcons name="account" color={color} size={size} />
 				),
-			  }} />
+			  }}  >
+			  {propss => <Profile {...propss}
+  							contact={props.contact}
+  							userInfo={props.userInfo}
+							/>}
+			</Tab.Screen>
       </Tab.Navigator>
 	);
 }

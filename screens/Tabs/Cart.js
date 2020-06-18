@@ -1,7 +1,7 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, FlatList, Alert, BackHandler } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../components/Header';
 import Colors from '../constants/Colors';
@@ -17,7 +17,10 @@ import CheckoutBar from '../components/CheckoutBar';
 const Cart = props => {
 
 	const [allSelected, setAllSelected] = useState(true);
-	const [checkoutList, setCheckoutList] = useState();
+
+	BackHandler.addEventListener('hardwareBackPress', function() {
+	    return true;
+	});
 
 	const calculateTotal = () => {
 		let total = 0.00;
@@ -40,14 +43,12 @@ const Cart = props => {
 		}
 
 		if(cartCopy.length>0)
-			setCheckoutList(cartCopy);
+			props.setCheckoutList(cartCopy);
 		else {
 			Alert.alert(
-				'You have no products in your cart!',
-				'You should select products first!',
+				'No products selected in your cart!',
+				'Check at least one product',
 				[
-					{text: 'Check out Products', style: 'destructive',
-						onPress: () => { props.navigation.navigate("MainMenu"); }},
 					{text: 'Ok', style: 'cancel'}
 				],
 				{ cancelable: true }
@@ -116,16 +117,21 @@ const Cart = props => {
 		<SafeAreaView style={{ flex: 1 }} forceInset={{ bottom: 'never' }}>
 
 			<CheckOut
+				sender={"Cart"}
+				uid={props.uid}
+			  	userInfo={props.userInfo}
 				cart={props.cart}
 				updateCart={props.updateCart}
-				checkoutList={checkoutList}
-				setCheckoutList={setCheckoutList}/>
+				checkoutList={props.checkoutList}
+				setCheckoutList={props.setCheckoutList}/>
 
 			<Header style={styles.header}>
 				<TouchableOpacity
 					onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
 					<MaterialCommunityIcons name="menu" color={"white"} size={30} />
 				</TouchableOpacity>
+
+				<Text style={styles.headertitle}>Cart</Text>
 
 				<CartTrashCan
 					cart={props.cart}
@@ -141,8 +147,13 @@ const Cart = props => {
 const styles = StyleSheet.create({
 	header:{
 		height: 90,
-		justifyContent:"space-between",
 	},
+    headertitle: {
+        fontSize: 23,
+        color:"white",
+        flex: 1,
+        marginHorizontal: 11,
+    },
 });
 
 export default Cart;

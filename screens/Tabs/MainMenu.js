@@ -1,7 +1,7 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, BackHandler } from 'react-native';
 import Colors from '../constants/Colors';
 import Header from '../components/Header';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,6 +14,10 @@ import MainCategoryItem from '../components/MainCategoryItem';
 
 const MainMenu = props => {
 
+	BackHandler.addEventListener('hardwareBackPress', function() {
+	    return true;
+	});
+
   // Admin Stuff
   const [data, setData] = useState();
   const [NewItemPage, setNewItemPage] = useState(false);
@@ -21,10 +25,10 @@ const MainMenu = props => {
     const addCategoryButton = () => {
       if(props.adminList.includes(props.uid)){
           return(<TouchableOpacity
-      							style={{padding:10, width:"100%", justifyContent:'center', alignItems:'center'}}
-      							onPress={() => {setNewItemPage(true);}}>
-      							<Text style={{color:"blue", fontSize:15}}>Add Category</Text>
-      						</TouchableOpacity>);
+    				style={{padding:10, width:"100%", justifyContent:'center', alignItems:'center'}}
+    				onPress={() => {setNewItemPage(true);}}>
+    				<Text style={{color:"blue", fontSize:15}}>Add Category</Text>
+    			</TouchableOpacity>);
       } else
           return(null);
     };
@@ -50,6 +54,10 @@ const MainMenu = props => {
   const productPreviewModalVisibility = () => {
     if(props.productPreviewed){
         return(<ProductPreviewModal
+            checkoutList={props.checkoutList}
+            setCheckoutList={props.setCheckoutList}
+            uid={props.uid}
+		  	userInfo={props.userInfo}
             navigation={props.navigation}
             buyNow={props.buyNow}
             addToCart={props.addToCart}
@@ -86,10 +94,12 @@ const MainMenu = props => {
     	{loading()}
 
     	<FlatList
-    		style={{paddingHorizontal: 8, paddingTop:5 }}
+    		style={{paddingHorizontal: 8, paddingTop:15 }}
     		data={props.categories}
     		renderItem={categoryData =>
                 <MainCategoryItem
+                    setNewItemPage={setNewItemPage}
+                    setData={setData}
                     setProductPreviewed={props.setProductPreviewed}
                     addProductButton={addProductButton}
                     item={categoryData.item}/>

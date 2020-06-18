@@ -10,7 +10,7 @@ const MainCategoryItem = props => {
                 <Text style={styles.category}>{props.item.category}</Text>
                 <TouchableOpacity
                     style={styles.addProductHolder}
-                    onPress={() => {setNewItemPage(true); setData(props.item); }}>
+                    onPress={() => {props.setNewItemPage(true); props.setData(props.item); }}>
                     {props.addProductButton()}
                 </TouchableOpacity>
             </View>

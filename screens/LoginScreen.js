@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import * as Google from 'expo-google-app-auth'; // change this to 'expo-google-sign-in' to turn the window login into a popup, also remove behavior: 'web' from the google code maybe?
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,6 +8,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const LoginScreen = props => {
 
 	const [loading, setLoading] = useState(false);
+
+	BackHandler.addEventListener('hardwareBackPress', function() {
+	    return true;
+	});
 
 	const isUserEqual = (googleUser, firebaseUser) => {
 		if (firebaseUser) {
@@ -44,18 +48,17 @@ const LoginScreen = props => {
 				firebase
 				.auth()
 				.signInAndRetrieveDataWithCredential(credential)
-				/*
 				.then(function(result) {
 					if (result.additionalUserInfo.isNewUser) {
 					firebase
 						.database()
 						.ref('/users/' + result.user.uid)
 						.set({
-						gmail: result.user.email,
-						profile_picture: result.additionalUserInfo.profile.picture,
-						first_name: result.additionalUserInfo.profile.given_name,
-						last_name: result.additionalUserInfo.profile.family_name,
-						created_at: Date.now()
+							gmail: result.user.email,
+							profile_picture: result.additionalUserInfo.profile.picture,
+							first_name: result.additionalUserInfo.profile.given_name,
+							last_name: result.additionalUserInfo.profile.family_name,
+							last_logged_in: Date.now()
 						})
 						.then(function(snapshot) {
 						// console.log('Snapshot', snapshot);
@@ -65,11 +68,14 @@ const LoginScreen = props => {
 						.database()
 						.ref('/users/' + result.user.uid)
 						.update({
-						last_logged_in: Date.now()
+							gmail: result.user.email,
+							profile_picture: result.additionalUserInfo.profile.picture,
+							first_name: result.additionalUserInfo.profile.given_name,
+							last_name: result.additionalUserInfo.profile.family_name,
+							last_logged_in: Date.now()
 						});
 					}
 				})
-				*/
 				.catch(function(error) {
 					var errorCode = error.code;
 					var errorMessage = error.message;
@@ -155,10 +161,10 @@ const styles = StyleSheet.create({
 	width: '80%',
 	paddingHorizontal: 10,
 	paddingVertical: 10,
-	borderWidth: 1, 
-	borderRadius: 30, 
-	flexDirection: 'row', 
-	justifyContent: 'center', 
+	borderWidth: 1,
+	borderRadius: 30,
+	flexDirection: 'row',
+	justifyContent: 'center',
 	alignItems: 'center',
 	elevation: 4,
 	backgroundColor: 'white',

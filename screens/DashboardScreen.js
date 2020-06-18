@@ -23,12 +23,15 @@ const DashboardScreen = props =>  {
 	const [finishedLoadingFromFirebase, setFinishedLoadingFromFirebase] = useState(false);
 	const [categories, setCategories] = useState([]);
 	const [productPreviewed, setProductPreviewed] = useState();
-	
+	const [userInfo, setUserInfo] = useState(userInfo);
+	const [checkoutList, setCheckoutList] = useState();
+	const [contact, setContact] = useState();
+
 	// admin stuff
 	const [adminList, setAdminList] = useState([]);
 
 	const pokeFirebase = () => {
-	
+
 		firebase.database().ref('/admins').on('value', adminListSnapshot => {
 			let adminListData = adminListSnapshot.val() ? adminListSnapshot.val() : {};
 			let admins = {...adminListData};
@@ -50,47 +53,78 @@ const DashboardScreen = props =>  {
 
 							// this little check is to hide currently previewed product if it was deleted from firebase
 							if(productPreviewed)
-								if(!currentlyDisplayedProductIsStillInFirebase)
+								if(!productPreviewedIsPresent)
 									if(KeysOfproductsInCategory[j]===productPreviewed.key)
-										currentlyDisplayedProductIsStillInFirebase = true;
+										productPreviewedIsPresent = true;
 
 							productList.push({ key: KeysOfproductsInCategory[j], data: JSON.parse(productsInCategory[j].data) });
 						}
 					}
-			
+
 					let nameOfCategory = Object.values(cateogoriesSnapshot)[i].name;
 					if(productList.length>0 || adminListTemp.includes(props.uid))
 						categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, products: productList });
-			}
-
-			// admin stuff
-			setAdminList(adminListTemp);
-
-			if(!finishedLoadingFromFirebase){
-				setFinishedLoadingFromFirebase(true);
-			}
-
-			if(productPreviewedIsPresent){
-				let cartCopy = cart.slice();
-				for(let i=0; i<cartCopy.length; i++){
-					if(cartCopy[i].key===productPreviewed.key){
-						cartCopy.splice(i, 1);
-						break;
-					}
 				}
-				updateCart();
-				setProductPreviewed();
-			}
 
-			if(categoriesList.length>0)
-				setCategories(categoriesList);
 
+				firebase.database().ref('/contact').once('value', contactSnapshot => {
+					let contactData = contactSnapshot.val() ? contactSnapshot.val() : {};
+					setContact({...contactData});
+				});
+
+				// Admin Stuff
+				firebase.database().ref('/admins').on('value', adminListSnapshot => {
+					let adminListData = adminListSnapshot.val() ? adminListSnapshot.val() : {};
+					let admins = {...adminListData};
+					let adminListTemp = Object.keys(admins);
+
+					firebase.database().ref('/users/' + props.uid).on('value', userInfoSnapShot => {
+						let dataaa = userInfoSnapShot.val() ? userInfoSnapShot.val() : {};
+						let userInfoSnap = {...dataaa};
+						setUserInfo(userInfoSnap);
+					});
+
+					// admin stuff
+					setAdminList(adminListTemp);
+
+					if(!finishedLoadingFromFirebase)
+						setFinishedLoadingFromFirebase(true);
+
+					if(!productPreviewedIsPresent){
+						let cartCopy = cart.slice();
+						for(let i=0; i<cartCopy.length; i++){
+							if(cartCopy[i].key===productPreviewed.key){
+								cartCopy.splice(i, 1);
+								break;
+							}
+						}
+						updateCart(cartCopy);
+
+						if(checkoutList){
+							let checkoutListCopy = checkoutList.slice();
+							for(let i=0; i<checkoutListCopy.length; i++){
+								if(checkoutListCopy[i].key===productPreviewed.key)
+									checkoutListCopy.splice(i, 1);
+							}
+							if(checkoutListCopy.length===0)
+								setCheckoutList();
+							else
+								setCheckoutList(checkoutListCopy);
+						}
+
+						setProductPreviewed();
+						setCheckoutList();
+					}
+
+					if(categoriesList.length>0)
+						setCategories(categoriesList);
+
+				});
+
+			});
 		});
-
-		});
-		
 	};
-	
+
 
   if(categories.length===0 && !finishedLoadingFromFirebase){
 	  pokeFirebase();
@@ -100,7 +134,7 @@ const DashboardScreen = props =>  {
 	const logOut = props => {
 		firebase.auth().signOut();
 
-		// Check if logged 
+		// Check if logged
 		firebase.auth().onAuthStateChanged(function(user){
 			if(!user){
 				props.goHere(2);
@@ -122,10 +156,10 @@ const DashboardScreen = props =>  {
 			return (
 				<DrawerContentScrollView {...propss}>
 				<DrawerItemList {...propss} />
-				<DrawerItem label="Logout" onPress={() => 
+				<DrawerItem label="Logout" onPress={() =>
 					Alert.alert(
-						'Logout', 
-						'Are you sure you want to log out?', 
+						'Logout',
+						'Are you sure you want to log out?',
 						[{text: 'No', style: 'cancel'},
 							{text: 'Yes', style: 'destructive', onPress: () => logOut(props) }],
 						{ cancelable: true }
@@ -133,20 +167,57 @@ const DashboardScreen = props =>  {
 				</DrawerContentScrollView>
 			)
 		}}>
-		<Drawer.Screen name="Main Page">{propss => <Tabs.MainMenuPage {...props} 
-														updateCart={updateCart}
-														cart={cart}
-														setProductPreviewed={setProductPreviewed}
-														productPreviewed={productPreviewed}
-														uid={props.uid} 
-														categories={categories} 
-														addToCart={addToCart} 
-														adminList={adminList}  
-														finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
-													</Drawer.Screen>
-		<Drawer.Screen name="Categories" >{propss => <Tabs.CategoriesPage {...props} uid={props.uid} cart={cart} updateCart={updateCart} />}</Drawer.Screen>
-		<Drawer.Screen name="Cart" >{propss => <Tabs.CartPage {...props} uid={props.uid} cart={cart} updateCart={updateCart} />}</Drawer.Screen>
-		<Drawer.Screen name="Profile" >{propss => <Tabs.ProfilePage {...props} uid={props.uid} cart={cart} updateCart={updateCart} />}</Drawer.Screen>
+
+		<Drawer.Screen name="Main Page">{propss =>
+			<Tabs.MainMenuPage {...props}
+				contact={contact}
+				setCheckoutList={setCheckoutList}
+				checkoutList={checkoutList}
+				userInfo={userInfo}
+				updateCart={updateCart}
+				cart={cart}
+				setProductPreviewed={setProductPreviewed}
+				productPreviewed={productPreviewed}
+				uid={props.uid}
+				categories={categories}
+				addToCart={addToCart}
+				adminList={adminList}
+				finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
+		</Drawer.Screen>
+
+		<Drawer.Screen name="Categories" >{propss =>
+			<Tabs.CategoriesPage {...props}
+				contact={contact}
+				setCheckoutList={setCheckoutList}
+				checkoutList={checkoutList}
+				userInfo={userInfo}
+				uid={props.uid}
+				cart={cart}
+				updateCart={updateCart} />}
+		</Drawer.Screen>
+
+		<Drawer.Screen name="Cart" >{propss =>
+			<Tabs.CartPage {...props}
+				contact={contact}
+				setCheckoutList={setCheckoutList}
+				checkoutList={checkoutList}
+				userInfo={userInfo}
+				uid={props.uid}
+				cart={cart}
+				updateCart={updateCart} />}
+		</Drawer.Screen>
+
+		<Drawer.Screen name="Profile" >{propss =>
+			<Tabs.ProfilePage {...props}
+				contact={contact}
+				setCheckoutList={setCheckoutList}
+				checkoutList={checkoutList}
+				uid={props.uid}
+				userInfo={userInfo}
+				cart={cart}
+				updateCart={updateCart} />}
+		</Drawer.Screen>
+
 	</Drawer.Navigator>
 	</NavigationContainer>
 	);
