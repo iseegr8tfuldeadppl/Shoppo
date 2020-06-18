@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
         alignItems:"center",
     },
 	total: {
+        fontWeight:"bold",
 		flex:1,
 		textAlign:"right",
 		fontSize:17,

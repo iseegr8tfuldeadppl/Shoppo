@@ -96,6 +96,8 @@ const Cart = props => {
 						data={props.cart}
 						renderItem={singleProductData =>
 							<CartItem
+								setProductPreviewed={props.setProductPreviewed}
+								productPreviewed={props.productPreviewed}
 								setAllSelected={setAllSelected}
 								allSelected={allSelected}
 								item={singleProductData.item}
@@ -119,6 +121,8 @@ const Cart = props => {
 			<CheckOut
 				sender={"Cart"}
 				uid={props.uid}
+				setProductPreviewed={props.setProductPreviewed}
+				productPreviewed={props.productPreviewed}
 			  	userInfo={props.userInfo}
 				cart={props.cart}
 				updateCart={props.updateCart}

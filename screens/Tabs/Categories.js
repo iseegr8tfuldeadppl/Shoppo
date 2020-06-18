@@ -65,7 +65,7 @@ const Categories = props => {
             <>
             <Header style={styles.header}>
                 <TouchableOpacity
-                    onPress={() => {setCategoryPreviewed();} }>
+                    onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
                     <MaterialCommunityIcons name="menu" color={"white"} size={30} />
                 </TouchableOpacity>
                 <View style={styles.headertitleholder}><Text style={styles.headertitle}>Categories</Text></View>

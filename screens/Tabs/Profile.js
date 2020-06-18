@@ -44,13 +44,15 @@ const Profile = props => {
     };
 
     const ordersCounted = () => {
-        let orders = Object.keys(props.userInfo.orders).length;
-        if(orders>1)
-            return orders + " Orders";
-        else if(orders===1)
-            return orders + " Order";
-        else
-            return "";
+        if(props.userInfo.orders){
+            let orders = Object.keys(props.userInfo.orders).length;
+            if(orders>1)
+                return orders + " Orders";
+            else if(orders===1)
+                return orders + " Order";
+            else
+                return "0 Orders";
+        } else return "0 Orders";
     };
 
     switch(page){

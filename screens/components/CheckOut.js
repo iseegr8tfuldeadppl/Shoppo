@@ -310,19 +310,19 @@ const CheckOut = props => {
  					<OkayButton
 						style={{ minWidth: 220 }}
  						textStyle={{ fontSize: 16 }}
- 						onClick={() => { props.setProductPreviewed(); exit(); }}
+ 						onClick={() => { if(props.productPreviewed) props.setProductPreviewed(); exit(); }}
  						text={"Go to Orders List"} />
 
  					<OkayButton
 						style={{ minWidth: "75%", marginTop: 10 }}
  						textStyle={{ fontSize: 16 }}
- 						onClick={() => { props.setProductPreviewed(); exit(); }}
+ 						onClick={() => { if(props.productPreviewed) props.setProductPreviewed(); exit(); }}
  						text={"Back to " + props.sender} />
 
  					<OkayButton
 						style={{ minWidth: 220, marginTop: 10 }}
  						textStyle={{ fontSize: 16 }}
- 						onClick={() => {props.setProductPreviewed(); exit(); }}
+ 						onClick={() => {if(props.productPreviewed) props.setProductPreviewed(); exit(); }}
  						text={"Back to Main Menu"} />
  				</View>
  			);
