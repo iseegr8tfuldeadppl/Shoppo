@@ -20,6 +20,7 @@ const ProductPreviewModal = props => {
 			enteredText = enteredText.replace(",", "");
 			enteredText = enteredText.replace(".", "");
 		}
+		enteredText = enteredText.replace(",", ".");
 		enteredText = enteredText.replace("-", "");
 		enteredText = enteredText.replace(/\s/g, "");
 
@@ -79,7 +80,7 @@ const ProductPreviewModal = props => {
 	const invalidQuantity = () => {
 		Alert.alert(
 			'Oops!',
-			'Please write a valid quanity!',
+			'Please write a valid quantity!',
 			[
 				{text: 'Ok', style: 'cancel'}
 			],

@@ -47,25 +47,16 @@ const CartItem = props => {
 	};
 
 	const cleanQuantity = (operand, enteredText, update_original) => {
-		if(isNaN(parseFloat(enteredText))){
-			updateQuantity(operand.key, operand.original_quantity);
-			return;
-		}
 		if(!IsOriginallyCurrency(operand.data.originaltype)){
 			enteredText = enteredText.replace(",", "");
 			enteredText = enteredText.replace(".", "");
 		}
+		enteredText = enteredText.replace(",", ".");
 		enteredText = enteredText.replace("-", "");
 		enteredText = enteredText.replace(/\s/g, "");
 
-		if(IsOriginallyCurrency(operand.data.originaltype))
-			enteredText = parseFloat(enteredText).toFixed(2).toString();
-		else
-			enteredText = Math.round(parseFloat(enteredText)).toString();
-
 		updateQuantity(operand.key, enteredText, update_original);
 	};
-
 
 	const textInput = operand =>{
 		if(IsOriginallyCurrency(operand.data.originaltype)){

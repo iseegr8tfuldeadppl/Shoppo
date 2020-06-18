@@ -27,14 +27,39 @@ const Cart = props => {
 
 		for(let i=0; i<props.cart.length; i++){
 			if(props.cart[i].selected_in_cart){
-				total += parseFloat(props.cart[i].data.cost) * parseFloat(props.cart[i].quantity);
+				if(!isNaN(parseFloat(props.cart[i].quantity))){
+					total += parseFloat(props.cart[i].data.cost) * parseFloat(props.cart[i].quantity);
+				}
 			}
 		}
 
 		return Math.round(total).toString();
 	};
 
+	const invalidQuantity = title => {
+		Alert.alert(
+			'Oops!',
+			'Please write a valid quantity for ' + title + '!',
+			[
+				{text: 'Ok', style: 'cancel'}
+			],
+			{ cancelable: true }
+		);
+	};
+
 	const buyNow = () => {
+
+		// check for valid quantities
+		for(let i=0; i<props.cart.length; i++){
+			if(props.cart[i].selected_in_cart){
+				if(isNaN(parseFloat(props.cart[i].quantity))){
+					invalidQuantity(props.cart[i].data.title);
+					return;
+				}
+			}
+		}
+
+
 		let cartCopy = [];
 		for(let i=0; i<props.cart.length; i++){
 			if(props.cart[i].selected_in_cart){
