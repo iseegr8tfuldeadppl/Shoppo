@@ -8,8 +8,9 @@ import LoadingScreen from './screens/LoadingScreen';
 import DashboardScreen from './screens/DashboardScreen';
 
 export default function App() {
-	
-	// Debugging Related
+
+
+	// for Debugging only
 	console.disableYellowBox = true;
 
 	const [page, setPage] = useState(1);
@@ -18,7 +19,7 @@ export default function App() {
 
 	if(!firebase.apps.length)
 		firebase.initializeApp(firebaseConfig);
-		
+
 	const goToPage = DestinationPage => {
 		setPage(DestinationPage);
 	};

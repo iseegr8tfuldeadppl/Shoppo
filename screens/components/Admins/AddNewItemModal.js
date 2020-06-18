@@ -7,7 +7,6 @@ import firebase from 'firebase';
 const AddNewItemModal = props => {
 
   const onAdd = (name) => {
-	console.log(name);
 	if(props.data){
 		firebase.database()
 			.ref('/categories/' + props.data.key + "/products")
@@ -15,7 +14,7 @@ const AddNewItemModal = props => {
 				data: JSON.stringify(name),
 			})
 			.then(function(snapshot) {
-				
+
 				props.setData();
 				props.onCancel();
 				//console.log('Snapshot', snapshot);
@@ -37,12 +36,12 @@ const AddNewItemModal = props => {
 
 	let menu;
 	if(props.data){
-		menu = <Product 
+		menu = <Product
 				data={props.data}
 				onAdd={onAdd}
 				onCancel={props.onCancel}/>
 	} else {
-		menu = <Category 
+		menu = <Category
 				onCancel={props.onCancel}
 				onAdd={onAdd}/>
 	}

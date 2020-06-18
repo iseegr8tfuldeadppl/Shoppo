@@ -2,8 +2,13 @@
   "ExpandedNodes": [
     "",
     "\\assets",
-    "\\componentos"
+    "\\reference",
+    "\\reference\\componentos",
+    "\\screens",
+    "\\screens\\components",
+    "\\screens\\constants",
+    "\\screens\\Tabs"
   ],
-  "SelectedNode": "\\componentos\\GoalInput.js",
+  "SelectedNode": "\\screens\\Tabs\\MainMenu.js",
   "PreviewInSolutionExplorer": false
 }
