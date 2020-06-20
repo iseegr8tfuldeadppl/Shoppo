@@ -6,14 +6,9 @@ import React, {useState} from 'react';
 import { Alert } from 'react-native';
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-	DrawerContentScrollView,
-	DrawerItemList,
-	DrawerItem,
-	createDrawerNavigator
-} from '@react-navigation/drawer';
-
+import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
 import Tabs from './Tabs/TabsHolder';
+
 const Drawer = createDrawerNavigator();
 
 

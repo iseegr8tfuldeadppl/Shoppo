@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { StyleSheet, View, Text, Modal, TouchableOpacity, FlatList, Alert, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Header from '../components/Header';
+import Header from './Header';
 import Colors from '../constants/Colors';
 import CheckoutItem from './CheckoutItem';
 import CheckoutBar from './CheckoutBar';
@@ -10,6 +10,9 @@ import PaymentMethod from './PaymentMethod';
 import * as ImagePicker from 'expo-image-picker';
 import firebase from 'firebase';
 import paymentMethods from '../constants/paymentMethods';
+import moment from 'moment';
+import Orders from './Orders';
+
 
 const CheckOut = props => {
 
@@ -66,9 +69,6 @@ const CheckOut = props => {
 	};
 
 	const Buy = () => {
-
-
-
 		if(title==="Payment Method"){
 			if(selected)
 				setTitle("Confirm Order");
@@ -86,19 +86,13 @@ const CheckOut = props => {
 			if(selected.type==="image-submit"){
 				setTitle("Submit Picture");
 			} else {
+				submitOrder();
 				setTitle("Order Confirmed");
 			}
 		} else if(title==="Submit Picture"){
 
 			if(!imageUri)
-				Alert.alert(
-					'Wait!',
-					'You should select a picture first!',
-					[
-						{text: 'Ok', style: 'cancel'}
-					],
-					{ cancelable: true }
-				);
+				Alert.alert('Wait!', 'You should select a picture first!', [{text: 'Ok', style: 'cancel'}], { cancelable: true });
 			else {
 				uploadImage(imageUri);
 			}
@@ -136,7 +130,6 @@ const CheckOut = props => {
 		  	let largest = 0;
 		  	let ordersKeys = Object.keys(props.userInfo.orders);
 		  	for(var i=0; i<ordersKeys.length; i++){
-				console.log(Object.values(props.userInfo.orders)[i]);
 			  	let pictureId = Object.values(props.userInfo.orders)[i].picture;
 				pictureId = pictureId.split(".png?alt=media")[0].split(props.uid + "%2F")[1];
 			  	if(parseInt(pictureId)>largest)
@@ -151,25 +144,38 @@ const CheckOut = props => {
 	  	const snapshot = await ref.put(blob);
 
 		//console.log("typeof(snapshot.downloadURL) " + typeof(snapshot.downloadURL));
-	  	return snapshot.ref.getDownloadURL().then(function(downloadURL) {
-	    	console.log("File available at", downloadURL);
+	  	snapshot.ref.getDownloadURL().then(function(downloadURL) {
+	    	//console.log("File available at", downloadURL);
 
-			let submittable = [];
-			for(let i=0; i<props.checkoutList.length; i++){
-				submittable[props.checkoutList[i].key] = { quantity: props.checkoutList[i].quantity };
-			}
+			submitOrder(downloadURL);
+	    });
+	}
 
-			firebase.database()
-				.ref('/users/' + props.uid + "/orders")
-				.push({ products: submittable, picture: downloadURL })
+	const submitOrder = imageUrl => {
+		let submittable = [];
+		for(let i=0; i<props.checkoutList.length; i++){
+			submittable[props.checkoutList[i].key] = { quantity: props.checkoutList[i].quantity };
+		}
+
+		let ref = firebase.database().ref('/users/' + props.uid + "/orders");
+		if(imageUrl)
+			ref.push({
+					products: submittable,
+					picture: imageUrl, state: "pending",
+					latest_update: moment().format('YYYYMMDDhmmssa'),
+					result: "Your order is still being reviewed",
+					date: moment().format('YYYYMMDDhmmssa') })
 				.then(function(snapshot) {
 					console.log('Snapshot', snapshot);
 					setTitle("Order Confirmed");
-				});
-
-
-	    });
-	}
+			});
+		else
+			ref.push({ products: submittable, state: "1", date: moment().format('YYYYMMDDhmmssa') })
+				.then(function(snapshot) {
+					console.log('Snapshot', snapshot);
+					setTitle("Order Confirmed");
+			});
+	};
 
   	const galery = async () => {
 	    let result = await ImagePicker.launchImageLibraryAsync();
@@ -193,6 +199,20 @@ const CheckOut = props => {
 		else
 			return "Submit";
 	};
+
+    const getOrders = () => {
+        let cake = [];
+
+        if(props.userInfo){
+            if(props.userInfo.orders){
+                let orders = Object.values(props.userInfo.orders);
+                for(let i=0; i<orders.length; i++){
+                    cake.push({key: i.toString(), order:orders[i]});
+                }
+            }
+        }
+        return cake;
+    };
 
 	const display = () => {
 		if(title==="Payment Method"){
@@ -310,7 +330,7 @@ const CheckOut = props => {
  					<OkayButton
 						style={{ minWidth: 220 }}
  						textStyle={{ fontSize: 16 }}
- 						onClick={() => { if(props.productPreviewed) props.setProductPreviewed(); exit(); }}
+ 						onClick={() => { setTitle("My Orders")  }}
  						text={"Go to Orders List"} />
 
  					<OkayButton
@@ -328,6 +348,16 @@ const CheckOut = props => {
  			);
  		}
 	};
+
+	if(title==="My Orders"){
+		return(
+			<Modal visible={props.checkoutList!==undefined} animationType="slide">
+				<Orders
+					backToRoot={() => {setTitle("Order Confirmed");} }
+					orders={getOrders()} />
+			</Modal>
+		);
+	}
 
 	return(
 		<Modal visible={props.checkoutList!==undefined} animationType="slide">

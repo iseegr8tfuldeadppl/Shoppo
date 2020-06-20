@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import * as Google from 'expo-google-app-auth'; // change this to 'expo-google-sign-in' to turn the window login into a popup, also remove behavior: 'web' from the google code maybe?
-import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Card from './components/Card';
 
 
 const LoginScreen = props => {
@@ -127,17 +128,12 @@ const LoginScreen = props => {
 
 	return (
 		<View style={styles.container}>
-		<TouchableOpacity
+		<Card
 			style={styles.botton}
 			onPress={() => signInWithGoogleAsync()}>
-			<Icon
-				style={{alignSelf:'flex-start'}}
-				name="google"
-				size={28}
-				reverse
-				color="black" />
+			<MaterialCommunityIcons name="google" color={"black"} size={28} />
 			{content}
-		</TouchableOpacity>
+		</Card>
 		</View>
 	);
 }
@@ -153,10 +149,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   botton:{
-	shadowColor: 'black',
-	shadowOffset: { width: 0, height: 2},
-	shadowOpacity: 0.26,
-	shadowRadius: 0,
 	borderColor: 'black',
 	width: '80%',
 	paddingHorizontal: 10,
@@ -165,8 +157,6 @@ const styles = StyleSheet.create({
 	borderRadius: 30,
 	flexDirection: 'row',
 	justifyContent: 'center',
-	alignItems: 'center',
-	elevation: 4,
 	backgroundColor: 'white',
   }
 });

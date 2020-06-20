@@ -5,7 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 const CartTrashCan = props => {
 
-	
+
 	const deleteSelectedOnes = () => {
 
 		let cartCopy = props.cart.slice();
@@ -26,8 +26,8 @@ const CartTrashCan = props => {
 
 	const deleteSelectedOnesConfirmation = () =>{
 		Alert.alert(
-			'Are you sure?', 
-			'You\'re about to remove the selected products from your shopping cart.', 
+			'Are you sure?',
+			'You\'re about to remove the selected products from your shopping cart.',
 			[
 				{text: 'No', style: 'cancel'},
 				{text: 'Yes', style: 'destructive',
@@ -41,7 +41,7 @@ const CartTrashCan = props => {
 
 	for(let i=0; i<props.cart.length; i++){
 		if(props.cart[i].selected_in_cart){
-			
+
 			return (
 				<TouchableOpacity
 					onPress={deleteSelectedOnesConfirmation}>
@@ -52,7 +52,7 @@ const CartTrashCan = props => {
 			return;
 		}
 	}
-		
+
 	return (null);
 
 };

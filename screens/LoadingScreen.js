@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Image, BackHandler } from 'react-native';
 import firebase from 'firebase';
 
+
 const LoadingScreen = props =>  {
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
@@ -22,9 +23,8 @@ const LoadingScreen = props =>  {
 
 	const checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged(function(user){
-			if(user!==undefined)
+			if(user && user!==null){
 				props.setCurrentUser(user.uid);
-			if(user){
 				props.goHere(3);
 			} else {
 				props.goHere(2);

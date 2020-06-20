@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import { StyleSheet, View, Text, Modal, TextInput, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Image, Button, Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Header from '../components/Header';
+import Header from './Header';
 import Colors from '../constants/Colors';
-import CheckOut from '../components/CheckOut';
+import CheckOut from './CheckOut';
 
 
 const ProductPreviewModal = props => {
@@ -156,7 +156,7 @@ const ProductPreviewModal = props => {
 							style={styles.customHeader}>
 						<TouchableOpacity
 							onPress={() => {props.setProductPreviewed();} }>
-							<MaterialCommunityIcons name="arrow-left" color={"white"} size={32} />
+							<MaterialCommunityIcons name={"arrow-left"} color={"white"} size={32} />
 						</TouchableOpacity>
 					</Header>
 
@@ -189,7 +189,7 @@ const ProductPreviewModal = props => {
 									}
 								}}
 								style={styles.minus}>
-								<MaterialCommunityIcons name="minus" color={"white"} size={23} />
+								<MaterialCommunityIcons name={"minus"} color={"white"} size={23} />
 							</TouchableOpacity>
 							<View style={styles.centerMaster}>
 								{textInput()}
@@ -206,7 +206,7 @@ const ProductPreviewModal = props => {
 									}
 								}}
 								style={styles.plus}>
-								<MaterialCommunityIcons name="plus" color={"white"} size={23} />
+								<MaterialCommunityIcons name={"plus"} color={"white"} size={23} />
 							</TouchableOpacity>
 						</View>
 

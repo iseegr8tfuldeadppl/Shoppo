@@ -2,6 +2,7 @@ import React from 'react';
 import {View, FlatList, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import MainProductItem from './MainProductItem';
 import Colors from '../constants/Colors';
+import Card from './Card';
 
 const SideCategoryItem = props => {
 
@@ -14,16 +15,15 @@ const SideCategoryItem = props => {
     };
 
     return(
-        <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => {props.setCategoryPreviewed(props.item); } }
-                style={styles.holder}>
+        <Card
+            onPress={() => {props.setCategoryPreviewed(props.item); } }
+            style={styles.holder}>
             <Text style={styles.text}>{props.item.category}</Text>
 
             <View style={styles.countContainer}>
                 <Text style={styles.countText}>{productCount()}</Text>
             </View>
-        </TouchableOpacity>
+        </Card>
     );
 };
 
@@ -45,14 +45,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Accent,
         marginVertical: 6,
         justifyContent:'space-between',
-        alignItems:'center',
         borderRadius: 7,
-
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 2},
-        shadowOpacity: 0.26,
-        shadowRadius: 0,
-        elevation: 5,
     },
     text: {
         marginHorizontal: 10,

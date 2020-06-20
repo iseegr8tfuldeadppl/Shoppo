@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { TextInput, Button, Text, View, StyleSheet, Alert, Image, CheckBox, TouchableOpacity} from 'react-native';
+import { TextInput, Button, Text, View, StyleSheet, Alert, Image, CheckBox, TouchableOpacity } from 'react-native';
 import Colors from '../../../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../Header';
@@ -7,12 +7,12 @@ import Header from '../../Header';
 const CanClientChooseQuantity = props => {
 
 	const [selection, setSelection] = useState(true);
-	
+
 	const setChecked = () => {
 		let temp = {
 			key: props.selected.key,
 			image: props.selected.image,
-			title: props.selected.title, 
+			title: props.selected.title,
 			background: props.selected.background,
 			textColor: props.selected.textColor,
 			originaltype: props.selected.originaltype,
@@ -21,12 +21,12 @@ const CanClientChooseQuantity = props => {
 		};
 		props.setSelected(temp);
 	};
-	
+
 	const makeStatic = () => {
 		let temp = {
 			key: props.selected.key,
 			image:props.selected.image,
-			title:props.selected.title, 
+			title:props.selected.title,
 			background:props.selected.background,
 			textColor:props.selected.textColor,
 			originaltype:props.selected.originaltype,
@@ -39,17 +39,17 @@ const CanClientChooseQuantity = props => {
 
 
 	const confimClicked = () => {
-		if(selection)  
+		if(selection)
 			setChecked();
-		else 
+		else
 			makeStatic();
 	};
-	
+
 	let question = "Choose";
 	return(
 		<View style={styles.screen}>
 			<View style={{...styles.screen, ...{justifyContent:"center", alignItems:"center", }}}>
-				<Image 
+				<Image
 					style={{width:70, height:70, borderRadius:10, marginBottom:10,}}
 					source={{ uri:props.selected.image }} />
 				<Text style={{color:Colors.Accent,fontSize:23, textAlign:"center", marginBottom:50}}>{props.selected.title}</Text>
@@ -73,7 +73,7 @@ const CanClientChooseQuantity = props => {
 
 			<Header
 				style={{ paddingTop:0, paddingBottom:0, paddingHorizontal:0, backgroundColor:null, position:'absolute', justifyContent:"space-between",  }}>
-				
+
 				<TouchableOpacity
 					style={{backgroundColor:Colors.Primary, paddingEnd: 20, paddingStart:8, borderBottomRightRadius:20, paddingVertical:10 , flexDirection:"row", justifyContent:"center", alignItems:"center", }}
 					onPress={() => {props.unsetChecked(); props.setSelected();}}>

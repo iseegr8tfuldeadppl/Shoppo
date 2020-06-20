@@ -9,6 +9,7 @@ import Colors from '../constants/Colors';
 import ProfilePageItem from '../components/ProfilePageItem';
 import Call from '../components/Call';
 import Email from '../components/Email';
+import Orders from '../components/Orders';
 
 
 const Profile = props => {
@@ -26,19 +27,39 @@ const Profile = props => {
 	});
 
     const getNumbers = () => {
-        let numbers = Object.keys(props.contact.numbers);
         let cake = [];
-        for(let i=0; i<numbers.length; i++){
-            cake.push({key: i.toString(), number:numbers[i]});
+        if(props.userInfo){
+            let numbers = Object.keys(props.contact.numbers);
+            for(let i=0; i<numbers.length; i++){
+                cake.push({key: i.toString(), number:numbers[i]});
+            }
         }
         return cake;
     };
 
     const getEmail = () => {
-        let emails = Object.values(props.contact.email);
         let cake = [];
-        for(let i=0; i<emails.length; i++){
-            cake.push({key: i.toString(), email:emails[i]});
+        if(props.userInfo){
+            if(props.contact.email){
+                let emails = Object.values(props.contact.email);
+                for(let i=0; i<emails.length; i++){
+                    cake.push({key: i.toString(), email:emails[i]});
+                }
+            }
+        }
+        return cake;
+    };
+
+    const getOrders = () => {
+        let cake = [];
+
+        if(props.userInfo){
+            if(props.userInfo.orders){
+                let orders = Object.values(props.userInfo.orders);
+                for(let i=0; i<orders.length; i++){
+                    cake.push({key: i.toString(), order:orders[i]});
+                }
+            }
         }
         return cake;
     };
@@ -57,6 +78,10 @@ const Profile = props => {
 
     switch(page){
         case "Orders":
+            return(
+                <Orders
+                    backToRoot={() => {setPage("Root");} }
+                    orders={getOrders()} />);
             break;
         case "Call":
             return(
@@ -71,6 +96,20 @@ const Profile = props => {
                     emails={getEmail()} />);
             break;
     }
+
+    const first_last_name = () => {
+        if(props.userInfo)
+            return props.userInfo.last_name + " " + props.userInfo.first_name;
+        else
+            return "";
+    }
+
+    const profile_pic = () => {
+        if(props.userInfo)
+            return props.userInfo.profile_picture;
+        else
+            return;
+    };
 
   return (
     <SafeAreaView style={styles.letout}>
@@ -91,7 +130,7 @@ const Profile = props => {
                                 style={styles.name}
 				                numberOfLines={1}
 				                ellipsizeMode='tail'>
-                            {props.userInfo.last_name} {props.userInfo.first_name}</Text>
+                            {first_last_name()}</Text>
                         <Text
                                 style={styles.orderCount}
 				                numberOfLines={1}
@@ -100,7 +139,7 @@ const Profile = props => {
                     </View>
                     <Image
                         style={styles.image}
-                        source={{ uri:props.userInfo.profile_picture }} />
+                        source={{ uri:profile_pic() }} />
                 </View>
             </View>
 

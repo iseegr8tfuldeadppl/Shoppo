@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, CheckBox, TextInput} from 'react-native';
 import Colors from '../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import SelectAllBar from '../components/SelectAllBar';
+import SelectAllBar from './SelectAllBar';
 
 
 const CartItem = props => {

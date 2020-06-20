@@ -2,6 +2,7 @@ import React from 'react';
 import {View, FlatList, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import MainProductItem from './MainProductItem';
 
+
 const MainCategoryItem = props => {
 
     return(

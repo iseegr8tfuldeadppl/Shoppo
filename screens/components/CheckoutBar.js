@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import OkayButton from './OkayButton';
 
+
 const CheckoutBar = props => {
 
     return(

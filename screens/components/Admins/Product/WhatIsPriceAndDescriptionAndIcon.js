@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, Button, Text, View, StyleSheet, Alert, Image, TouchableOpacity} from 'react-native';
+import { TextInput, Button, Text, View, StyleSheet, Alert, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Colors from '../../../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../Header';
@@ -10,8 +10,8 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 	const submit = () => {
 		if(props.name.length===0 || (props.selected.originaltype==="item" && props.name5.length===0) || (props.name2.length===0 && props.selected.type!==props.selected.originaltype)  ){
 			Alert.alert(
-				'Missing Information', 
-				'Please fill the boxes.', 
+				'Missing Information',
+				'Please fill the boxes.',
 				[{text: 'Ok', style: 'cancel'}],
 				{ cancelable: true }
 			);
@@ -37,10 +37,10 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 		amountof = <View style={{flexDirection:'row',alignItems:'center', width:'95%',}}>
 						<TextInput
 							maxLength={30}
-							blurOnSubmit 
-							autoCapitalize="none" 
-							autoCorrect={false}  
-							keyboardType="number-pad" 
+							blurOnSubmit
+							autoCapitalize="none"
+							autoCorrect={false}
+							keyboardType="number-pad"
 							style={styles.input}
 							placeholder="Amount of"
 							onChangeText={props.NameUpdater2}
@@ -51,7 +51,7 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 
 	let title;
 	if(props.selected.originaltype==="item"){
-		title = 
+		title =
 				<TextInput
 					blurOnSubmit={true}
 					style={styles.linkinput}
@@ -63,7 +63,7 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 	return(
 		<View style={styles.screen}>
 			<View style={{...styles.screen, ...{justifyContent:"center", alignItems:"center", }}}>
-				<Image 
+				<Image
 					style={{width:70, height:70, borderRadius:10, }}
 					source={{ uri:props.selected.image }} />
 
@@ -74,17 +74,17 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 				<View style={{flexDirection:'row',alignItems:'center', width:'95%',}}>
 					<TextInput
 						maxLength={30}
-						blurOnSubmit 
-						autoCapitalize="none" 
-						autoCorrect={false}  
-						keyboardType="number-pad" 
+						blurOnSubmit
+						autoCapitalize="none"
+						autoCorrect={false}
+						keyboardType="number-pad"
 						style={styles.input}
 						placeholder={question}
 						onChangeText={props.NameUpdater}
 						value={props.name} />
 					<Text style={{fontSize:20, marginStart:10, color:Colors.Accent}}>Dinar</Text>
 				</View>
-			
+
 				<TextInput
 					blurOnSubmit={true}
 					style={styles.linkinput}
@@ -101,11 +101,11 @@ const WhatIsPriceAndDescriptionAndIcon = props => {
 					onChangeText={props.NameUpdater3}
 					value={props.name3} />
 			</View>
-					
+
 
 			<Header
 				style={{ paddingTop:0, paddingBottom:0, paddingHorizontal:0, backgroundColor:null, position:'absolute', justifyContent:"space-between",  }}>
-				
+
 				<TouchableOpacity
 					style={{backgroundColor:Colors.Primary, paddingEnd: 20, paddingStart:8, borderBottomRightRadius:20, paddingVertical:10 , flexDirection:"row", justifyContent:"center", alignItems:"center", }}
 					onPress={() => {props.unsetChecked(); props.setSelected();}}>

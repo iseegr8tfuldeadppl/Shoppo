@@ -1,12 +1,13 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
+import Card from './Card';
+
 
 const MainProductItem = props => {
     return(
-        <TouchableOpacity
+        <Card
             onPress={() => {props.setProductPreviewed(props.item);}}
-            activeOpacity={.7}
             style={styles.productItem}>
 
             <Image
@@ -15,7 +16,7 @@ const MainProductItem = props => {
 
             <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
             <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
-        </TouchableOpacity>
+        </Card>
     );
 };
 

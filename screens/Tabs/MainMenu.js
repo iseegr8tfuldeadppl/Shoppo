@@ -3,11 +3,11 @@
 import React, {useState} from 'react';
 import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, BackHandler } from 'react-native';
 import Colors from '../constants/Colors';
-import Header from '../components/Header';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerActions } from '@react-navigation/native';
 import Card from '../components/Card';
 import AddNewItemModal from '../components/Admins/AddNewItemModal';
+import Header from '../components/Header';
 import ProductPreviewModal from '../components/ProductPreviewModal';
 import MainCategoryItem from '../components/MainCategoryItem';
 
@@ -25,7 +25,7 @@ const MainMenu = props => {
     const addCategoryButton = () => {
       if(props.adminList.includes(props.uid)){
           return(<TouchableOpacity
-    				style={{padding:10, width:"100%", justifyContent:'center', alignItems:'center'}}
+    				style={styles.addCategory}
     				onPress={() => {setNewItemPage(true);}}>
     				<Text style={{color:"blue", fontSize:15}}>Add Category</Text>
     			</TouchableOpacity>);
@@ -84,7 +84,7 @@ const MainMenu = props => {
     			onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
     			<MaterialCommunityIcons name="menu" color={"white"} size={30} />
     		</TouchableOpacity>
-    		<Card style={styles.customCard}>
+    		<Card style={styles.searchHolder}>
     			<MaterialCommunityIcons name="magnify" color={"black"} size={20} />
     			<Text style={styles.searchText}>Search</Text>
     		</Card>
@@ -94,7 +94,7 @@ const MainMenu = props => {
     	{loading()}
 
     	<FlatList
-    		style={{paddingHorizontal: 8, paddingTop:15 }}
+    		style={styles.list}
     		data={props.categories}
     		renderItem={categoryData =>
                 <MainCategoryItem
@@ -109,15 +109,26 @@ const MainMenu = props => {
 }
 
 const styles = StyleSheet.create({
-    customCard: {
+	list: {
+		paddingHorizontal: 8,
+		paddingTop:15
+	},
+	addCategory: {
+		padding:10,
+		width:"100%",
+		justifyContent:'center',
+		alignItems:'center'
+	},
+    searchHolder: {
+		backgroundColor:"white",
         marginStart:10,
         paddingVertical: 10,
         flexDirection: 'row',
         flex:1,
-        color: 'white',
-        fontSize: 18,
+		padding: 15,
     },
     searchText: {
+		color:"black",
         textAlign:'center',
         fontSize:16,
         marginStart:10,

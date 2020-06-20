@@ -3,15 +3,15 @@
 import React, {useState} from 'react';
 import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity, FlatList, Alert, BackHandler } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Header from '../components/Header';
 import Colors from '../constants/Colors';
 import { DrawerActions } from '@react-navigation/native';
 import CheckOut from '../components/CheckOut';
+import CheckoutBar from '../components/CheckoutBar';
 import CartItem from '../components/CartItem';
 import SelectAllBar from '../components/SelectAllBar';
 import CartTrashCan from '../components/CartTrashCan';
 import OkayButton from '../components/OkayButton';
-import CheckoutBar from '../components/CheckoutBar';
+import Header from '../components/Header';
 
 
 const Cart = props => {
