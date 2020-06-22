@@ -16,7 +16,9 @@ const Profile = props => {
 
     const [page, setPage] = useState("Root");
 
-	BackHandler.addEventListener('hardwareBackPress', function() {
+    console.log(page);
+
+    BackHandler.addEventListener('hardwareBackPress', function() {
 	    if(page==="Call")
             setPage("Root");
         else if(page==="Email")

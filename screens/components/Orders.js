@@ -36,6 +36,14 @@ const Orders = props => {
             ],{ cancelable: true });
     };
 
+
+    const result = () => {
+        if(displayedOrder && displayedOrder.order)
+            return displayedOrder.order.result;
+        else
+            return "";
+    };
+
     if(props.orders.length===0)
         return(
             <View style={styles.list}>
@@ -45,7 +53,6 @@ const Orders = props => {
             </View>
         );
 
-console.log(displayedOrder);
     return(
         <SafeAreaView style={styles.letout}>
             <ArrowedHeader backToRoot={props.backToRoot} title={"Orders"}/>
@@ -53,9 +60,9 @@ console.log(displayedOrder);
             <Modal visible={displayedOrder!==undefined} animationType="slide">
 
                 <View style={styles.modal}>
-                    <ArrowedHeader style={styles.customHeader} backToRoot={props.backToRoot} title={"My Order"}/>
+                    <ArrowedHeader style={styles.customHeader} backToRoot={() => {setDisplayedOrder(); }} title={"My Order"}/>
                     <ScrollView style={styles.page}>
-                        <Text style={styles.result}>{displayedOrder.order.result}</Text>
+                        <Text style={styles.result}>{result()}</Text>
                     </ScrollView>
                     <OkayButton
                         style={{ width:"80%", marginBottom: 15, }}
@@ -65,6 +72,7 @@ console.log(displayedOrder);
                 </View>
 
             </Modal>
+
 
             <FlatList
                 style={styles.list}

@@ -62,6 +62,8 @@ const CheckOut = props => {
 	};
 
 	const exit = () => {
+		if(props.resetRequirements)
+			props.resetRequirements();
 		if(imageUri)
 			setImageUri();
 		props.setCheckoutList();
@@ -152,29 +154,30 @@ const CheckOut = props => {
 	}
 
 	const submitOrder = imageUrl => {
-		let submittable = [];
+		let submittable = {};
 		for(let i=0; i<props.checkoutList.length; i++){
-			submittable[props.checkoutList[i].key] = { quantity: props.checkoutList[i].quantity };
+			submittable[props.checkoutList[i].key] = {
+				quantity: props.checkoutList[i].quantity,
+				requirements: {}
+			}
+			for(let j=0; j<props.checkoutList[i].requirements.length; j++){
+				submittable[props.checkoutList[i].key]["requirements"][props.checkoutList[i].requirements[j].tag] = props.checkoutList[i].requirements[j].slot;
+			}
 		}
 
 		let ref = firebase.database().ref('/users/' + props.uid + "/orders");
-		if(imageUrl)
-			ref.push({
-					products: submittable,
-					picture: imageUrl, state: "pending",
-					latest_update: moment().format('YYYYMMDDhmmssa'),
-					result: "Your order is still being reviewed",
-					date: moment().format('YYYYMMDDhmmssa') })
-				.then(function(snapshot) {
-					console.log('Snapshot', snapshot);
-					setTitle("Order Confirmed");
-			});
-		else
-			ref.push({ products: submittable, state: "1", date: moment().format('YYYYMMDDhmmssa') })
-				.then(function(snapshot) {
-					console.log('Snapshot', snapshot);
-					setTitle("Order Confirmed");
-			});
+		let yes= imageUrl? imageUrl : "";
+		ref.push({
+				products: submittable,
+				picture: yes,
+				state: "pending",
+				latest_update: moment().format('YYYYMMDDhmmssa'),
+				result: "Your order is still being reviewed",
+				date: moment().format('YYYYMMDDhmmssa') })
+			.then(function(snapshot) {
+				//console.log('Snapshot', snapshot);
+				setTitle("Order Confirmed");
+		});
 	};
 
   	const galery = async () => {

@@ -56,6 +56,7 @@ const MainMenu = props => {
         return(<ProductPreviewModal
             checkoutList={props.checkoutList}
             setCheckoutList={props.setCheckoutList}
+			adminListt={props.adminList}
             uid={props.uid}
 		  	userInfo={props.userInfo}
             navigation={props.navigation}
@@ -73,9 +74,10 @@ const MainMenu = props => {
 
         <AddNewItemModal
           setData={setData}
+		  categories={props.categories}
           data={data}
           doIShowUp={NewItemPage}
-          onCancel={() => {setNewItemPage(false);}} />
+          onCancel={() => {setNewItemPage(false); setData();}} />
 
       {productPreviewModalVisibility()}
 

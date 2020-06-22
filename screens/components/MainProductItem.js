@@ -1,10 +1,22 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Card from './Card';
 
 
 const MainProductItem = props => {
+
+    const visible = () =>  {
+        if(!props.item.data.visible){
+            return(
+                <View style={{position:"absolute", justifyContent:"flex-start", width:"100%", paddingTop: 3, paddingStart: 5}}>
+                    <MaterialCommunityIcons name={"eye-off"} color={"white"} size={25} />
+                </View>
+            );
+        }
+    };
+
     return(
         <Card
             onPress={() => {props.setProductPreviewed(props.item);}}
@@ -16,6 +28,7 @@ const MainProductItem = props => {
 
             <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
             <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
+            {visible()}
         </Card>
     );
 };
@@ -23,10 +36,8 @@ const MainProductItem = props => {
 
 const styles = StyleSheet.create({
     productItem: {
-        justifyContent:'center',
         marginTop:7,
         marginHorizontal:7,
-        alignItems:'center',
         flex:0.5,
         borderRadius: 18,
 

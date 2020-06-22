@@ -46,13 +46,16 @@ const DashboardScreen = props =>  {
 						productsInCategory = Object.values(productsInCategory);
 						for(var j=0; j<KeysOfproductsInCategory.length; j++){
 
-							// this little check is to hide currently previewed product if it was deleted from firebase
-							if(productPreviewed)
-								if(!productPreviewedIsPresent)
-									if(KeysOfproductsInCategory[j]===productPreviewed.key)
-										productPreviewedIsPresent = true;
+							// this only shows people products that are visible or shows the admins the product
+							if(productsInCategory[j].data.visible || adminListTemp.includes(props.uid)){
+								// this little check is to hide currently previewed product if it was deleted from firebase
+								if(productPreviewed)
+									if(!productPreviewedIsPresent)
+										if(KeysOfproductsInCategory[j]===productPreviewed.key)
+											productPreviewedIsPresent = true;
 
-							productList.push({ key: KeysOfproductsInCategory[j], data: JSON.parse(productsInCategory[j].data) });
+								productList.push({ key: KeysOfproductsInCategory[j], data: productsInCategory[j].data });
+							}
 						}
 					}
 

@@ -4,7 +4,7 @@ import Colors from '../../../constants/Colors';
 
 const Category = props => {
 	const [name, setName] = useState('');
-  
+
 	function NameUpdater(enteredText) {
   		setName(enteredText);
 	}
@@ -12,8 +12,8 @@ const Category = props => {
 	const addCategory = () => {
 		if(name.length===0){
 			Alert.alert(
-				'Missing Information', 
-				'Please write a product name', 
+				'Missing Information',
+				'Please write a product name',
 				[{text: 'Ok', style: 'cancel'}],
 				{ cancelable: true }
 			);
@@ -21,7 +21,7 @@ const Category = props => {
 		}
 
   		props.onAdd(name, props.data);
-  	
+
 		setName('');
 		props.onCancel();
 	};

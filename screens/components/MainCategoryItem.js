@@ -5,13 +5,18 @@ import MainProductItem from './MainProductItem';
 
 const MainCategoryItem = props => {
 
+    const setProductPreviewed = item => {
+        item.category = {key: props.item.key, name: props.item.category};
+        props.setProductPreviewed(item);
+    };
+
     return(
         <View style={{flex:1, }}>
             <View style={{flexDirection:'row'}}>
                 <Text style={styles.category}>{props.item.category}</Text>
                 <TouchableOpacity
                     style={styles.addProductHolder}
-                    onPress={() => {props.setNewItemPage(true); props.setData(props.item); }}>
+                    onPress={() => {props.setNewItemPage(true); let nigger = props.item; nigger.nigger=true; props.setData(nigger); }}>
                     {props.addProductButton()}
                 </TouchableOpacity>
             </View>
@@ -22,7 +27,7 @@ const MainCategoryItem = props => {
                 data={props.item.products}
                 renderItem={singleProductData =>
                     <MainProductItem
-                        setProductPreviewed={props.setProductPreviewed}
+                        setProductPreviewed={setProductPreviewed}
                         item={singleProductData.item}/>
                 }/>
         </View>

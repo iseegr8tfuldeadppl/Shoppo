@@ -7,49 +7,39 @@ import firebase from 'firebase';
 const AddNewItemModal = props => {
 
   const onAdd = (name) => {
-	if(props.data){
-		firebase.database()
-			.ref('/categories/' + props.data.key + "/products")
-			.push({
-				data: JSON.stringify(name),
-			})
-			.then(function(snapshot) {
-
-				props.setData();
-				props.onCancel();
-				//console.log('Snapshot', snapshot);
-			});
-	} else {
-		firebase.database()
-			.ref('/categories/')
-			.push({
-				name: name,
-			})
-			.then(function(snapshot) {
-				props.setData();
-				props.onCancel();
-				//console.log('Snapshot', snapshot);
-			});
-	}
-
+	firebase.database()
+		.ref('/categories/')
+		.push({
+			name: name,
+		})
+		.then(function(snapshot) {
+			props.setData();
+			props.onCancel();
+			//console.log('Snapshot', snapshot);
+		});
   };
 
-	let menu;
-	if(props.data){
-		menu = <Product
+    const menu = () => {
+    	if(!props.data){
+            return(
+                <Category
+                    onCancel={props.onCancel}
+                    onAdd={onAdd}/>
+            );
+    	}
+		return(
+            <Product
+                categories={props.categories}
 				data={props.data}
 				onAdd={onAdd}
 				onCancel={props.onCancel}/>
-	} else {
-		menu = <Category
-				onCancel={props.onCancel}
-				onAdd={onAdd}/>
-	}
+        );
+    };
 
 	return (
 		<Modal visible={props.doIShowUp} animationType="slide">
 			<TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}} >
-				{menu}
+				{menu()}
 			</TouchableWithoutFeedback>
 		</Modal>
 	);

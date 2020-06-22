@@ -1,19 +1,47 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, Modal, TextInput, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Image, Button, Alert } from 'react-native';
+import { StyleSheet, View, Text, Modal, TextInput, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Image, Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from './Header';
 import Colors from '../constants/Colors';
 import CheckOut from './CheckOut';
+import possibleRequirements from '../constants/possibleRequirements';
+import OkayButton from './OkayButton';
+import firebase from 'firebase';
+//admin stuff
+import EditProduct from './Admins/Product/EditProduct';
 
 
 const ProductPreviewModal = props => {
 
 	const IsOriginallyCurrency = () => {
-		return props.productPreviewed.data.originaltype==="currency" || props.productPreviewed.data.originaltype==="account-charging";
+		return props.productPreviewed.data.type==="currency" || props.productPreviewed.data.type==="account-charging";
 	};
 
+	const stuff = () => {
+		let required = props.productPreviewed.data.submittable_requirements.split(",");
+		if(required.length>1)
+			required.splice(required.length-1, 1);
+		let withslots = [];
+		for(let i=0; i<required.length; i++){
+			for(let j=0; j<possibleRequirements.length; j++){
+				if(required[i]===possibleRequirements[j].tag){
+					withslots.push({slot: "", tag: required[i], title: possibleRequirements[j].title});
+					break;
+				}
+			}
+		}
+		return withslots;
+	};
+
+	const resetRequirements = () => {
+		setRequirements(stuff());
+	}
+
+	const [addToCartClicked, setAddToCartClicked] = useState(false);
+	const [buyNowClicked, setBuyNowClicked] = useState(false);
 	const [quantity, setQuantity] = useState(IsOriginallyCurrency() ? "1.00"  : "1");
-	let page;
+	const [requirements, setRequirements] = useState(stuff());
+	const [index, setIndex] = useState("nigger");
 
 	const cleanQuantity = enteredText => {
 		if(!IsOriginallyCurrency()){
@@ -48,6 +76,7 @@ const ProductPreviewModal = props => {
 						cartCopy[i].quantity = (parseInt(cartCopy[i].quantity) + parseInt(quantity)).toString();
 						cartCopy[i].original_quantity = cartCopy[i].quantity;
 					}
+					cartCopy[i].quantity.requirements = requirements;
 
 					Alert.alert(
 						'Added To Cart!',
@@ -73,6 +102,7 @@ const ProductPreviewModal = props => {
 			);
 			props.productPreviewed.quantity = quantity;
 			props.productPreviewed.original_quantity = props.productPreviewed.quantity;
+			props.productPreviewed.requirements = requirements;
 			props.addToCart(props.productPreviewed);
 		}
 	};
@@ -95,6 +125,7 @@ const ProductPreviewModal = props => {
 		} else {
 			props.productPreviewed.quantity = quantity;
 			props.productPreviewed.selected_in_cart = true;
+			props.productPreviewed.requirements = requirements;
 			props.setCheckoutList([props.productPreviewed]);
 		}
 	};
@@ -134,100 +165,322 @@ const ProductPreviewModal = props => {
 		}
 	};
 
+	const check = () => {
+		for(let i=0; i<requirements.length; i++){
+			if(requirements[i].slot==="")
+				return i;
+		}
+		if(buyNowClicked)
+			buyNow();
+		else if(addToCartClicked)
+			addToCart();
+		return "nigger";
+	};
+
+	const updateRequirements = (index, enteredText) => {
+		let requirementsTemp = requirements.slice();
+		requirementsTemp[index].slot = enteredText;
+		setRequirements(requirementsTemp);
+	};
+
+	const page = () => {
+		if(addToCartClicked || buyNowClicked){
+
+			if(!isNaN(index)){
+				return(
+					<View style={styles.letout}>
+						<Text style={styles.requirementTitle}>Please enter {requirements[index].title} for {props.productPreviewed.data.title}</Text>
+						<TextInput
+							style={styles.requirementInput}
+							blurOnSubmit
+							placeholder={requirements[index].title + " for " + props.productPreviewed.data.title}
+							onChangeText={(enteredText) => {updateRequirements(index, enteredText);}}
+							value={requirements[index].slot} />
+
+		              	<OkayButton
+		                  	style={{ marginBottom:10, marginTop: 30, width: "80%" }}
+		                  	textStyle={{ fontSize: 16 }}
+		                  	onClick={() => {setIndex(check()); }}
+		                  	text={"Next"} />
+					</View>
+				);
+			}
+		}
+		return(
+		<View style={styles.flexer}>
+			<View style={styles.flexer}>
+				<Image
+					style={styles.banner}
+					source={{
+						uri:props.productPreviewed.data.banner, }} />
+				<View style={styles.costHolder}>
+					<Text numberOfLines={3} ellipsizeMode='tail' style={styles.cost}>{props.productPreviewed.data.cost} DA</Text>
+				</View>
+
+				<View style={styles.content}>
+					<Text style={styles.title}>{props.productPreviewed.data.title}</Text>
+					<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
+				</View>
+			</View>
+
+			<View style={styles.quantityOuterHolder}>
+				<View style={styles.quantityInnerHolder}>
+					<TouchableOpacity
+						onPress={() => {
+							if(isNaN(parseFloat(quantity)))
+								setQuantity("1");
+							else if(parseFloat(quantity)>1) {
+								if(IsOriginallyCurrency())
+									setQuantity((parseFloat(quantity)-1).toFixed(2).toString());
+								else
+									setQuantity(Math.round(parseFloat(quantity)-1).toString());
+							}
+						}}
+						style={styles.minus}>
+						<MaterialCommunityIcons name={"minus"} color={"white"} size={23} />
+					</TouchableOpacity>
+					<View style={styles.centerMaster}>
+						{textInput()}
+					</View>
+					<TouchableOpacity
+						onPress={() => {
+							if(isNaN(parseFloat(quantity)))
+								setQuantity("1");
+							else {
+								if(IsOriginallyCurrency())
+									setQuantity((parseFloat(quantity)+1).toFixed(2).toString());
+								else
+									setQuantity(Math.round(parseFloat(quantity)+1).toString());
+							}
+						}}
+						style={styles.plus}>
+						<MaterialCommunityIcons name={"plus"} color={"white"} size={23} />
+					</TouchableOpacity>
+				</View>
+
+
+	              <OkayButton
+	                  style={{ marginTop:10, width: "80%" }}
+	                  textStyle={{ fontSize: 16 }}
+	                  onClick={() => {setBuyNowClicked(true);setIndex(check()); }}
+	                  text={"Buy Now"} />
+
+	              <OkayButton
+	                  style={{ marginVertical:10, width: "80%" }}
+	                  textStyle={{ fontSize: 16 }}
+	                  onClick={() => {setAddToCartClicked(true);setIndex(check()); }}
+	                  text={"Add To Cart"} />
+
+			</View>
+		</View>
+		);
+	};
+
+	// admins tuff
+	const editmodo = () => {
+		if(editMode){
+			return(
+				<EditProduct
+					setProductPreviewed={props.setProductPreviewed}
+					productPreviewed={props.productPreviewed}
+					setEditMode={setEditMode}
+					productPreviewed={props.productPreviewed}/>
+			);
+		} else {
+			return(
+				<>
+				<CheckOut
+					resetRequirements={resetRequirements}
+					sender={sender()}
+					uid={props.uid}
+					userInfo={props.userInfo}
+					productPreviewed={props.productPreviewed}
+					setProductPreviewed={props.setProductPreviewed}
+					cart={props.cart}
+					updateCart={props.updateCart}
+					checkoutList={props.checkoutList}
+					setCheckoutList={props.setCheckoutList}/>
+
+				<TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}} >
+					<View style={styles.wholedamnting}>
+
+						<Header
+							style={styles.customHeader}>
+							<TouchableOpacity
+								onPress={() => {reset(); props.setProductPreviewed();} }>
+								<MaterialCommunityIcons name={"arrow-left"} color={"white"} size={32} />
+							</TouchableOpacity>
+							{adminControls()}
+						</Header>
+
+						<View style={{width:"100%", flex:1}}>
+							{page()}
+						</View>
+
+					</View>
+				</TouchableWithoutFeedback>
+				</>
+			);
+		}
+	};
+
+	const reset = () => {
+		if(requirements)
+			setRequirements();
+		if(!isNaN(index))
+			setIndex("nigger");
+		if(buyNowClicked)
+			setBuyNowClicked(false);
+		else if(addToCartClicked)
+			setAddToCartClicked(false)
+	}
+
+	//admin stuff
+	const deleteConfirmation = () => {
+		Alert.alert(
+			'Delete this product',
+			'Are you sure you want to delete this product from the store?',
+			[
+				{text: "No Don't Delete it", style: 'cancel'},
+				{text: 'Yes Delete It', style: 'destructive',
+					onPress: () => {
+						props.setProductPreviewed();
+						let key = props.productPreviewed.key;
+						let category_key = props.productPreviewed.category.key;
+						let ref = firebase.database().ref("/categories/" + category_key + "/products")
+						.child(key).remove().then(function(snapshot) {
+							Alert.alert('Success', 'Product was deleted', [{text: "Ok", style: 'cancel'}], { cancelable: true });
+						});
+					}
+				}],
+			{ cancelable: true }
+		);
+	};
+	const toggleVisibilityConfirmation = () => {
+		if(props.productPreviewed.data.visible){
+			Alert.alert(
+				'Hide this product',
+				'Are you sure you want to hide this product in the store?',
+				[
+					{text: "No", style: 'cancel'},
+					{text: 'Yes', style: 'destructive',
+						onPress: () => {
+							let key = props.productPreviewed.key;
+							let category_key = props.productPreviewed.category.key;
+							let ref = firebase.database().ref("/categories/" + category_key + "/products")
+							.child(key).child("data").child("visible").set(false).then(function(snapshot) {
+								Alert.alert('Success', 'Product was hidden', [{text: "Ok", style: 'cancel'}], { cancelable: true });
+							});
+						}
+					}],
+				{ cancelable: true }
+			);
+		} else {
+			Alert.alert(
+				'Show this product',
+				'Are you sure you want to show this product in the store?',
+				[
+					{text: "No", style: 'cancel'},
+					{text: 'Yes', style: 'destructive',
+						onPress: () => {
+							let key = props.productPreviewed.key;
+							let category_key = props.productPreviewed.category.key;
+							let ref = firebase.database().ref("/categories/" + category_key + "/products")
+							.child(key).child("data").child("visible").set(true).then(function(snapshot) {
+								Alert.alert('Success', 'Product is now visible', [{text: "Ok", style: 'cancel'}], { cancelable: true });
+							});
+						}
+					}],
+				{ cancelable: true }
+			);
+		}
+	};
+
+	const [editMode, setEditMode] = useState(false);
+	const editConfirmation = () => {
+		setEditMode(true);
+	};
+
+	const visibility = () => {
+		if(props.productPreviewed.data.visible)
+			return "eye";
+		else
+			return "eye-off";
+	};
+
+	const adminControls = () => {
+      	if(props.adminListt.includes(props.uid) && !editMode){
+	  		// continue here continue here continue here continue here continue here
+			return(
+				<View style={styles.horizontal}>
+					<TouchableOpacity
+						style={styles.adminbotton}
+						onPress={editConfirmation}>
+						<MaterialCommunityIcons name={"square-edit-outline"} color={"white"} size={32} />
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.adminbotton}
+						onPress={toggleVisibilityConfirmation}>
+						<MaterialCommunityIcons name={visibility()} color={"white"} size={32} />
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.adminbotton}
+						onPress={deleteConfirmation}>
+						<MaterialCommunityIcons name={"trash-can-outline"} color={"red"} size={32} />
+					</TouchableOpacity>
+				</View>
+			);
+
+	  	} else {
+		  	return;
+	  	}
+	};
+
 	return(
 
 		<Modal visible={props.productPreviewed!==undefined} animationType="slide"
 			onRequestClose={() => { /* remove the effect of onbackpress closing this modal due to me not being able to contrl it myself */ }}>
 
-			<CheckOut
-				sender={sender()}
-				uid={props.uid}
-				userInfo={props.userInfo}
-				setProductPreviewed={props.setProductPreviewed}
-				cart={props.cart}
-				updateCart={props.updateCart}
-				checkoutList={props.checkoutList}
-				setCheckoutList={props.setCheckoutList}/>
-
-			<TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}} >
-				<View style={styles.wholedamnting}>
-
-					<Header
-							style={styles.customHeader}>
-						<TouchableOpacity
-							onPress={() => {props.setProductPreviewed();} }>
-							<MaterialCommunityIcons name={"arrow-left"} color={"white"} size={32} />
-						</TouchableOpacity>
-					</Header>
-
-					<View style={{width:"100%", flex:1}}>
-					<Image
-						style={styles.banner}
-						source={{
-							uri:props.productPreviewed.data.banner, }} />
-						<View style={styles.costHolder}>
-							<Text numberOfLines={3} ellipsizeMode='tail' style={styles.cost}>{props.productPreviewed.data.cost} DA</Text>
-						</View>
-
-						<View style={styles.content}>
-							<Text style={styles.title}>{props.productPreviewed.data.title}</Text>
-							<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
-						</View>
-					</View>
-
-					<View style={styles.quantityOuterHolder}>
-						<View style={styles.quantityInnerHolder}>
-							<TouchableOpacity
-								onPress={() => {
-									if(isNaN(parseFloat(quantity)))
-										setQuantity("1");
-									else if(parseFloat(quantity)>1) {
-										if(IsOriginallyCurrency())
-											setQuantity((parseFloat(quantity)-1).toFixed(2).toString());
-										else
-											setQuantity(Math.round(parseFloat(quantity)-1).toString());
-									}
-								}}
-								style={styles.minus}>
-								<MaterialCommunityIcons name={"minus"} color={"white"} size={23} />
-							</TouchableOpacity>
-							<View style={styles.centerMaster}>
-								{textInput()}
-							</View>
-							<TouchableOpacity
-								onPress={() => {
-									if(isNaN(parseFloat(quantity)))
-										setQuantity("1");
-									else {
-										if(IsOriginallyCurrency())
-											setQuantity((parseFloat(quantity)+1).toFixed(2).toString());
-										else
-											setQuantity(Math.round(parseFloat(quantity)+1).toString());
-									}
-								}}
-								style={styles.plus}>
-								<MaterialCommunityIcons name={"plus"} color={"white"} size={23} />
-							</TouchableOpacity>
-						</View>
-
-
-						<View style={styles.button}>
-							<Button title="Buy Now" color={Colors.Accent} onPress={buyNow} />
-						</View>
-
-						<View style={styles.button}>
-							<Button title="Add To Cart" color={Colors.Accent} onPress={addToCart} />
-						</View>
-					</View>
-
-				</View>
-			</TouchableWithoutFeedback>
+			{editmodo()}
 
 		</Modal>
 	);
 };
 
 const styles = StyleSheet.create({
+	horizontal: {
+		flexDirection:"row"
+	},
+	adminbotton: {
+		paddingStart: 15,
+	},
+	requirementTitle: {
+		fontSize: 20,
+		marginHorizontal: 15,
+		textAlign:"center",
+		marginBottom:30,
+	},
+	requirementInput : {
+		borderColor:Colors.Primary,
+		borderRadius: 10,
+		width: "80%",
+		paddingVertical: 3,
+		paddingHorizontal: 20,
+		paddingVertical: 10,
+		borderWidth: 2,
+		fontSize:17,
+		textAlign:'center',
+	},
+	letout: {
+		width: "100%",
+		flex: 1,
+		justifyContent:"center",
+		alignItems:"center",
+	},
+	flexer: {
+		width:"100%",
+		flex:1
+	},
 	wholedamnting: {
 		flex:1,
 		alignItems:'center',
@@ -302,11 +555,8 @@ const styles = StyleSheet.create({
 	},
 	customHeader: {
 		paddingTop:18,
+		justifyContent:"space-between",
 		paddingBottom:12
-	},
-	button:{
-		width:"80%",
-		marginBottom: 15,
 	},
 	quantityInput : {
 		fontSize:16,

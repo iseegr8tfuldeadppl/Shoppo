@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Alert, Text, View, Button, ScrollView, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
-import AccordionView from './AccordionView';
 import Colors from '../../../constants/Colors';
 import DoubleArrowedHeader from './DoubleArrowedHeader';
 import CostPage from './CostPage';
@@ -17,58 +16,26 @@ import SubmittedPage from './SubmittedPage';
 
 
 const pages = [
-	"Root", "Title", "Description", "Cost", "StaticOrDynamic", "Quantity", "Stock", "Requirements", "Picture", "Preview", "Submitting Post...", "Submitted"
+	"Title", "Description", "Cost", "StaticOrDynamic", "Quantity", "Stock", "Requirements", "Picture", "Preview", "Submitting Post...", "Submitted"
 ]
 
-const Product = props => {
+const EditProduct = props => {
 
-	const [stock, setStock] = useState("");
-	const [page, setPage] = useState("Root");
-	const [selected, setSelected] = useState();
-	const [cost, setCost] = useState("");
+	const [stock, setStock] = useState(props.productPreviewed.data.stock);
+	const [page, setPage] = useState("Title");
+	const [cost, setCost] = useState(props.productPreviewed.data.cost);
 	const [quantity, setQuantity] = useState("1");
-	const [title, setTitle] = useState("");
+	const [type, setType] = useState(props.productPreviewed.data.type);
+	const [title, setTitle] = useState(props.productPreviewed.data.title);
 	const [imageUri, setImageUri] = useState();
-	const [description, setDescription] = useState("");
+	const [description, setDescription] = useState(props.productPreviewed.data.description);
     const [requirements, setRequirements] = useState();
-	const [imageUrl, setImageUrl] = useState();
-	const [preselectedBanner, setPreselectedBanner] = useState(false);
+	const [imageUrl, setImageUrl] = useState(props.productPreviewed.data.banner);
+	const [preselectedBanner, setPreselectedBanner] = useState(props.productPreviewed.data.banner.length>0? true:false);
 
-	//props.onAdd({title:selected.title, cost:name, type:"currency"});
-
-	const unsetChecked = () => {
-		let temp = {
-			key: selected.key,
-			image:selected.image,
-			title:selected.title,
-			background:selected.background,
-			textColor:selected.textColor,
-			originaltype:selected.originaltype,
-			type:selected.originaltype,
-			requirements:selected.original_requirements,
-			original_requirements:selected.original_requirements,
-			checked:false,
-		};
-		setSelected(temp);
-	};
-	const cleanRequirements = () => {
-		let temp = {
-			key: selected.key,
-			image:selected.image,
-			title:selected.title,
-			background:selected.background,
-			textColor:selected.textColor,
-			originaltype:selected.originaltype,
-			type:selected.originaltype,
-			requirements:selected.original_requirements,
-			original_requirements:selected.original_requirements,
-			checked:selected.checked,
-		};
-		setSelected(temp);
-	};
 
 	const IsCurrency = () => {
-		return selected.type==="currency" || selected.type==="account-charging";
+		return props.productPreviewed.data.original_type==="currency" || props.productPreviewed.data.original_type==="account-charging";
 	};
 
 	const uploadImage = async(uri) => {
@@ -105,6 +72,7 @@ const Product = props => {
 	    });
 	}
 
+	console.log('/users/categories/' + props.productPreviewed.category.key + '/products/' + props.productPreviewed.key);
 	const submitProduct = downloadURL => {
 
 		let submittable_requirements = "";
@@ -118,8 +86,8 @@ const Product = props => {
 		if(submittable_requirements.length>0)
 			submittable_requirements = submittable_requirements.substring(0, submittable_requirements.length-1);
 
-		let ref = firebase.database().ref('/categories/' + props.data.key + '/products');
-		ref.push({
+		let ref = firebase.database().ref('/categories/' + props.productPreviewed.category.key + '/products/' + props.productPreviewed.key);
+		ref.set({
 			data: {
 				visible: true,
 				banner: downloadURL,
@@ -129,9 +97,9 @@ const Product = props => {
 				submittable_requirements: submittable_requirements,
 				quantity: quantity,
 				cost: cost,
-				background: selected.background,
-				type: selected.type,
-				original_type: selected.originaltype
+				background: props.productPreviewed.data.background,
+				type: type,
+				original_type: props.productPreviewed.data.original_type
 			},
 		})
 		.then(function(snapshot) {
@@ -142,9 +110,6 @@ const Product = props => {
 
 	const next = () => {
 		switch(page){
-			case "Root":
-				Alert.alert('Wait!', 'You should select a product first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
-				break;
 			case "Title":
 				if(title!==""){
 					setPage("Description");
@@ -197,8 +162,7 @@ const Product = props => {
 				}
 				break;
 			case "Submitted":
-				reset();
-				props.onCancel();
+				props.setProductPreviewed();
 				break;
 		}
 	};
@@ -223,15 +187,8 @@ const Product = props => {
 
 	const back = () => {
 		switch(page){
-			case "Root":
-				reset();
-				props.onCancel();
-				break;
 			case "Title":
-				unsetChecked();
-				cleanRequirements();
-				setSelected();
-				setPage("Root");
+				props.setEditMode(false);
 				break;
 			case "Description":
 				setPage("Title");
@@ -271,139 +228,120 @@ const Product = props => {
 	};
 
 	const hasRelevantBanner = () => {
-		return selected.image!==""
+		return props.productPreviewed.banner!==""
 	}
 
 	const Lepage = () => {
-		if(selected){
-			switch(page){
-				case "Root":
-					if(IsCurrency())
-						setTitle(selected.title);
-					setPage("Title");
-					break;
-				case "Title":
+		switch(page){
+			case "Title":
+				return(
+					<TitlePage
+						hint={"Enter a title"}
+						title={title}
+						setTitle={setTitle}/>
+				);
+				break;
+			case "Description":
+				return(
+					<DescriptionPage
+						hint={"Enter a description!"}
+						setDescription={setDescription}
+						description={description} />
+				);
+				break;
+			case "StaticOrDynamic":
+				return(
+					<StaticOrDynamicPage
+						type={type}
+						productPreviewed={props.productPreviewed}
+						original_type={props.productPreviewed.data.original_type}
+						setType={setType} />
+				);
+				break;
+			case "Quantity":
+				return(
+					<QuantityPage
+						hint={"Quantity"}
+						setQuantity={setQuantity}
+						quantity={quantity}/>
+				);
+				break;
+			case "Cost":
+				if(IsCurrency()){
 					return(
-						<TitlePage
-							hint={"Enter a title"}
-							title={title}
-							setTitle={setTitle}/>
-					);
-					break;
-				case "Description":
-					return(
-						<DescriptionPage
-							hint={"Enter a description!"}
-							setDescription={setDescription}
-							description={description} />
-					);
-					break;
-				case "StaticOrDynamic":
-					return(
-						<StaticOrDynamicPage
-							setSelected={setSelected}
-							selected={selected} />
-					);
-					break;
-				case "Quantity":
-					return(
-						<QuantityPage
-							hint={"Quantity"}
-							setQuantity={setQuantity}
-							quantity={quantity}/>
-					);
-					break;
-				case "Cost":
-					if(IsCurrency()){
-						return(
-							<CostPage
-								hint={"Cost of 1 " + selected.title}
-								setCost={setCost}
-								cost={cost} />
-						);
-					} else {
-						return(
-							<CostPage
-								hint={"Cost of your product"}
-								setCost={setCost}
-								cost={cost} />
-						);
-					}
-					break;
-				case "Stock":
-					return(
-						<StockPage
-							type={selected.type}
-							hint={"How much stock do you have"}
-							setStock={setStock}
-							stock={stock} />
-					);
-					break;
-				case "Requirements":
-					return(
-						<RequirementsPage
-							selected={selected}
-							setRequirements={setRequirements}
-							requirements={requirements}/>
-					);
-					break;
-				case "Picture":
-					// use the pre-defined banner only if it's a currency since currencies have relevant banner
-					if(!imageUrl){
-						if(hasRelevantBanner()){
-							setImageUrl(selected.image);
-							setPreselectedBanner(true);
-						} else
-							setImageUrl("");
-					}
-
-					return(
-						<ImageSubmission
-							preselectedBanner={preselectedBanner}
-							preview={() => {setPage("Preview");}}
-							hint={"Paste a link"}
-							setImageUrl={setImageUrl}
-							imageUrl={imageUrl}
-							setImageUri={setImageUri}
-							imageUri={imageUri}/>
-					);
-					break;
-				case "Preview":
-					return(
-						<Preview
-							imageUrl={imageUrl}
-							imageUri={imageUri}
-							requirements={requirements}
-							title={title}
-							description={description}
+						<CostPage
+							hint={"Cost of 1 " + props.productPreviewed.data.title}
+							setCost={setCost}
 							cost={cost} />
 					);
-					break;
-				case "Submitting Post...":
+				} else {
 					return(
-						<View style={styles.regularPage}>
-							<Text style={{ fontSize:17, marginBottom:20 }}>Do not exit until submission finishes!</Text>
-							<ActivityIndicator size={50}/>
-						</View>
+						<CostPage
+							hint={"Cost of your product"}
+							setCost={setCost}
+							cost={cost} />
 					);
-					break;
-				case "Submitted":
-					return(
-						<SubmittedPage
-							reset={reset}
-							setSelected={setSelected}
-							onCancel={props.onCancel}
-							/>
-					);
-					break;
-			}
-		} else {
-			return(
-				<ScrollView>
-					<Text style={styles.subTitle}>First, Select A Product Below!</Text>
-					<AccordionView checkThisOut={(itsinfo) => {setSelected(itsinfo);}} />
-				</ScrollView>
-			);
+				}
+				break;
+			case "Stock":
+				return(
+					<StockPage
+						type={type}
+						hint={"How much stock do you have"}
+						setStock={setStock}
+						stock={stock} />
+				);
+				break;
+			case "Requirements":
+				return(
+					<RequirementsPage
+						submittable_requirements={props.productPreviewed.data.submittable_requirements}
+						setRequirements={setRequirements}
+						requirements={requirements}/>
+				);
+				break;
+			case "Picture":
+				// use the pre-defined banner only if it's a currency since currencies have relevant banner
+
+				return(
+					<ImageSubmission
+						preselectedBanner={preselectedBanner}
+						setPreselectedBanner={setPreselectedBanner}
+						preview={() => {setPage("Preview");}}
+						hint={"Paste a link"}
+						setImageUrl={setImageUrl}
+						imageUrl={imageUrl}
+						setImageUri={setImageUri}
+						imageUri={imageUri}/>
+				);
+				break;
+			case "Preview":
+				return(
+					<Preview
+						imageUrl={imageUrl}
+						imageUri={imageUri}
+						requirements={requirements}
+						title={title}
+						description={description}
+						cost={cost} />
+				);
+				break;
+			case "Submitting Post...":
+				return(
+					<View style={styles.regularPage}>
+						<Text style={{ fontSize:17, marginBottom:20 }}>Do not exit until submission finishes!</Text>
+						<ActivityIndicator size={50}/>
+					</View>
+				);
+				break;
+			case "Submitted":
+				return(
+					<SubmittedPage
+						productPreviewed={props.productPreviewed}
+						setProductPreviewed={props.setProductPreviewed}
+						/>
+				);
+				break;
 		}
 	};
 
@@ -464,4 +402,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Product;
+export default EditProduct;
