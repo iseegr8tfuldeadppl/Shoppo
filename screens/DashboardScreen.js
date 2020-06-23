@@ -23,6 +23,7 @@ const DashboardScreen = props =>  {
 	const [contact, setContact] = useState();
 
 	// admin stuff
+	const [allUsers, setAllUsers] = useState();
 	const [adminList, setAdminList] = useState([]);
 
 	const pokeFirebase = () => {
@@ -54,13 +55,15 @@ const DashboardScreen = props =>  {
 										if(KeysOfproductsInCategory[j]===productPreviewed.key)
 											productPreviewedIsPresent = true;
 
-								productList.push({ key: KeysOfproductsInCategory[j], data: productsInCategory[j].data });
+								productList.push({ showmore: false, key: KeysOfproductsInCategory[j], data: productsInCategory[j].data });
 							}
 						}
 					}
+					if(productList.length>0)
+						productList.push({ showmore: true, key: "0", data: {visible: true} });
 
 					let nameOfCategory = Object.values(cateogoriesSnapshot)[i].name;
-					if(productList.length>0 || adminListTemp.includes(props.uid))
+					if((productList.length>0 && !productList[0].showmore) || adminListTemp.includes(props.uid))
 						categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, products: productList });
 				}
 
@@ -84,6 +87,7 @@ const DashboardScreen = props =>  {
 
 					// admin stuff
 					setAdminList(adminListTemp);
+
 
 					if(!finishedLoadingFromFirebase)
 						setFinishedLoadingFromFirebase(true);
@@ -117,6 +121,20 @@ const DashboardScreen = props =>  {
 					if(categoriesList.length>0)
 						setCategories(categoriesList);
 
+
+					// admin stuff
+					if(adminListTemp.includes(props.uid))
+						firebase.database().ref('/users').on('value', allUsersSnapshot => {
+							let allUsersData = allUsersSnapshot.val() ? allUsersSnapshot.val() : {};
+							let yes = {...allUsersData};
+							let bigman = [];
+							let index = 0;
+							for(var i in yes){
+	    						bigman.push({key: index.toString(), stuff: yes[i]});
+								index += 1;
+							}
+							setAllUsers(bigman);
+						});
 				});
 
 			});
@@ -168,6 +186,7 @@ const DashboardScreen = props =>  {
 
 		<Drawer.Screen name="Main Page">{propss =>
 			<Tabs.MainMenuPage {...props}
+				adminList={adminList}
 				contact={contact}
 				setCheckoutList={setCheckoutList}
 				checkoutList={checkoutList}
@@ -180,36 +199,46 @@ const DashboardScreen = props =>  {
 				categories={categories}
 				addToCart={addToCart}
 				adminList={adminList}
+				allUsers={allUsers}
 				finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
 		</Drawer.Screen>
 
 		<Drawer.Screen name="Categories" >{propss =>
 			<Tabs.CategoriesPage {...props}
+				categories={categories}
+				adminList={adminList}
 				contact={contact}
 				setCheckoutList={setCheckoutList}
 				checkoutList={checkoutList}
 				userInfo={userInfo}
 				uid={props.uid}
 				cart={cart}
+				allUsers={allUsers}
 				updateCart={updateCart} />}
 		</Drawer.Screen>
 
 		<Drawer.Screen name="Cart" >{propss =>
 			<Tabs.CartPage {...props}
+				categories={categories}
+				adminList={adminList}
 				contact={contact}
 				setCheckoutList={setCheckoutList}
 				checkoutList={checkoutList}
 				userInfo={userInfo}
 				uid={props.uid}
+				allUsers={allUsers}
 				cart={cart}
 				updateCart={updateCart} />}
 		</Drawer.Screen>
 
 		<Drawer.Screen name="Profile" >{propss =>
 			<Tabs.ProfilePage {...props}
+				categories={categories}
+				adminList={adminList}
 				contact={contact}
 				setCheckoutList={setCheckoutList}
 				checkoutList={checkoutList}
+				allUsers={allUsers}
 				uid={props.uid}
 				userInfo={userInfo}
 				cart={cart}

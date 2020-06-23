@@ -53,7 +53,7 @@ const Categories = props => {
                     onPress={() => {setCategoryPreviewed();} }>
                     <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
                 </TouchableOpacity>
-                <View style={{ justifyContent:"center", alignItems:"flex-start", flex: 1 }}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
+                <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
             </Header>
             <CategoryPreview
                 item={categoryPreviewed}

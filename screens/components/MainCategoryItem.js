@@ -10,8 +10,21 @@ const MainCategoryItem = props => {
         props.setProductPreviewed(item);
     };
 
+    const setCategoryPreviewed = () => {
+        props.setCategoryPreviewed(props.item);
+    };
+
+    // this function to limit products to a maximum of 5 or else specified
+    const products = () => {
+        const max = 5;
+        if(props.item.products.length<=max+1) return props.item.products;
+        else {
+            return [...props.item.products.subarray(0, max-1), ...props.item.products[max]];
+        }
+    };
+
     return(
-        <View style={{flex:1, }}>
+        <View style={{...{ flex:1 }, ...props.style}}>
             <View style={{flexDirection:'row'}}>
                 <Text style={styles.category}>{props.item.category}</Text>
                 <TouchableOpacity
@@ -24,9 +37,10 @@ const MainCategoryItem = props => {
             <FlatList
                 numColumns={2}
                 style={styles.list}
-                data={props.item.products}
+                data={products()}
                 renderItem={singleProductData =>
                     <MainProductItem
+                        setCategoryPreviewed={setCategoryPreviewed}
                         setProductPreviewed={setProductPreviewed}
                         item={singleProductData.item}/>
                 }/>

@@ -165,12 +165,16 @@ const ProductPreviewModal = props => {
 		}
 	};
 
-	const check = () => {
+	const check = (buyNoww, addToCartt) => {
 		for(let i=0; i<requirements.length; i++){
 			if(requirements[i].slot==="")
 				return i;
 		}
-		if(buyNowClicked)
+		if(buyNoww)
+			buyNow();
+		else if(addToCartt)
+			addToCart();
+		else if(buyNowClicked)
 			buyNow();
 		else if(addToCartClicked)
 			addToCart();
@@ -197,10 +201,10 @@ const ProductPreviewModal = props => {
 							onChangeText={(enteredText) => {updateRequirements(index, enteredText);}}
 							value={requirements[index].slot} />
 
-		              	<OkayButton
+		              	<OkayButtons
 		                  	style={{ marginBottom:10, marginTop: 30, width: "80%" }}
 		                  	textStyle={{ fontSize: 16 }}
-		                  	onClick={() => {setIndex(check()); }}
+		                  	onClick={() => {setIndex(check(false, false)); }}
 		                  	text={"Next"} />
 					</View>
 				);
@@ -237,7 +241,7 @@ const ProductPreviewModal = props => {
 							}
 						}}
 						style={styles.minus}>
-						<MaterialCommunityIcons name={"minus"} color={"white"} size={23} />
+						<MaterialCommunityIcons name={"minus"} color={"white"} size={20} />
 					</TouchableOpacity>
 					<View style={styles.centerMaster}>
 						{textInput()}
@@ -254,21 +258,21 @@ const ProductPreviewModal = props => {
 							}
 						}}
 						style={styles.plus}>
-						<MaterialCommunityIcons name={"plus"} color={"white"} size={23} />
+						<MaterialCommunityIcons name={"plus"} color={"white"} size={20} />
 					</TouchableOpacity>
 				</View>
 
 
 	              <OkayButton
-	                  style={{ marginTop:10, width: "80%" }}
-	                  textStyle={{ fontSize: 16 }}
-	                  onClick={() => {setBuyNowClicked(true);setIndex(check()); }}
+	                  style={{ marginTop:10, width: "70%", paddingVertical: 8, }}
+	                  textStyle={{ fontSize: 14 }}
+	                  onClick={() => {setBuyNowClicked(true);setIndex(check(true, false)); }}
 	                  text={"Buy Now"} />
 
 	              <OkayButton
-	                  style={{ marginVertical:10, width: "80%" }}
-	                  textStyle={{ fontSize: 16 }}
-	                  onClick={() => {setAddToCartClicked(true);setIndex(check()); }}
+	                  style={{ marginTop:10, marginBottom: 15, width: "70%", paddingVertical: 8, }}
+	                  textStyle={{ fontSize: 14 }}
+	                  onClick={() => {setAddToCartClicked(true);setIndex(check(false, true)); }}
 	                  text={"Add To Cart"} />
 
 			</View>
@@ -437,13 +441,7 @@ const ProductPreviewModal = props => {
 	};
 
 	return(
-
-		<Modal visible={props.productPreviewed!==undefined} animationType="slide"
-			onRequestClose={() => { /* remove the effect of onbackpress closing this modal due to me not being able to contrl it myself */ }}>
-
-			{editmodo()}
-
-		</Modal>
+		editmodo()
 	);
 };
 
@@ -515,7 +513,7 @@ const styles = StyleSheet.create({
 	},
 	quantityOuterHolder: {
 		paddingTop: 10,
-		backgroundColor:"white",
+		backgroundColor:Colors.Dank,
 		width:"100%",
 		justifyContent:"center",
 		alignItems:"center",
@@ -524,11 +522,10 @@ const styles = StyleSheet.create({
 		flexDirection:'row',
 		alignItems:'center',
 		justifyContent:'center',
-		marginBottom:11,
 	},
 	minus: {
-		width:35,
-		height:35,
+		width:30,
+		height:30,
 		borderRadius:50,
 		backgroundColor:Colors.Primary,
 		alignItems:'center',
@@ -539,8 +536,8 @@ const styles = StyleSheet.create({
 		justifyContent:'center',
 	},
 	plus: {
-		width:35,
-		height:35,
+		width:30,
+		height:30,
 		borderRadius:50,
 		backgroundColor:Colors.Primary,
 		alignItems:'center',
@@ -554,14 +551,15 @@ const styles = StyleSheet.create({
 		marginTop: -7
 	},
 	customHeader: {
-		paddingTop:18,
 		justifyContent:"space-between",
-		paddingBottom:12
+		height: 80,
+		paddingBottom: 2,
+		alignItems:"center",
 	},
 	quantityInput : {
 		fontSize:16,
 		textAlign:'center',
-		marginHorizontal: 10,
+		marginHorizontal: 8,
 	},
 	quantityInputCurrency : {
 		borderColor:Colors.Primary,
@@ -573,7 +571,7 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		fontSize:18,
 		textAlign:'center',
-		marginHorizontal: 10,
+		marginHorizontal: 8,
 	},
 });
 

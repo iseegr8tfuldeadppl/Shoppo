@@ -10,13 +10,22 @@ import AddNewItemModal from '../components/Admins/AddNewItemModal';
 import Header from '../components/Header';
 import ProductPreviewModal from '../components/ProductPreviewModal';
 import MainCategoryItem from '../components/MainCategoryItem';
+import CategoryPreview from '../components/CategoryPreview';
 
 
 const MainMenu = props => {
 
+  const [categoryPreviewed, setCategoryPreviewed] = useState();
+
 	BackHandler.addEventListener('hardwareBackPress', function() {
+		if(props.productPreviewed)
+			props.setProductPreviewed();
+		else if(categoryPreviewed){
+			setCategoryPreviewed();
+		}
 	    return true;
 	});
+
 
   // Admin Stuff
   const [data, setData] = useState();
@@ -50,70 +59,106 @@ const MainMenu = props => {
     }
   };
 
-  // this function is needed cz the modal's code only needs to be run if it's visible and in this case it is being run on launch of mainmenu
-  const productPreviewModalVisibility = () => {
-    if(props.productPreviewed){
-        return(<ProductPreviewModal
-            checkoutList={props.checkoutList}
-            setCheckoutList={props.setCheckoutList}
-			adminListt={props.adminList}
-            uid={props.uid}
-		  	userInfo={props.userInfo}
-            navigation={props.navigation}
-            buyNow={props.buyNow}
-            addToCart={props.addToCart}
-            cart={props.cart}
-            updateCart={props.updateCart}
-            setProductPreviewed={props.setProductPreviewed}
-            productPreviewed={props.productPreviewed}/>);
-    } else return(null);
+  const categoryPreviewedTitle = () =>{
+      if(categoryPreviewed)
+          return categoryPreviewed.category;
+      else
+          return "";
+  };
+
+  const page = () => {
+	  // category preview
+	  if(props.productPreviewed){
+		return(
+		  	<SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
+			  	<ProductPreviewModal
+  	            	checkoutList={props.checkoutList}
+  	            	setCheckoutList={props.setCheckoutList}
+  					adminListt={props.adminList}
+  	            	uid={props.uid}
+  			  		userInfo={props.userInfo}
+  	            	navigation={props.navigation}
+  	            	buyNow={props.buyNow}
+  	            	addToCart={props.addToCart}
+  	            	cart={props.cart}
+  	            	updateCart={props.updateCart}
+  	            	setProductPreviewed={props.setProductPreviewed}
+  	            	productPreviewed={props.productPreviewed}/>
+			</SafeAreaView>
+		);
+	  } else if(categoryPreviewed){
+		  return(
+			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
+	              <Header style={styles.header}>
+	                  <TouchableOpacity
+	                      onPress={() => {setCategoryPreviewed();} }>
+	                      <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
+	                  </TouchableOpacity>
+	                  <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
+	              </Header>
+	              <CategoryPreview
+				  	setCategoryPreviewed={setCategoryPreviewed}
+	                  item={categoryPreviewed}
+	                  setProductPreviewed={props.setProductPreviewed}/>
+			  </SafeAreaView>
+		  );
+	  } else {
+
+		  // main page
+		  return(
+			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
+
+		          <AddNewItemModal
+		            setData={setData}
+		  		  categories={props.categories}
+		            data={data}
+		            doIShowUp={NewItemPage}
+		            onCancel={() => {setNewItemPage(false); setData();}} />
+
+		  	  	<Header style={{height: 90,}}>
+		  	  		<TouchableOpacity
+		  	  		  onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
+		  	  		  <MaterialCommunityIcons name="menu" color={"white"} size={30} />
+		  	  	  </TouchableOpacity>
+		  	  	  <Card style={styles.searchHolder}>
+		  	  		  <MaterialCommunityIcons name="magnify" color={"black"} size={20} />
+		  	  		  <Text style={styles.searchText}>Search</Text>
+		  	  	  </Card>
+		  	    </Header>
+
+		      	{addCategoryButton()}
+		      	{loading()}
+
+		      	<FlatList
+		      		style={styles.list}
+		      		data={props.categories}
+		      		renderItem={categoryData =>
+		                  <MainCategoryItem
+						  	style={styles.mainCategoryItem}
+		  					setCategoryPreviewed={setCategoryPreviewed}
+		                      setNewItemPage={setNewItemPage}
+		                      setData={setData}
+		                      setProductPreviewed={props.setProductPreviewed}
+		                      addProductButton={addProductButton}
+		                      item={categoryData.item}/>
+		      		}/>
+		      </SafeAreaView>
+		  );
+	  }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
-
-        <AddNewItemModal
-          setData={setData}
-		  categories={props.categories}
-          data={data}
-          doIShowUp={NewItemPage}
-          onCancel={() => {setNewItemPage(false); setData();}} />
-
-      {productPreviewModalVisibility()}
-
-    	<Header style={{height: 90,}}>
-            <TouchableOpacity
-    			onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
-    			<MaterialCommunityIcons name="menu" color={"white"} size={30} />
-    		</TouchableOpacity>
-    		<Card style={styles.searchHolder}>
-    			<MaterialCommunityIcons name="magnify" color={"black"} size={20} />
-    			<Text style={styles.searchText}>Search</Text>
-    		</Card>
-    	</Header>
-
-    	{addCategoryButton()}
-    	{loading()}
-
-    	<FlatList
-    		style={styles.list}
-    		data={props.categories}
-    		renderItem={categoryData =>
-                <MainCategoryItem
-                    setNewItemPage={setNewItemPage}
-                    setData={setData}
-                    setProductPreviewed={props.setProductPreviewed}
-                    addProductButton={addProductButton}
-                    item={categoryData.item}/>
-    		}/>
-    </SafeAreaView>
+    	page()
   );
 }
 
 const styles = StyleSheet.create({
+	mainCategoryItem: {
+		paddingBottom: 10,
+	},
 	list: {
 		paddingHorizontal: 8,
-		paddingTop:15
+		paddingTop:15,
 	},
 	addCategory: {
 		padding:10,
@@ -134,6 +179,20 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontSize:16,
         marginStart:10,
+    },
+	header:{
+		height: 90,
+	},
+    headertitleholder: {
+        justifyContent:"center",
+        alignItems:"flex-start",
+        flex: 1
+    },
+    headertitle: {
+        textAlign:"center",
+        fontSize: 23,
+        color:"white",
+        marginHorizontal: 11,
     },
 });
 export default MainMenu;

@@ -82,6 +82,10 @@ const MainMenuPage = props => {
 				),
 			  }} >
 			  {propss => <Profile {...propss}
+			  				categories={props.categories}
+			  				allUsers={props.allUsers}
+			  				uid={props.uid}
+			  				adminList={props.adminList}
   							contact={props.contact}
   							userInfo={props.userInfo}
 							/>}
@@ -167,6 +171,10 @@ const CategoriesPage = props => {
 				),
 			  }} >
 			  {propss => <Profile {...propss}
+			  				categories={props.categories}
+			  				allUsers={props.allUsers}
+			  				uid={props.uid}
+			  				adminList={props.adminList}
   							contact={props.contact}
   							userInfo={props.userInfo}
 							/>}
@@ -250,6 +258,10 @@ const CartPage = props => {
 				),
 			  }}  >
 			  {propss => <Profile {...propss}
+			  				categories={props.categories}
+			  				allUsers={props.allUsers}
+			  				uid={props.uid}
+			  				adminList={props.adminList}
   							contact={props.contact}
   							userInfo={props.userInfo}
 							/>}
@@ -330,6 +342,10 @@ const ProfilePage = props => {
 				),
 			  }}  >
 			  {propss => <Profile {...propss}
+			  				categories={props.categories}
+			  				allUsers={props.allUsers}
+			  				uid={props.uid}
+			  				adminList={props.adminList}
   							contact={props.contact}
   							userInfo={props.userInfo}
 							/>}

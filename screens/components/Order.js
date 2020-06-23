@@ -15,8 +15,58 @@ const Order = props => {
         return parseInt(props.item.key) + 1
     };
 
+    const changeState = stuffos => {
+        if(stuffos.order.state==="success")
+            Alert.alert('Success!', 'Your order was successfully processed',
+            [{text: 'Show Results', style: 'destructive',
+            onPress: () => {
+                setDisplayedOrder(stuffos);
+            }},
+                {text: 'Ok', style: 'cancel'}
+            ],{ cancelable: true });
+        else if(stuffos.order.state==="failed")
+            Alert.alert('Failed!', 'Your order failed',
+            [{text: 'Show Results', style: 'destructive',
+            onPress: () => {
+                setDisplayedOrder(stuffos);
+            }},
+                {text: 'Ok', style: 'cancel'}
+            ],{ cancelable: true });
+        else if(stuffos.order.state==="statee")
+            Alert.alert('Processing!', 'Your order is still processing',
+            [{text: 'Show Results', style: 'destructive',
+            onPress: () => {
+                setDisplayedOrder(stuffos);
+            }},
+                {text: 'Ok', style: 'cancel'}
+            ],{ cancelable: true });
+    };
+
+    const state = item => {
+        if(item.order.state==="pending")
+            return(
+                <TouchableOpacity style={styles.stateHolder} onPress={() => {changeState(item);}} activeOpacity={0.50}>
+                    <MaterialCommunityIcons name={"rotate-right"} color={"gray"} size={25} />
+                    <Text style={styles.processing}>Processing</Text>
+                </TouchableOpacity>
+            );
+        else if(item.order.state==="failed")
+            return(
+                <TouchableOpacity style={styles.stateHolder} onPress={() => {changeState(item);}} activeOpacity={0.50}>
+                    <MaterialCommunityIcons name={"alert-circle"} color={"red"} size={25} />
+                    <Text style={styles.failed}>Failed</Text>
+                </TouchableOpacity>
+            );
+        else if(item.order.state==="success")
+            return(
+                <TouchableOpacity style={styles.stateHolder} onPress={() => {changeState(item);}} activeOpacity={0.50}>
+                    <MaterialCommunityIcons name={"check-circle"} color={"green"} size={25} />
+                    <Text style={styles.success}>Success</Text>
+                </TouchableOpacity>
+            );
+    };
+
     const productCount = () => {
-        console.log();
         const count = Object.keys(props.item.order.products).length;
         if(count===1)
             return "1 Product";
@@ -24,51 +74,22 @@ const Order = props => {
             return count + " Product";
     };
 
-    const state = () => {
-        if(props.item.order.state==="processing")
-            return(
-                <TouchableOpacity style={styles.stateHolder} onPress={() => {props.statee(props.item)}} activeOpacity={0.50}>
-                    <MaterialCommunityIcons name={"rotate-right"} color={"gray"} size={25} />
-                    <Text style={styles.processing}>Processing</Text>
-                </TouchableOpacity>
-            );
-        else if(props.item.order.state==="failed")
-            return(
-                <TouchableOpacity style={styles.stateHolder} onPress={() => {props.statee(props.item)}} activeOpacity={0.50}>
-                    <MaterialCommunityIcons name={"alert-circle"} color={"red"} size={25} />
-                    <Text style={styles.failed}>Failed</Text>
-                </TouchableOpacity>
-            );
-        else if(props.item.order.state==="success")
-            return(
-                <TouchableOpacity style={styles.stateHolder} onPress={() => {props.statee(props.item)}} activeOpacity={0.50}>
-                    <MaterialCommunityIcons name={"check-circle"} color={"green"} size={25} />
-                    <Text style={styles.success}>Success</Text>
-                </TouchableOpacity>
-            );
-    };
-
     return(
-        <TouchableOpacity style={styles.holder} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.holder} onPress={() => {props.setDisplayedOrder(props.item);}} activeOpacity={0.50}>
             <Text style={styles.count}>#{count()}</Text>
             <View style={styles.men}>
                 <Text style={styles.title}>{productCount()}</Text>
                 <Text style={styles.howold}>{howold()}</Text>
             </View>
-            {state()}
-            <TouchableOpacity style={styles.pressoHolder} onPress={() => {props.setDisplayedOrder(props.item);}} activeOpacity={0.50}>
+            {state(props.item)}
+            <View style={styles.pressoHolder}>
                 <Text style={styles.pressoText}>View</Text>
-            </TouchableOpacity>
+            </View>
         </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
-    men: {
-        marginStart: 15,
-        justifyContent:"flex-start",
-        flex: 1,
-    },
     processing: {
         fontSize: 12,
         color: "gray",
@@ -84,6 +105,11 @@ const styles = StyleSheet.create({
     stateHolder: {
         paddingEnd: 10,
         alignItems:"center",
+    },
+    men: {
+        marginStart: 15,
+        justifyContent:"flex-start",
+        flex: 1,
     },
     pressoHolder: {
         marginVertical: 15,

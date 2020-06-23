@@ -17,24 +17,55 @@ const MainProductItem = props => {
         }
     };
 
+    const product = () => {
+        if(props.item.showmore){
+            return(
+                <Card
+                    onPress={() => {props.setCategoryPreviewed();}}
+                    style={{...styles.productItem, ...styles.showmoreCard}}>
+                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.showmoreText}>More</Text>
+                    <MaterialCommunityIcons name={"dots-horizontal"} color={"white"} size={60} />
+                </Card>
+            );
+        } else {
+            return(
+                <Card
+                    onPress={() => {props.setProductPreviewed(props.item);}}
+                    style={styles.productItem}>
+
+                    <Image
+                        style={styles.image}
+                        source={{ uri:props.item.data.banner }} />
+
+                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
+                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
+                    {visible()}
+                </Card>
+            );
+        }
+    };
+
     return(
-        <Card
-            onPress={() => {props.setProductPreviewed(props.item);}}
-            style={styles.productItem}>
-
-            <Image
-                style={styles.image}
-                source={{ uri:props.item.data.banner }} />
-
-            <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
-            <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
-            {visible()}
-        </Card>
+        product()
     );
 };
 
 
 const styles = StyleSheet.create({
+    showmoreCard: {
+        alignItems:"center",
+        justifyContent:"center",
+        backgroundColor:Colors.Accent,
+        paddingVertical: 10,
+    },
+    showmoreText: {
+        marginTop: 18,
+        marginBottom: -18,
+        textAlign:"center",
+        fontWeight:"bold",
+        fontSize: 20,
+        color:"white",
+    },
     productItem: {
         marginTop:7,
         marginHorizontal:7,

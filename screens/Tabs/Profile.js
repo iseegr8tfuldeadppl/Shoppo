@@ -16,8 +16,6 @@ const Profile = props => {
 
     const [page, setPage] = useState("Root");
 
-    console.log(page);
-
     BackHandler.addEventListener('hardwareBackPress', function() {
 	    if(page==="Call")
             setPage("Root");
@@ -82,6 +80,10 @@ const Profile = props => {
         case "Orders":
             return(
                 <Orders
+                    categories={props.categories}
+                    uid={props.uid}
+	  				allUsers={props.allUsers}
+                    adminList={props.adminList}
                     backToRoot={() => {setPage("Root");} }
                     orders={getOrders()} />);
             break;
