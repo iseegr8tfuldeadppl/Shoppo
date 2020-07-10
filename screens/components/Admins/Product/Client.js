@@ -8,40 +8,24 @@ import Colors from '../../../constants/Colors';
 const Client = props => {
 
     const howold = () => {
-        let orders = [];
-        for(var i in props.item.stuff.orders)
-            orders.push(props.item.stuff.orders[i]);
-
-        let newest = 0;
-        for(let i=0; i<orders.length; i++){
-            if(moment(orders[i].latest_update, "YYYYMMDDhmmssa").isAfter(orders[newest].latest_update)){
-                newest = i;
-            }
-        }
-        return moment(orders[newest].latest_update, "YYYYMMDDhmmssa").fromNow();
-    };
-
-    const count = () => {
-        return parseInt(props.item.key) + 1
-    };
-
-    const fullname = () => {
-        return props.item.stuff.last_name + " " + props.item.stuff.first_name;
+        return moment(props.item.n, "YYYYMMDDhmmssa").fromNow();
     };
 
     const orderCount = () => {
-        return Object.keys(props.item.stuff.orders).length;
+        if(props.item.o==="1")
+            return props.item.o + " Order";
+        return props.item.o + " Orders";
     };
 
     return(
-        <TouchableOpacity style={styles.holder} onPress={() => {props.setClientSelected(props.item); props.setPage("Client"); }} activeOpacity={0.50}>
-            <Text style={styles.count}>#{count()}</Text>
+        <TouchableOpacity style={styles.holder} onPress={() => {props.setClientSelected(props.item); props.setPage("Chat"); }} activeOpacity={0.50}>
+            <Text style={styles.count}>#{props.item.count}</Text>
             <View style={styles.men}>
-                <Text style={styles.title}>{fullname()}</Text>
+                <Text style={styles.title}>{props.item.f}</Text>
                 <Text style={styles.howold}>{howold()}</Text>
             </View>
             <View style={styles.pressoHolder}>
-                <Text style={styles.pressoText}>{orderCount()} Orders</Text>
+                <Text style={styles.pressoText}>{orderCount()}</Text>
             </View>
         </TouchableOpacity>
     );

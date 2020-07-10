@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.6",
+    "@react-native-community/netinfo": "^5.9.4",
     "@react-navigation/bottom-tabs": "^5.5.2",
     "@react-navigation/drawer": "^5.8.2",
     "@react-navigation/material-bottom-tabs": "^5.2.10",
@@ -33,13 +34,15 @@
     "react-native-firebase": "^5.6.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-picker": "^2.3.1",
+    "react-native-netinfo": "^1.1.0",
     "react-native-paper": "^3.10.1",
     "react-native-reanimated": "^1.7.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.2.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
-    "react-navigation": "^4.3.9"
+    "react-navigation": "^4.3.9",
+    "undefined": "react-native-community/netinfo"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.1.0",

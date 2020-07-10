@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import { FlatList, StyleSheet, SafeAreaView, TouchableOpacity, View, Text, Alert, ScrollView, TextInput } from 'react-native';
+import { FlatList, StyleSheet, SafeAreaView, TouchableOpacity, View, Text, Alert, ScrollView, TextInput, Image } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Order from './Order';
 import ArrowedHeader from './ArrowedHeader';
 import OkayButton from './OkayButton';
 import Colors from '../constants/Colors';
+import moment from 'moment';
+import firebase from 'firebase';
 
 // admin stuff
 import Client from './Admins/Product/Client';
@@ -13,36 +14,8 @@ import StateSelector from './Admins/Product/StateSelector';
 
 const Orders = props => {
 
-    const [displayedOrder, setDisplayedOrder] = useState();
-    const [page, setPage] = useState("Orders");
-    const [productListo, setProductListo] = useState([]);
-
-    // Admin stuff
-    const [clientSelected, setClientSelected] = useState();
-    const [state, setState] = useState();
-    const clientOrdersButton = () => {
-        return(
-            <TouchableOpacity onPress={() => {setPage("Clients");}} style={styles.adminHolda} activeOpacity={0.7}>
-                <Text style={styles.adminText}>Press Here For Client Orders</Text>
-            </TouchableOpacity>
-        );
-    };
-    const ordersForThisClient = () => {
-        let orders = [];
-        let index = 0;
-        for(var i in clientSelected.stuff.orders){
-            orders.push({key: index.toString(), order: clientSelected.stuff.orders[i]});
-            index += 1;
-        }
-        return orders;
-    };
-
-    const result = () => {
-        if(displayedOrder && displayedOrder.order)
-            return displayedOrder.order.result;
-        else
-            return "";
-    };
+    const [messageInput, setMessage] = useState("");
+    const [page, setPage] = useState(props.adminList.includes(props.uid)? "Clients" : "Chat");
 
     const statee = stuffos => {
         if(stuffos.order.state==="success")
@@ -64,173 +37,217 @@ const Orders = props => {
 
     const back = () => {
         switch(page){
-            case "Orders":
+            // this case statement is admin stuff
+            case "Clients":
                 props.backToRoot();
                 break;
-            case "Clients":
-                setPage("Orders");
-                break;
-            case "Client":
-                setClientSelected();
-                setPage("Clients");
-                break;
-            case "Order":
+
+            case "Chat":
                 // admin if statement
-                if(clientSelected){
-                    setState();
-                    setPage("Client");
+                if(props.clientSelected){
+                    props.setClientSelected();
+                    props.setMessages();
+                    setPage("Clients");
                 } else
-                    setPage("Orders");
+                    props.backToRoot();
                 break;
         }
     };
 
-    const userSumbmitted = () => {
-        let productList = [];
-
-        let productsArray = [];
-        for(var l in displayedOrder.order.products){
-            productsArray.push({key: l, scuffed: displayedOrder.order.products[l]});
+    const picture = url => {
+        if(url){
+            return(
+                <Image
+                    style={{width: "70%", height: 100, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}
+                    source={{ uri:url }} />
+            );
         }
-
-        for(let i=0; i<productsArray.length; i++){
-
-            // look for this product in product list to get its title
-            let foundit = false;
-            for(let j=0; j<props.categories.length; j++){
-                for(let z=0; z<props.categories[j].products.length; z++){
-                    //console.log(productsArray[i]);
-                        //console.log("two " + props.categories[j].products[z].key);
-                    if(props.categories[j].products[z].key===productsArray[i].key){
-
-                        // convert requirements into an array from a firebase json object and then turn it into a cool listo
-                        let requirementList = [];
-                        let index = 0;
-                        for(var l in productsArray[i].scuffed.requirements){
-                            requirementList.push({key: index.toString(), tag: l, slot: productsArray[i].scuffed.requirements[l]});
-                            index += 1;
-                        }
-
-                        productList.push({
-                            key: productsArray[i].key,
-                            name: props.categories[j].products[z].data.title,
-                            category_key: props.categories[j].key,
-                            requirements: requirementList
-                        })
-
-                        foundit = true;
-                        break;
-                    }
-                }
-                if(foundit)
-                    break;
-            }
-
-        }
-        setProductListo(productList);
     };
 
-    if(productListo.length===0 && displayedOrder)
-        userSumbmitted();
+    const isItTop = key => {
+        if(key===props.messago[props.messago.length-1].key)
+            return {paddingTop: 13, paddingBottom: 7};
+        else
+            return {paddingBottom: 7};
+    };
 
-    const normalOrClientOrdersList = () => {
+    const clientOrAdminDecision = admin => {
+        if(props.adminList.includes(props.uid))
+            return admin;
+        return !admin;
+    };
+
+    const leftOrRight = admin => {
+        if(clientOrAdminDecision(admin))
+            return {paddingEnd: 10, alignItems:"flex-end"};
+        return {paddingStart: 10, alignItems:"flex-start"};
+    };
+    const leftOrRight2 = admin => {
+        if(clientOrAdminDecision(admin))
+            return {backgroundColor:"gray"};
+        return {backgroundColor: Colors.Accent};
+    };
+
+    const setState = (stato, key) => {
+        let stateDisplay = "";
+        if(stato==="pending"){
+            stateDisplay = "Pending";
+        } else if(stato==="failed"){
+            stateDisplay = "Failed";
+        } else if(stato==="success"){
+            stateDisplay = "Success";
+        }
+
+		Alert.alert(
+			'Are you sure?',
+			'set the state to this order to ' + stateDisplay + '.',
+			[
+                {text: 'No', style: 'cancel'},
+				{text: 'Yes', style: 'destructive', onPress: () => { updateState(stato, key); } }],
+			{ cancelable: true }
+		);
+    };
+
+    const updateState = (stato, key) => {
+
+        // count new amount of pending orders
+        let pendingOrdersCount = 0;
+        for(let i=0; i<props.messago.length; i++){
+            if(props.messago[i].state)
+                if(props.messago[i].state==="pending")
+                    pendingOrdersCount ++;
+        }
+
+		let ref = firebase.database().ref('/users/' + props.clientSelected.key + '/orders/' + key);
+		ref.update({"state": stato})
+		.then(function(snapshot) {
+			//console.log('Snapshotssss', snapshot);
+
+            let ref = firebase.database().ref('/userList/' + props.clientSelected.key);
+            ref.update({"o":pendingOrdersCount.toString()})
+            .then(function(snapshot) {
+                //console.log('Snapshotssss2', snapshot);
+
+                let array2 = props.turnIntoMessages();
+                props.setMessages(array2);
+            });
+		});
+    };
+
+    const stateman = (admin, state, key) => {
+        if(state)
+            return(
+                <StateSelector
+                    keyy={key}
+                    state={state}
+                    setState={setState}/>
+            );
+    };
+
+    const message = item => {
+        return(
+            <View style={{...{borderRadius: 15, width: "100%"}, ...leftOrRight(item.admin), ...isItTop(item.key)}}>
+                <View style={{...{borderRadius: 23, maxwidth: "70%", padding: 10}, ...leftOrRight2(item.admin) }}>
+                    <Text style={styles.prodoct}>{item.message}</Text>
+                </View>
+                {picture(item.picture)}
+                {stateman(item.admin, item.state, item.key)}
+            </View>
+        );
+    };
+
+    const submitMessage = () => {
+		let ref = firebase.database().ref('/users/' + props.uid + "/messages");
+		ref.push({
+				message: messageInput,
+ 				date: moment().format('YYYYMMDDhmmssa'),
+                admin: props.adminList.includes(props.uid)
+			})
+			.then(function(snapshot) {
+				//console.log('submitMessage response = ' + snapshot);
+                setMessage("");
+
+                let array2 = props.turnIntoMessages();
+                props.setMessages(array2);
+
+				let ref2 = firebase.database().ref('/userList/' + props.uid + ' /n');
+				ref2.set(moment().format('YYYYMMDDhmmssa'))
+				.then(function(snapshot) {
+					//console.log('Snapshot', snapshot);
+				});
+		});
+    };
+
+/*
+    const usersLatestFiltered = () => {
+        let usersLatest = [];
+        let count = 1;
+        for(let i=0; i<props.usersLatest.length; i++){
+            if(props.usersLatest[i].o){
+                if(parseInt(props.usersLatest[i].o)>0){
+                    props.usersLatest[i].count = count;
+                    count += 1;
+                    usersLatest.push(props.usersLatest[i]);
+                }
+            }
+        }
+        return usersLatest;
+    };
+*/
+
+    const addNumbersToUsersLatest = () => {
+        let usersLatest = [];
+        let count = 1;
+        for(let i=props.usersLatest.length-1; i>=0; i--){
+            props.usersLatest[i].count = count;
+            count += 1;
+            usersLatest.push(props.usersLatest[i]);
+        }
+        return usersLatest;
+    };
+
+    const pageChosen = () => {
         // first if statement is admin stuff
         switch(page){
-            case "Orders":
-                if(props.orders.length===0){
-                    return(
-                        <>
-                        {clientOrdersButton()}
-                        <Text style={styles.plspress}>You have no orders submitted.</Text>
-                        </>
-                    );
-                } else {
-                    return(
-                        <View style={styles.letout}>
-                        {clientOrdersButton()}
-
-                        <FlatList
-                            style={styles.list}
-                            data={props.orders}
-                            renderItem={orderData =>
-                                <Order
-                                    setDisplayedOrder={setDisplayedOrder}
-                                    statee={statee}
-                                    item={orderData.item} />
-                            }/>
-                        </View>
-                    );
-                }
-                break;
             case "Clients":
                 return(
                     <FlatList
                         style={styles.list}
-                        data={props.allUsers}
-                        renderItem={clientData =>
+                        data={addNumbersToUsersLatest()}
+                        renderItem={clientLatestData =>
                             <Client
                                 setPage={setPage}
-                                setClientSelected={setClientSelected}
-                                item={clientData.item} />
+                                setClientSelected={props.setClientSelected}
+                                item={clientLatestData.item} />
                         }/>
                 );
                 break;
-            case "Client":
+            case "Chat":
                 return(
-                    <FlatList
-                        style={styles.list}
-                        data={ordersForThisClient()}
-                        renderItem={orderData =>
-                            <Order
-                                setDisplayedOrder={(orderData) => {setDisplayedOrder(orderData); setPage("Order"); }}
-                                statee={statee}
-                                item={orderData.item} />
-                        }/>
-                );
-                break;
-            case "Order":
-                // admin stuff if statement
-                if(props.adminList.includes(props.uid)){
-                    if(!state)
-                        setState(displayedOrder.order.state);
-                    return(
-                        <View style={styles.page}>
-                            <StateSelector
-                                state={state}
-                                setState={setState}/>
-                            <FlatList
-                                style={styles.flexer}
-                                data={productListo}
-                                renderItem={productData =>
-                                    <View style={{width:"100%"}}>
-                                        <Text style={styles.prodoct}>{productData.item.name}</Text>
-                                        <FlatList
-                                            style={styles.flexer2}
-                                            data={productData.item.requirements}
-                                            renderItem={requirementData =>
-                                                <View>
-                                                    <Text style={styles.tag}>{requirementData.item.tag}</Text>
-                                                    <View style={styles.requirement}>
-                                                        <Text>{requirementData.item.slot}</Text>
-                                                    </View>
-                                                </View>
-                                            }/>
-                                    </View>
-                                }/>
+                    <View style={styles.page}>
+                        <FlatList
+                            inverted={true}
+                            style={styles.flexer}
+                            data={props.messago}
+                            renderItem={productData => message(productData.item)}
+                        />
+
+                        <View style={{flexDirection:"row", width:"100%", paddingHorizontal: 10, borderTopWidth: 1, borderTopColor:Colors.Primary, paddingVertical: 10}}>
                             <TextInput
                                 multiline={true}
                                 style={styles.quantityInputCurrency}
-                                placeholder={"Response"}
-                                onChangeText={(enteredText) => {props.setDescription(enteredText);} }
-                                value={props.description} />
+                                placeholder={"Aa"}
+                                onChangeText={setMessage}
+                                value={messageInput} />
                             <OkayButton
-                                style={{ width:"80%", marginBottom: 15, marginTop: 15, }}
-                                textStyle={{ fontSize: 16 }}
-                                onClick={() => {setDisplayedOrder(); }}
-                                text={"Contact Us"} />
+                                style={{ backgroundColor:Colors.Primary, borderRadius: 15, marginStart: 10 }}
+                                onClick={() => {submitMessage()}}
+                                textStyle={{ fontSize: 17, color:"white", fontWeight:"bold" }}
+                                text={"Send"} />
                         </View>
-                    );
-                }
+
+                    </View>
+                );
                 break;
         }
     };
@@ -238,7 +255,7 @@ const Orders = props => {
     return(
         <SafeAreaView style={styles.letout}>
             <ArrowedHeader backToRoot={back} title={page}/>
-            {normalOrClientOrdersList()}
+            {pageChosen()}
         </SafeAreaView>
     );
 };
@@ -262,32 +279,24 @@ const styles = StyleSheet.create({
         justifyContent:"center",
     },
     prodoct: {
-        paddingTop: 10,
-        paddingHorizontal: 20,
-        fontWeight: "bold",
-        fontSize: 19,
+        color:"white",
+        fontSize: 15,
     },
     flexer: {
-        borderWidth: 2,
-        borderColor: Colors.Primary,
-        marginHorizontal: 5,
-        marginVertical: 5,
         flex: 1,
-        width:"95%",
-    },
-    flexer2: {
         width:"100%",
+        paddingTop: 5,
     },
     quantityInputCurrency : {
+        flex: 1,
+        backgroundColor: "white",
+        borderRadius: 20,
+        borderWidth: 1,
         borderColor:Colors.Primary,
-        borderRadius: 10,
-        minHeight: 80,
-        width: "95%",
         fontWeight: "bold",
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         paddingVertical: 10,
-        borderWidth: 2,
-        fontSize:18,
+        fontSize:15,
     },
     adminHolda: {
         borderWidth: 5,

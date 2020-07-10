@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Image, BackHandler } from 'react-native';
 import firebase from 'firebase';
 
 
 const LoadingScreen = props =>  {
+
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
 	    return true;
@@ -13,13 +14,9 @@ const LoadingScreen = props =>  {
 		setTimeout(()=>{
 			//Put All Your Code Here, Which You Want To Execute After Some Delay Time.
 
-			// initialize firebase if not aleady been
-			if(!firebase.apps.length)
-				firebase.initializeApp(firebaseConfig);
-
 			checkIfLoggedIn();
 		}, 1000);
-	}
+	};
 
 	const checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged(function(user){
@@ -30,16 +27,22 @@ const LoadingScreen = props =>  {
 				props.goHere(2);
 			}
 		}); // to use component u have to add .bind(this) and also make it this.props.blabla
-	}
+	};
+
+	const page = () => {
+		return(
+			<View style={styles.screen}>
+				<Image
+					source={require("../images/justlogo.png")}
+					style={{ width: 71.66, height: 86.33 }}
+				/>
+			</View>
+		);
+	};
 
 	delayTillEnter();
 	return(
-		<View style={styles.screen}>
-			<Image
-				source={require("../images/justlogo.png")}
-				style={{ width: 71.66, height: 86.33 }}
-			/>
-		</View>
+		page()
 	);
 }
 

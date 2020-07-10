@@ -3,11 +3,12 @@
 
 //import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-import { Alert } from 'react-native';
+import { Alert, View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
 import Tabs from './Tabs/TabsHolder';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Drawer = createDrawerNavigator();
 
@@ -21,10 +22,11 @@ const DashboardScreen = props =>  {
 	const [userInfo, setUserInfo] = useState(userInfo);
 	const [checkoutList, setCheckoutList] = useState();
 	const [contact, setContact] = useState();
+	const [loading, setLoading] = useState(true);
 
 	// admin stuff
-	const [allUsers, setAllUsers] = useState();
 	const [adminList, setAdminList] = useState([]);
+	const [usersLatest, setUserLatest] = useState();
 
 	const pokeFirebase = () => {
 
@@ -118,31 +120,33 @@ const DashboardScreen = props =>  {
 						setCheckoutList();
 					}
 
-					if(categoriesList.length>0)
+					if(categoriesList.length>0){
 						setCategories(categoriesList);
-
+						if(loading)
+							setLoading(false);
+					}
 
 					// admin stuff
-					if(adminListTemp.includes(props.uid))
-						firebase.database().ref('/users').on('value', allUsersSnapshot => {
-							let allUsersData = allUsersSnapshot.val() ? allUsersSnapshot.val() : {};
-							let yes = {...allUsersData};
-							let bigman = [];
-							let index = 0;
-							for(var i in yes){
-	    						bigman.push({key: index.toString(), stuff: yes[i]});
-								index += 1;
-							}
-							setAllUsers(bigman);
+					if(adminListTemp.includes(props.uid)){
+						firebase.database().ref('/userList').on('value', userLatestSnapshot => {
+							let userLatestData = userLatestSnapshot.val() ? userLatestSnapshot.val() : {};
+						    let usersLatesto = [];
+						    let vals = Object.values({...userLatestData});
+						    let index = -1;
+						    for(var i in {...userLatestData}){
+						        index ++;
+				        		usersLatesto.push({key: i, n: vals[index].n, o: vals[index].o, f: vals[index].f});
+						    }
+							setUserLatest(usersLatesto);
 						});
+					}
 				});
 
 			});
 		});
 	};
 
-
-  if(categories.length===0 && !finishedLoadingFromFirebase){
+  if(categories.length===0 && !finishedLoadingFromFirebase && props.connection){
 	  pokeFirebase();
   }
 
@@ -166,88 +170,134 @@ const DashboardScreen = props =>  {
 
 	};
 
-	return (
-	<NavigationContainer>
-	<Drawer.Navigator initialRouteName="Main Page" drawerContent={propss => {
-			return (
-				<DrawerContentScrollView {...propss}>
-				<DrawerItemList {...propss} />
-				<DrawerItem label="Logout" onPress={() =>
-					Alert.alert(
-						'Logout',
-						'Are you sure you want to log out?',
-						[{text: 'No', style: 'cancel'},
-							{text: 'Yes', style: 'destructive', onPress: () => logOut(props) }],
-						{ cancelable: true }
-					)} />
-				</DrawerContentScrollView>
-			)
-		}}>
+	const loadingPage = () => {
+		if(loading){
+			return(
+				<View style={styles.loadingh}>
+					<Text style={{color:"white", fontSize: 25, fontWeight:"bold"}}>Loading..</Text>
+                	<ActivityIndicator size={50}/>
+				</View>
+			);
+		}
+	};
 
-		<Drawer.Screen name="Main Page">{propss =>
-			<Tabs.MainMenuPage {...props}
-				adminList={adminList}
-				contact={contact}
-				setCheckoutList={setCheckoutList}
-				checkoutList={checkoutList}
-				userInfo={userInfo}
-				updateCart={updateCart}
-				cart={cart}
-				setProductPreviewed={setProductPreviewed}
-				productPreviewed={productPreviewed}
-				uid={props.uid}
-				categories={categories}
-				addToCart={addToCart}
-				adminList={adminList}
-				allUsers={allUsers}
-				finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
-		</Drawer.Screen>
+	const page = () => {
+		if(!props.connection){
+			return(
+				<View style={styles.screen}>
+					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>No Internet</Text>
+                	<MaterialCommunityIcons name="wifi-off" color={"red"} size={60} />
+				</View>
+			);
+		} else {
+			return(
+					<View style={{flex: 1, width:"100%"}}>
 
-		<Drawer.Screen name="Categories" >{propss =>
-			<Tabs.CategoriesPage {...props}
-				categories={categories}
-				adminList={adminList}
-				contact={contact}
-				setCheckoutList={setCheckoutList}
-				checkoutList={checkoutList}
-				userInfo={userInfo}
-				uid={props.uid}
-				cart={cart}
-				allUsers={allUsers}
-				updateCart={updateCart} />}
-		</Drawer.Screen>
+						<NavigationContainer>
+						<Drawer.Navigator initialRouteName="Main Page" drawerContent={propss => {
+								return (
+									<DrawerContentScrollView {...propss}>
+									<DrawerItemList {...propss} />
+									<DrawerItem label="Logout" onPress={() =>
+										Alert.alert(
+											'Logout',
+											'Are you sure you want to log out?',
+											[{text: 'No', style: 'cancel'},
+												{text: 'Yes', style: 'destructive', onPress: () => logOut(props) }],
+											{ cancelable: true }
+										)} />
+									</DrawerContentScrollView>
+								)
+							}}>
 
-		<Drawer.Screen name="Cart" >{propss =>
-			<Tabs.CartPage {...props}
-				categories={categories}
-				adminList={adminList}
-				contact={contact}
-				setCheckoutList={setCheckoutList}
-				checkoutList={checkoutList}
-				userInfo={userInfo}
-				uid={props.uid}
-				allUsers={allUsers}
-				cart={cart}
-				updateCart={updateCart} />}
-		</Drawer.Screen>
+							<Drawer.Screen name="Main Page">{propss =>
+								<Tabs.MainMenuPage {...props}
+									adminList={adminList}
+									contact={contact}
+									setCheckoutList={setCheckoutList}
+									checkoutList={checkoutList}
+									userInfo={userInfo}
+									updateCart={updateCart}
+									cart={cart}
+									setProductPreviewed={setProductPreviewed}
+									productPreviewed={productPreviewed}
+									uid={props.uid}
+									usersLatest={usersLatest}
+									categories={categories}
+									addToCart={addToCart}
+									adminList={adminList}
+									finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
+							</Drawer.Screen>
 
-		<Drawer.Screen name="Profile" >{propss =>
-			<Tabs.ProfilePage {...props}
-				categories={categories}
-				adminList={adminList}
-				contact={contact}
-				setCheckoutList={setCheckoutList}
-				checkoutList={checkoutList}
-				allUsers={allUsers}
-				uid={props.uid}
-				userInfo={userInfo}
-				cart={cart}
-				updateCart={updateCart} />}
-		</Drawer.Screen>
+							<Drawer.Screen name="Categories" >{propss =>
+								<Tabs.CategoriesPage {...props}
+									categories={categories}
+									adminList={adminList}
+									contact={contact}
+									setCheckoutList={setCheckoutList}
+									usersLatest={usersLatest}
+									checkoutList={checkoutList}
+									userInfo={userInfo}
+									uid={props.uid}
+									cart={cart}
+									updateCart={updateCart} />}
+							</Drawer.Screen>
 
-	</Drawer.Navigator>
-	</NavigationContainer>
-	);
+							<Drawer.Screen name="Cart" >{propss =>
+								<Tabs.CartPage {...props}
+									categories={categories}
+									adminList={adminList}
+									contact={contact}
+									setCheckoutList={setCheckoutList}
+									checkoutList={checkoutList}
+									userInfo={userInfo}
+									uid={props.uid}
+									usersLatest={usersLatest}
+									cart={cart}
+									updateCart={updateCart} />}
+							</Drawer.Screen>
+
+							<Drawer.Screen name="Profile" >{propss =>
+								<Tabs.ProfilePage {...props}
+									usersLatest={usersLatest}
+									categories={categories}
+									adminList={adminList}
+									contact={contact}
+									setCheckoutList={setCheckoutList}
+									checkoutList={checkoutList}
+									uid={props.uid}
+									userInfo={userInfo}
+									cart={cart}
+									updateCart={updateCart} />}
+							</Drawer.Screen>
+
+						</Drawer.Navigator>
+						</NavigationContainer>
+
+						{loadingPage()}
+					</View>
+				);
+		}
+	};
+
+	return(page());
 }
 
 export default DashboardScreen;
+
+const styles = StyleSheet.create({
+	screen:{
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	loadingh:{
+		flex: 1,
+		position:"absolute",
+		width:"100%",
+		height:"100%",
+		backgroundColor:"#55666666",
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
+})

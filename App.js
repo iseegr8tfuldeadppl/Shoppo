@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import LoginScreen from './screens/LoginScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import DashboardScreen from './screens/DashboardScreen';
+import NetInfo from '@react-native-community/netinfo';
 
 
 export default function App() {
@@ -13,12 +14,20 @@ export default function App() {
 	// for Debugging only
 	console.disableYellowBox = true;
 
+	const [connection, setConnection] = useState(true);
 	const [page, setPage] = useState(1);
 	const [uid, setUID] = useState("");
-	let content;
 
 	if(!firebase.apps.length)
 		firebase.initializeApp(firebaseConfig);
+
+	// Subscribe
+	const unsubscribe = NetInfo.addEventListener(state => {
+	  //console.log("Connection type", state.type);
+	  if(connection!=state.isConnected)
+	  	setConnection(state.isConnected);
+	  	//unsubscribe();
+	});
 
 	const goToPage = DestinationPage => {
 		setPage(DestinationPage);
@@ -27,24 +36,19 @@ export default function App() {
 		setUID(uid);
 	};
 
-	if(page===1){
-		content = <LoadingScreen setCurrentUser={setCurrentUser} goHere={goToPage}/>
-	} else if(page===2){
-		content = <LoginScreen goHere={goToPage}/>
-	} else if(page===3){
-		content = <DashboardScreen uid={uid} goHere={goToPage}/>
-	}
+	const lapage = () => {
+		if(page===1){
+			return(
+				<LoadingScreen connection={connection} setCurrentUser={setCurrentUser} goHere={goToPage}/>
+			);
+		} else if(page===2){
+			return(<LoginScreen connection={connection} goHere={goToPage}/>);
+		} else if(page===3){
+			return(<DashboardScreen connection={connection} uid={uid} goHere={goToPage}/>);
+		}
+	};
 
 	return  (
-		<View style={styles.screen}>
-			{content}
-		</View>
+		lapage()
 	);
 }
-
-
-const styles = StyleSheet.create({
-	screen: {
-		flex: 1,
-	},
-});

@@ -82,8 +82,8 @@ const MainMenuPage = props => {
 				),
 			  }} >
 			  {propss => <Profile {...propss}
+				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
-			  				allUsers={props.allUsers}
 			  				uid={props.uid}
 			  				adminList={props.adminList}
   							contact={props.contact}
@@ -163,7 +163,6 @@ const CategoriesPage = props => {
 
 			<Tab.Screen
 			  name="Profile"
-			  component={Profile}
 			  options={{
 				tabBarLabel: 'Profile',
 				tabBarIcon: ({ color, size }) => (
@@ -171,8 +170,8 @@ const CategoriesPage = props => {
 				),
 			  }} >
 			  {propss => <Profile {...propss}
+				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
-			  				allUsers={props.allUsers}
 			  				uid={props.uid}
 			  				adminList={props.adminList}
   							contact={props.contact}
@@ -258,8 +257,8 @@ const CartPage = props => {
 				),
 			  }}  >
 			  {propss => <Profile {...propss}
+				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
-			  				allUsers={props.allUsers}
 			  				uid={props.uid}
 			  				adminList={props.adminList}
   							contact={props.contact}
@@ -342,8 +341,8 @@ const ProfilePage = props => {
 				),
 			  }}  >
 			  {propss => <Profile {...propss}
+				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
-			  				allUsers={props.allUsers}
 			  				uid={props.uid}
 			  				adminList={props.adminList}
   							contact={props.contact}

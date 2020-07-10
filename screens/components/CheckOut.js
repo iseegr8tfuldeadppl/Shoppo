@@ -118,7 +118,6 @@ const CheckOut = props => {
 		}
 	};
 
-
 	const uploadImage = async(uri) => {
 
 		setTitle("Submitting Picture...");
@@ -165,19 +164,61 @@ const CheckOut = props => {
 			}
 		}
 
+		let yes = imageUrl? imageUrl : "";
+		let message = "";
+		for(let i=0; i<props.checkoutList.length; i++){
+			message += "Product: " + props.checkoutList[i].data.title + '\n';
+			message += "Quantity: " + props.checkoutList[i].data.quantity + '\n';
+			message += "Total: " + calculateTotalForThisProduct(props.checkoutList[i]) + " DA" + "\n\n";
+			for(let j=0; j<props.checkoutList[i].requirements.length; j++){
+				message += props.checkoutList[i].requirements[j].title + ": " + props.checkoutList[i].requirements[j].slot + '\n';
+			}
+		}
+
+
+		let orders_counted = (orders_count() + 1).toString();
+
+		message = message.substring(0, message.length-1);
+		if(props.checkoutList[i].requirements.length===0)
+			message = message.substring(0, message.length-1);
+			
 		let ref = firebase.database().ref('/users/' + props.uid + "/orders");
-		let yes= imageUrl? imageUrl : "";
 		ref.push({
-				products: submittable,
-				picture: yes,
 				state: "pending",
-				latest_update: moment().format('YYYYMMDDhmmssa'),
-				result: "Your order is still being reviewed",
-				date: moment().format('YYYYMMDDhmmssa') })
+				message: message,
+				picture: yes,
+ 				date: moment().format('YYYYMMDDhmmssa')
+			})
 			.then(function(snapshot) {
 				//console.log('Snapshot', snapshot);
-				setTitle("Order Confirmed");
+				let ref2 = firebase.database().ref('/userList/' + props.uid);
+				ref2.set({
+					n: moment().format('YYYYMMDDhmmssa'),
+					o: orders_counted,
+					f: props.userInfo.first_name + " " + props.userInfo.last_name
+				})
+				.then(function(snapshot) {
+					//console.log('Snapshot', snapshot);
+					setTitle("Order Confirmed");
+					if(props.sender==="Cart")
+						props.updateCart([]);
+				});
 		});
+	};
+	const orders_count = () => {
+
+		let counter = 0;
+		if(props.userInfo.orders){
+			let vals = Object.values(props.userInfo.orders);
+			let index = -1;
+			for(var i in props.userInfo.orders){
+				index += 1;
+				if(vals[index].state==="pending")
+					counter += 1;
+			}
+			return counter;
+		}
+		return 0;
 	};
 
   	const galery = async () => {
@@ -214,6 +255,7 @@ const CheckOut = props => {
                 }
             }
         }
+
         return cake;
     };
 

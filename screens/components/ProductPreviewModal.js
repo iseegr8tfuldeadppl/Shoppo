@@ -201,7 +201,7 @@ const ProductPreviewModal = props => {
 							onChangeText={(enteredText) => {updateRequirements(index, enteredText);}}
 							value={requirements[index].slot} />
 
-		              	<OkayButtons
+		              	<OkayButton
 		                  	style={{ marginBottom:10, marginTop: 30, width: "80%" }}
 		                  	textStyle={{ fontSize: 16 }}
 		                  	onClick={() => {setIndex(check(false, false)); }}

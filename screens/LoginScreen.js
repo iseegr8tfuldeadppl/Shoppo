@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import * as Google from 'expo-google-app-auth'; // change this to 'expo-google-sign-in' to turn the window login into a popup, also remove behavior: 'web' from the google code maybe?
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Card from './components/Card';
+import moment from 'moment';
 
 
 const LoginScreen = props => {
@@ -50,39 +51,26 @@ const LoginScreen = props => {
 				.auth()
 				.signInAndRetrieveDataWithCredential(credential)
 				.then(function(result) {
-					if (result.additionalUserInfo.isNewUser) {
 					firebase
-						.database()
-						.ref('/users/' + result.user.uid)
-						.set({
-							gmail: result.user.email,
-							profile_picture: result.additionalUserInfo.profile.picture,
-							first_name: result.additionalUserInfo.profile.given_name,
-							last_name: result.additionalUserInfo.profile.family_name,
-							last_logged_in: Date.now()
-						})
-						.then(function(snapshot) {
-						// console.log('Snapshot', snapshot);
-						});
-					} else {
-					firebase
-						.database()
-						.ref('/users/' + result.user.uid)
-						.update({
-							gmail: result.user.email,
-							profile_picture: result.additionalUserInfo.profile.picture,
-							first_name: result.additionalUserInfo.profile.given_name,
-							last_name: result.additionalUserInfo.profile.family_name,
-							last_logged_in: Date.now()
-						});
-					}
-				})
-				.catch(function(error) {
-					var errorCode = error.code;
-					var errorMessage = error.message;
-					var email = error.email;
-					// The firebase.auth.AuthCredential type that was used.
-					var credential = error.credential;
+					.database()
+					.ref('/users/' + result.user.uid)
+					.set({
+						gmail: result.user.email,
+						profile_picture: result.additionalUserInfo.profile.picture,
+						first_name: result.additionalUserInfo.profile.given_name? result.additionalUserInfo.profile.given_name : "",
+						last_name: result.additionalUserInfo.profile.family_name? result.additionalUserInfo.profile.family_name : ""
+					})
+					.then(function(snapshot) {
+						console.log('Snapshot' + snapshot);
+						if (result.additionalUserInfo.isNewUser) {
+							firebase
+							.database()
+							.ref('/userList/' + result.user.uid)
+							.set({
+								n: moment().format('YYYYMMDDhmmssa')
+							});
+						}
+					});
 				});
 				setLoading(false);
 			} else {
@@ -126,15 +114,30 @@ const LoginScreen = props => {
 		content = <Text style={{marginLeft: 'auto', marginRight: 'auto',}}>Sign In With Google</Text>
 	}
 
+	const page = () => {
+		if(!props.connection){
+			return(
+				<View style={styles.screen}>
+					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>No Internet</Text>
+                	<MaterialCommunityIcons name="wifi-off" color={"red"} size={60} />
+				</View>
+			);
+		} else {
+			return(
+				<View style={styles.container}>
+				<Card
+					style={styles.botton}
+					onPress={() => signInWithGoogleAsync()}>
+					<MaterialCommunityIcons name="google" color={"black"} size={28} />
+					{content}
+				</Card>
+				</View>
+			);
+		}
+	};
+
 	return (
-		<View style={styles.container}>
-		<Card
-			style={styles.botton}
-			onPress={() => signInWithGoogleAsync()}>
-			<MaterialCommunityIcons name="google" color={"black"} size={28} />
-			{content}
-		</Card>
-		</View>
+		page()
 	);
 }
 
