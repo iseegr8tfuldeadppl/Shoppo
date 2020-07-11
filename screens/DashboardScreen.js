@@ -7,14 +7,17 @@ import { Alert, View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
-import Tabs from './Tabs/TabsHolder';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import MainMenu from './Tabs/MainMenu';
+import Categories from './Tabs/Categories';
+import Cart from './Tabs/Cart';
+import Profile from './Tabs/Profile';
 const Drawer = createDrawerNavigator();
 
 
 const DashboardScreen = props =>  {
 
+	const [remoteOrdersOpen, setRemoteOrdersOpen] = useState();
 	const [cart, updateCart] = useState([]);
 	const [finishedLoadingFromFirebase, setFinishedLoadingFromFirebase] = useState(false);
 	const [categories, setCategories] = useState([]);
@@ -212,73 +215,71 @@ const DashboardScreen = props =>  {
 							)
 					}}>
 
-					<Drawer.Screen name="Main Page">{propss =>
-						<Tabs.MainMenuPage {...props}
-							adminList={adminList}
-							contact={contact}
-							setFocusedPage={setFocusedPage}
-							focusedPage={focusedPage}
-							setCheckoutList={setCheckoutList}
-							checkoutList={checkoutList}
+					<Drawer.Screen name="Main Menu">{propss =>
+	  			  		<MainMenu {...propss}
+							setRemoteOrdersOpen={setRemoteOrdersOpen}
+  						  	setFocusedPage={setFocusedPage}
+  						  	focusedPage={focusedPage}
+  						  	setCheckoutList={setCheckoutList}
+  						  	checkoutList={checkoutList}
 							userInfo={userInfo}
-							updateCart={updateCart}
-							cart={cart}
-							setProductPreviewed={setProductPreviewed}
-							productPreviewed={productPreviewed}
-							uid={props.uid}
-							usersLatest={usersLatest}
-							categories={categories}
-							addToCart={addToCart}
-							adminList={adminList}
-							finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
+  							setProductPreviewed={setProductPreviewed}
+  							productPreviewed={productPreviewed}
+  							uid={props.uid}
+  							updateCart={updateCart}
+  							addToCart={addToCart}
+  							cart={cart}
+  							categories={categories}
+  							adminList={adminList}
+  							finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
 					</Drawer.Screen>
 
 					<Drawer.Screen name="Categories" >{propss =>
-						<Tabs.CategoriesPage {...props}
-							categories={categories}
-							setFocusedPage={setFocusedPage}
-							focusedPage={focusedPage}
-							adminList={adminList}
-							contact={contact}
-							setCheckoutList={setCheckoutList}
-							usersLatest={usersLatest}
-							checkoutList={checkoutList}
-							userInfo={userInfo}
+						<Categories {...propss}
+							updateCart={updateCart}
 							uid={props.uid}
-							cart={cart}
-							updateCart={updateCart} />}
+							userInfo={userInfo}
+		  				  	checkoutList={checkoutList}
+		  				  	adminList={adminList}
+		  				  	addToCart={addToCart}
+		  				  	cart={cart}
+							setCheckoutList={setCheckoutList}
+							setRemoteOrdersOpen={setRemoteOrdersOpen}
+  						  	setFocusedPage={setFocusedPage}
+  						  	focusedPage={focusedPage}
+						  	categories={categories}
+  						  	setProductPreviewed={setProductPreviewed}
+  						  	productPreviewed={productPreviewed}/>}
 					</Drawer.Screen>
 
 					<Drawer.Screen name="Cart" >{propss =>
-						<Tabs.CartPage {...props}
-							categories={categories}
-							adminList={adminList}
-							setFocusedPage={setFocusedPage}
-							focusedPage={focusedPage}
-							contact={contact}
-							setCheckoutList={setCheckoutList}
-							checkoutList={checkoutList}
+						<Cart {...propss}
+							setRemoteOrdersOpen={setRemoteOrdersOpen}
+  						  	setFocusedPage={setFocusedPage}
+  						  	focusedPage={focusedPage}
+  						  	setCheckoutList={setCheckoutList}
+  						  	checkoutList={checkoutList}
 							userInfo={userInfo}
-							uid={props.uid}
-							usersLatest={usersLatest}
-							cart={cart}
-							updateCart={updateCart} />}
+  							updateCart={updateCart}
+  							setProductPreviewed={setProductPreviewed}
+  							productPreviewed={productPreviewed}
+  							uid={props.uid}
+  							cart={cart}
+  							adminList={adminList}/>}
 					</Drawer.Screen>
 
 					<Drawer.Screen name="Profile" >{propss =>
-						<Tabs.ProfilePage {...props}
-							usersLatest={usersLatest}
-							categories={categories}
-							adminList={adminList}
+						<Profile {...propss}
+							setRemoteOrdersOpen={setRemoteOrdersOpen}
+							remoteOrdersOpen={remoteOrdersOpen}
+  						  	setFocusedPage={setFocusedPage}
+  						  	focusedPage={focusedPage}
+  				  			usersLatest={usersLatest}
+  			  				categories={categories}
+  			  				uid={props.uid}
+  			  				adminList={adminList}
 							contact={contact}
-							setFocusedPage={setFocusedPage}
-							focusedPage={focusedPage}
-							setCheckoutList={setCheckoutList}
-							checkoutList={checkoutList}
-							uid={props.uid}
-							userInfo={userInfo}
-							cart={cart}
-							updateCart={updateCart} />}
+							userInfo={userInfo}/>}
 					</Drawer.Screen>
 
 					</Drawer.Navigator>

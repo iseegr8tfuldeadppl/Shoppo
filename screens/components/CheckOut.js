@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity, FlatList, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, Alert, ActivityIndicator, BackHandler } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from './Header';
 import Colors from '../constants/Colors';
@@ -11,7 +11,6 @@ import * as ImagePicker from 'expo-image-picker';
 import firebase from 'firebase';
 import paymentMethods from '../constants/paymentMethods';
 import moment from 'moment';
-import Orders from './Orders';
 
 
 const CheckOut = props => {
@@ -62,12 +61,10 @@ const CheckOut = props => {
 	};
 
 	const exit = () => {
-		if(props.resetRequirements)
-			props.resetRequirements();
-		if(imageUri)
-			setImageUri();
 		props.setCheckoutList();
-		setTitle("Payment Method");
+		if(props.sender!=="Cart")
+			props.resetRequirements();
+		//setTitle("Payment Method");
 	};
 
 	const Buy = () => {
@@ -99,7 +96,6 @@ const CheckOut = props => {
 				uploadImage(imageUri);
 			}
 		} else if(title==="Order Confirmed"){
-			cleanCart();
 			exit();
 		}
 
@@ -113,10 +109,18 @@ const CheckOut = props => {
 		} else if(title==="Submit Picture"){
 			setTitle("Confirm Order");
 		} else if(title==="Order Confirmed"){
-			cleanCart();
+			if(props.sender==="Cart")
+				cleanCart();
+			if(imageUri)
+				setImageUri();
 			exit();
 		}
 	};
+
+	BackHandler.addEventListener('hardwareBackPress', function() {
+		goBack();
+	    return true;
+	});
 
 	const uploadImage = async(uri) => {
 
@@ -190,13 +194,13 @@ const CheckOut = props => {
 				state: "pending",
 				message: message,
 				picture: yes,
- 				date: moment().format('YYYYMMDDhmmssa')
+ 				date: moment().format('YYYYMMDDhhmmssa')
 			})
 			.then(function(snapshot) {
 				//console.log('Snapshot', snapshot);
 				let ref2 = firebase.database().ref('/userList/' + props.uid);
 				ref2.set({
-					n: moment().format('YYYYMMDDhmmssa'),
+					n: moment().format('YYYYMMDDhhmmssa'),
 					o: orders_counted,
 					f: props.userInfo.first_name + " " + props.userInfo.last_name
 				})
@@ -204,7 +208,9 @@ const CheckOut = props => {
 					//console.log('Snapshot', snapshot);
 					setTitle("Order Confirmed");
 					if(props.sender==="Cart")
-						props.updateCart([]);
+						cleanCart();
+					if(imageUri)
+						setImageUri();
 				});
 		});
 	};
@@ -378,7 +384,7 @@ const CheckOut = props => {
  					<OkayButton
 						style={{ minWidth: 220 }}
  						textStyle={{ fontSize: 16 }}
- 						onClick={() => { setTitle("My Orders")  }}
+ 						onClick={() => { setTitle("My Orders");  }}
  						text={"Go to Orders List"} />
 
  					<OkayButton
@@ -398,32 +404,30 @@ const CheckOut = props => {
 	};
 
 	if(title==="My Orders"){
-		return(
-			<Modal visible={props.checkoutList!==undefined} animationType="slide">
-				<Orders
-					backToRoot={() => {setTitle("Order Confirmed");} }
-					orders={getOrders()} />
-			</Modal>
-		);
+		if(props.sender==="Cart")
+			cleanCart();
+		if(imageUri)
+			setImageUri();
+		exit();
+
+		props.setProductPreviewed();
+		props.setRemoteOrdersOpen("ah");
+		props.navigation.navigate("Profile");
 	}
 
 	return(
-		<Modal visible={props.checkoutList!==undefined} animationType="slide">
+		<View style={{flex:1, alignItems:"center", width:"100%"}}>
+			<Header style={styles.customHeader}>
+				<TouchableOpacity
+					onPress={goBack}>
+					<MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
+				</TouchableOpacity>
+			</Header>
 
-			<View style={{flex:1, alignItems:"center",}}>
-				<Header style={styles.customHeader}>
-					<TouchableOpacity
-						onPress={goBack}>
-						<MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
-					</TouchableOpacity>
-				</Header>
+			<Text style={styles.cuteTitle}>{title}</Text>
 
-				<Text style={styles.cuteTitle}>{title}</Text>
-
-				{display()}
-			</View>
-
-		</Modal>
+			{display()}
+		</View>
 	);
 };
 
@@ -443,8 +447,7 @@ const styles = StyleSheet.create({
 		alignItems:"center",
 	},
 	customHeader: {
-		paddingTop:18,
-		paddingBottom:12,
+		height: 70,
 	},
 	cuteTitle: {
 		width:"100%",

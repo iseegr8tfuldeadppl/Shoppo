@@ -130,7 +130,7 @@ const CartItem = props => {
 						update(props.item.key);
 						props.setAllSelected(areTheyAllSelected());
 					}} />
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => {props.setProductPreviewed(props.item);}}>
 					<View
 						style={styles.horizontal}>
 						<Image

@@ -1,8 +1,9 @@
 import React from 'react';
-import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
+import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Card from './Card';
+import CachedImage from './CachedImage';
 
 
 const MainProductItem = props => {
@@ -33,9 +34,10 @@ const MainProductItem = props => {
                     onPress={() => {props.setProductPreviewed(props.item);}}
                     style={styles.productItem}>
 
-                    <Image
+                    <CachedImage
+                        source={props.item.data.banner}
                         style={styles.image}
-                        source={{ uri:props.item.data.banner }} />
+                        />
 
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center",
         backgroundColor:Colors.Accent,
-        paddingVertical: 10,
+        height: 140,
     },
     showmoreText: {
         marginTop: 18,
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
         marginHorizontal:7,
         flex:0.5,
         borderRadius: 18,
+        height: 150,
 
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 2},

@@ -9,19 +9,33 @@ import Colors from '../constants/Colors';
 import ProfilePageItem from '../components/ProfilePageItem';
 import Call from '../components/Call';
 import Email from '../components/Email';
-import Orders from '../components/Orders';
+import Clients from '../components/Admins/Clients';
 import firebase from 'firebase';
+import moment from 'moment';
+import Taboo from '../components/Taboo';
+import Chat from '../components/Chat';
 
 
 const Profile = props => {
 
     const [page, setPage] = useState("Root");
+
+    // this is for when they press "go to my orders" from <checkout>
+    if(props.navigation.isFocused()){
+        if(props.remoteOrdersOpen){
+            if(page!=="Clients"){
+                setPage("Clients");
+                props.setRemoteOrdersOpen();
+            }
+        }
+    }
+
     BackHandler.addEventListener('hardwareBackPress', function() {
 	    if(page==="Call")
             setPage("Root");
         else if(page==="Email")
             setPage("Root")
-        else if(page==="Orders")
+        else if(page==="Clients")
             setPage("Root");
 	    return true;
 	});
@@ -163,34 +177,127 @@ const Profile = props => {
         } else return "0 Orders";
     };
 
-    switch(page){
-        case "Orders":
-            return(
-                <Orders
-                    clientSelected={clientSelected}
-                    setClientSelected={setClientSelected}
-                    categories={props.categories}
-                    uid={props.uid}
-	  				usersLatest={props.usersLatest}
-                    adminList={props.adminList}
-                    backToRoot={() => {setPage("Root");} }
-                    setMessages={setMessages}
-                    turnIntoMessages={turnIntoMessages}
-                    messago={messago} />);
-            break;
-        case "Call":
-            return(
-                <Call
-                    backToRoot={() => {setPage("Root");} }
-                    numbers={getNumbers()} />);
-            break;
-        case "Email":
-            return(
-                <Email
-                    backToRoot={() => {setPage("Root");} }
-                    emails={getEmail()} />);
-            break;
-    }
+    const doubleTabPress = () => {
+        setPage("Root");
+    };
+
+    const ordersOrClients = () => {
+        if(props.adminList.includes(props.uid))
+            return "Clients";
+        return "Orders";
+    };
+
+    const pageDisplay = () => {
+        switch(page){
+            case "Chat":
+                return(
+                    <SafeAreaView style={styles.letout}>
+                        <Chat
+                            setPage={setPage}
+                            setClientSelected={setClientSelected}
+                            uid={props.uid}
+                            adminList={props.adminList}
+                            backToRoot={() => {setPage("Root");} }
+                            setMessages={setMessages}
+                            turnIntoMessages={turnIntoMessages}
+                            messago={messago} />
+                    </SafeAreaView>
+                );
+                break;
+            case "Clients":
+                return(
+                      <SafeAreaView style={styles.letout}>
+                        <Clients
+                            setPage={setPage}
+                            clientSelected={clientSelected}
+                            setClientSelected={setClientSelected}
+                            categories={props.categories}
+                            uid={props.uid}
+        	  				usersLatest={props.usersLatest}
+                            adminList={props.adminList}
+                            backToRoot={() => {setPage("Root");} }/>
+                          <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                      </SafeAreaView>
+                );
+                break;
+            case "Call":
+                return(
+                  <SafeAreaView style={styles.letout}>
+                      <Call
+                          backToRoot={() => {setPage("Root");} }
+                          numbers={getNumbers()} />
+                      <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                  </SafeAreaView>
+                );
+                break;
+            case "Email":
+                return(
+                  <SafeAreaView style={styles.letout}>
+                    <Email
+                        backToRoot={() => {setPage("Root");} }
+                        emails={getEmail()} />
+                      <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                  </SafeAreaView>
+                );
+                break;
+            default:
+                return(
+                  <SafeAreaView style={styles.letout}>
+                      <Header style={styles.header}>
+                          <TouchableOpacity
+                              onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
+                              <MaterialCommunityIcons name="menu" color={"white"} size={30} />
+                          </TouchableOpacity>
+                          <View style={styles.headertitleholder}><Text style={styles.headertitle}>Profile</Text></View>
+                      </Header>
+
+                      <ScrollView>
+                          <View style={styles.topBar}>
+                              <View style={styles.topBarInner}>
+                                  <View style={styles.topbarLeftTextsHolder}>
+                                      <Text
+                                              style={styles.name}
+                                              numberOfLines={1}
+                                              ellipsizeMode='tail'>
+                                          {first_last_name()}</Text>
+                                      <Text
+                                              style={styles.orderCount}
+                                              numberOfLines={1}
+                                              ellipsizeMode='tail'>
+                                          {ordersCounted()}</Text>
+                                  </View>
+                                  <Image
+                                      style={styles.image}
+                                      source={{ uri:profile_pic() }} />
+                              </View>
+                          </View>
+
+                          <ProfilePageItem
+                              name={"menu"}
+                              onEsspresso={() => {if(props.adminList.includes(props.uid)) setPage("Clients"); else setPage("Chat");}}
+                              text={ordersOrClients()} />
+
+                          <ProfilePageItem
+                              name={"share-variant"}
+                              onEsspresso={() => {setPage("Share");}}
+                              text={"Share app with friends!"} />
+
+                          <ProfilePageItem
+                              name={"phone"}
+                              onEsspresso={() => {setPage("Call");}}
+                              text={"Call Us"} />
+
+                          <ProfilePageItem
+                              name={"email"}
+                              onEsspresso={() => {setPage("Email");}}
+                              text={"Email Us"} />
+                      </ScrollView>
+                      <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                  </SafeAreaView>
+                );
+                break;
+        }
+    };
 
     const first_last_name = () => {
         return props.userInfo.last_name + " " + props.userInfo.first_name;
@@ -199,64 +306,11 @@ const Profile = props => {
     const profile_pic = () => {
         if(props.userInfo)
             return props.userInfo.profile_picture;
-        else
-            return;
+        return;
     };
 
   return (
-    <SafeAreaView style={styles.letout}>
-
-        <Header style={styles.header}>
-            <TouchableOpacity
-                onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
-                <MaterialCommunityIcons name="menu" color={"white"} size={30} />
-            </TouchableOpacity>
-            <View style={styles.headertitleholder}><Text style={styles.headertitle}>Profile</Text></View>
-        </Header>
-
-        <ScrollView>
-            <View style={styles.topBar}>
-                <View style={styles.topBarInner}>
-                    <View style={styles.topbarLeftTextsHolder}>
-                        <Text
-                                style={styles.name}
-				                numberOfLines={1}
-				                ellipsizeMode='tail'>
-                            {first_last_name()}</Text>
-                        <Text
-                                style={styles.orderCount}
-				                numberOfLines={1}
-	                            ellipsizeMode='tail'>
-                            {ordersCounted()}</Text>
-                    </View>
-                    <Image
-                        style={styles.image}
-                        source={{ uri:profile_pic() }} />
-                </View>
-            </View>
-
-            <ProfilePageItem
-                name={"menu"}
-                onEsspresso={() => {setPage("Orders");}}
-                text={"Orders"} />
-
-            <ProfilePageItem
-                name={"share-variant"}
-                onEsspresso={() => {setPage("Share");}}
-                text={"Share app with friends!"} />
-
-            <ProfilePageItem
-                name={"phone"}
-                onEsspresso={() => {setPage("Call");}}
-                text={"Call Us"} />
-
-            <ProfilePageItem
-                name={"email"}
-                onEsspresso={() => {setPage("Email");}}
-                text={"Email Us"} />
-        </ScrollView>
-
-    </SafeAreaView>
+    pageDisplay()
   );
 }
 

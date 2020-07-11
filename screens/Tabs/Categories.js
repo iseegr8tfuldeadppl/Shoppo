@@ -7,6 +7,8 @@ import { DrawerActions } from '@react-navigation/native';
 import Header from '../components/Header';
 import SideCategoryItem from '../components/SideCategoryItem';
 import CategoryPreview from '../components/CategoryPreview';
+import ProductPreviewModal from '../components/ProductPreviewModal';
+import Taboo from '../components/Taboo';
 
 
 const Categories = props => {
@@ -22,6 +24,15 @@ const Categories = props => {
             setCategoryPreviewed();
 	    return true;
 	});
+
+    const doubleTabPress = () => {
+        if(props.productPreviewed){
+            props.setProductPreviewed();
+            return;
+        }
+        if(categoryPreviewed)
+            setCategoryPreviewed();
+    };
 
     const list = () => {
         return(
@@ -39,47 +50,74 @@ const Categories = props => {
     const categoryPreviewedTitle = () =>{
         if(categoryPreviewed)
             return categoryPreviewed.category;
-        else
-            return "";
+        return "";
+    };
+
+    const title = () => {
+        if(categoryPreviewed)
+            return categoryPreviewedTitle();
+        return "Categories";
     };
 
     const page = () => {
-
-        if(categoryPreviewed){
+        if(props.productPreviewed && props.navigation.isFocused())
             return(
-            <>
-            <Header style={styles.header}>
-                <TouchableOpacity
-                    onPress={() => {setCategoryPreviewed();} }>
-                    <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
-                </TouchableOpacity>
-                <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
-            </Header>
-            <CategoryPreview
-                item={categoryPreviewed}
-                setProductPreviewed={props.setProductPreviewed}/>
-            </>
+			  <ProductPreviewModal
+				  navigation={props.navigation}
+				  setRemoteOrdersOpen={props.setRemoteOrdersOpen}
+				  checkoutList={props.checkoutList}
+				  setCheckoutList={props.setCheckoutList}
+				  adminList={props.adminList}
+				  uid={props.uid}
+				  userInfo={props.userInfo}
+				  navigation={props.navigation}
+				  addToCart={props.addToCart}
+				  cart={props.cart}
+				  updateCart={props.updateCart}
+				  setProductPreviewed={props.setProductPreviewed}
+				  productPreviewed={props.productPreviewed}/>
             );
-        } else {
+        else if(categoryPreviewed)
+            return(
+                <>
+                <Header style={styles.header}>
+                    <TouchableOpacity
+                        onPress={() => {if(categoryPreviewed) setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
+                        <MaterialCommunityIcons name={headerIcon()} color={"white"} size={30} />
+                    </TouchableOpacity>
+                    <View style={styles.headertitleholder}><Text style={styles.headertitle}>{title()}</Text></View>
+                </Header>
+                <CategoryPreview
+                    setCategoryPreviewed={setCategoryPreviewed}
+                    item={categoryPreviewed}
+                    setProductPreviewed={props.setProductPreviewed}/>
+                </>
+            );
+
         return(
             <>
             <Header style={styles.header}>
                 <TouchableOpacity
-                    onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
-                    <MaterialCommunityIcons name="menu" color={"white"} size={30} />
+                    onPress={() => {if(categoryPreviewed) setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
+                    <MaterialCommunityIcons name={headerIcon()} color={"white"} size={30} />
                 </TouchableOpacity>
-                <View style={styles.headertitleholder}><Text style={styles.headertitle}>Categories</Text></View>
+                <View style={styles.headertitleholder}><Text style={styles.headertitle}>{title()}</Text></View>
             </Header>
-
             {list()}
             </>
         );
-        }
+    };
+
+    const headerIcon = () => {
+        if(categoryPreviewed)
+            return "arrow-left";
+        return "menu";
     };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
 		{page()}
+        <Taboo focus={"Categories"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
     </SafeAreaView>
   );
 }

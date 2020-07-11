@@ -11,6 +11,7 @@ import Header from '../components/Header';
 import ProductPreviewModal from '../components/ProductPreviewModal';
 import MainCategoryItem from '../components/MainCategoryItem';
 import CategoryPreview from '../components/CategoryPreview';
+import Taboo from '../components/Taboo';
 
 
 const MainMenu = props => {
@@ -18,7 +19,6 @@ const MainMenu = props => {
   const [categoryPreviewed, setCategoryPreviewed] = useState();
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
-        console.log("caught it");
 		if(props.productPreviewed)
 			props.setProductPreviewed();
 		else if(categoryPreviewed){
@@ -56,19 +56,24 @@ const MainMenu = props => {
           return "";
   };
 
+  const doubleTabPress = () => {
+    console.log("double tab press");
+  };
+
   const page = () => {
 	  // category preview
-	  if(props.productPreviewed){
+	  if(props.productPreviewed && props.navigation.isFocused()){
 		return(
 		  	<SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
 			  	<ProductPreviewModal
+                    navigation={props.navigation}
+                    setRemoteOrdersOpen={props.setRemoteOrdersOpen}
   	            	checkoutList={props.checkoutList}
   	            	setCheckoutList={props.setCheckoutList}
-  					adminListt={props.adminList}
+  					adminList={props.adminList}
   	            	uid={props.uid}
   			  		userInfo={props.userInfo}
   	            	navigation={props.navigation}
-  	            	buyNow={props.buyNow}
   	            	addToCart={props.addToCart}
   	            	cart={props.cart}
   	            	updateCart={props.updateCart}
@@ -93,11 +98,9 @@ const MainMenu = props => {
 			  </SafeAreaView>
 		  );
 	  } else {
-
 		  // main page
 		  return(
 			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
-
 		          <AddNewItemModal
 		            setData={setData}
 		  		  categories={props.categories}
@@ -117,7 +120,6 @@ const MainMenu = props => {
 		  	    </Header>
 
 		      	{addCategoryButton()}
-
 		      	<FlatList
 		      		style={styles.list}
 		      		data={props.categories}
@@ -131,6 +133,7 @@ const MainMenu = props => {
 		                      addProductButton={addProductButton}
 		                      item={categoryData.item}/>
 		      		}/>
+                    <Taboo focus={"Main Menu"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
 		      </SafeAreaView>
 		  );
 	  }

@@ -96,6 +96,7 @@ const ProductPreviewModal = props => {
 						cartCopy[i].original_quantity = cartCopy[i].quantity;
 					}
 					cartCopy[i].quantity.requirements = requirements;
+					props.updateCart(cartCopy);
 
 					Alert.alert(
 						'Added To Cart!',
@@ -106,7 +107,6 @@ const ProductPreviewModal = props => {
 						{ cancelable: true }
 					);
 
-					props.updateCart(cartCopy);
 					return;
 				}
 			}
@@ -208,7 +208,6 @@ const ProductPreviewModal = props => {
 
 	const page = () => {
 		if(addToCartClicked || buyNowClicked){
-
 			if(!isNaN(index)){
 				return(
 					<View style={styles.letout}>
@@ -229,7 +228,6 @@ const ProductPreviewModal = props => {
 				);
 			}
 		}
-
 		return(
 		<View style={styles.flexer}>
 			<View
@@ -297,20 +295,12 @@ const ProductPreviewModal = props => {
 		);
 	};
 
-	// admins tuff
-	const editmodo = () => {
-		if(editMode){
+	const CheckoutOrPreview = () => {
+		if(props.checkoutList){
 			return(
-				<EditProduct
-					setProductPreviewed={props.setProductPreviewed}
-					productPreviewed={props.productPreviewed}
-					setEditMode={setEditMode}
-					productPreviewed={props.productPreviewed}/>
-			);
-		} else {
-			return(
-				<>
 				<CheckOut
+					navigation={props.navigation}
+                    setRemoteOrdersOpen={props.setRemoteOrdersOpen}
 					resetRequirements={resetRequirements}
 					sender={sender()}
 					uid={props.uid}
@@ -321,28 +311,45 @@ const ProductPreviewModal = props => {
 					updateCart={props.updateCart}
 					checkoutList={props.checkoutList}
 					setCheckoutList={props.setCheckoutList}/>
-
-				<TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}} >
-					<View style={styles.wholedamnting}>
-
-						<Header
-							style={styles.customHeader}>
-							<TouchableOpacity
-								onPress={() => {back();} }>
-								<MaterialCommunityIcons name={"arrow-left"} color={"white"} size={32} />
-							</TouchableOpacity>
-							{adminControls()}
-						</Header>
-
-						<View style={{width:"100%", flex:1}}>
-							{page()}
-						</View>
-
-					</View>
-				</TouchableWithoutFeedback>
-				</>
 			);
 		}
+		return(
+			<TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}} >
+				<View style={styles.wholedamnting}>
+
+					<Header
+						style={styles.customHeader}>
+						<TouchableOpacity
+							onPress={() => {back();} }>
+							<MaterialCommunityIcons name={"arrow-left"} color={"white"} size={32} />
+						</TouchableOpacity>
+						{adminControls()}
+					</Header>
+
+					<View style={{width:"100%", flex:1}}>
+						{page()}
+					</View>
+
+				</View>
+			</TouchableWithoutFeedback>
+		);
+	};
+
+	// admins tuff
+	const editmodo = () => {
+		if(editMode){
+			return(
+				<EditProduct
+					setProductPreviewed={props.setProductPreviewed}
+					productPreviewed={props.productPreviewed}
+					setEditMode={setEditMode}
+					productPreviewed={props.productPreviewed}/>
+			);
+		}
+
+		return(
+			CheckoutOrPreview()
+		);
 	};
 
 	const reset = () => {
@@ -430,7 +437,7 @@ const ProductPreviewModal = props => {
 	};
 
 	const adminControls = () => {
-      	if(props.adminListt.includes(props.uid) && !editMode){
+      	if(props.adminList.includes(props.uid) && !editMode){
 	  		// continue here continue here continue here continue here continue here
 			return(
 				<View style={styles.horizontal}>

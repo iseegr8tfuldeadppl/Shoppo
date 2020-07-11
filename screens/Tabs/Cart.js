@@ -12,6 +12,8 @@ import SelectAllBar from '../components/SelectAllBar';
 import CartTrashCan from '../components/CartTrashCan';
 import OkayButton from '../components/OkayButton';
 import Header from '../components/Header';
+import Taboo from '../components/Taboo';
+import ProductPreviewModal from '../components/ProductPreviewModal';
 
 
 const Cart = props => {
@@ -21,6 +23,17 @@ const Cart = props => {
 	BackHandler.addEventListener('hardwareBackPress', function() {
 	    return true;
 	});
+
+    const doubleTabPress = () => {
+		if(props.checkoutList){
+			props.setCheckoutList();
+			return;
+		}
+		if(props.productPreviewed){
+			props.setProductPreviewed();
+			return;
+		}
+    };
 
 	const calculateTotal = () => {
 		let total = 0.00;
@@ -82,34 +95,98 @@ const Cart = props => {
 	};
 
 	const Listpage = () => {
-		if(props.cart.length==0)
+	  	if(props.productPreviewed && props.navigation.isFocused()){
+		  	return(
+			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
+				  <ProductPreviewModal
+					  navigation={props.navigation}
+					  setRemoteOrdersOpen={props.setRemoteOrdersOpen}
+					  checkoutList={props.checkoutList}
+					  setCheckoutList={props.setCheckoutList}
+					  adminList={props.adminList}
+					  uid={props.uid}
+					  userInfo={props.userInfo}
+					  navigation={props.navigation}
+					  addToCart={props.addToCart}
+					  cart={props.cart}
+					  updateCart={props.updateCart}
+					  setProductPreviewed={props.setProductPreviewed}
+					  productPreviewed={props.productPreviewed}/>
+			  </SafeAreaView>
+		  	);
+		} else if(props.cart.length==0)
 			return(
-				<View style={{
-						flex: 1,
-						alignItems: "center",
-						justifyContent: "center",
-					}}>
+				<>
+					<Header style={styles.header}>
+						<TouchableOpacity
+							onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
+							<MaterialCommunityIcons name="menu" color={"white"} size={30} />
+						</TouchableOpacity>
 
-					<MaterialCommunityIcons name="cart" color={Colors.Primary} size={65} />
+						<Text style={styles.headertitle}>Cart</Text>
 
-					<Text style={{
-						fontSize: 24,
-						marginTop: 6,
-						marginBottom: 30,
-					}}>Your Cart is Empty</Text>
+						<CartTrashCan
+							cart={props.cart}
+							updateCart={props.updateCart}/>
+					</Header>
 
-					<OkayButton
-						textStyle={{
-							fontSize: 16,
-						}}
-						onClick={() => {
-							props.navigation.navigate("MainMenu");
-						}}
-						text={"Visit Product Page!"} />
-				</View>
-			);
+					<View style={{
+							flex: 1,
+							alignItems: "center",
+							justifyContent: "center",
+						}}>
+
+						<MaterialCommunityIcons name="cart" color={Colors.Primary} size={65} />
+
+						<Text style={{
+							fontSize: 24,
+							marginTop: 6,
+							marginBottom: 30,
+						}}>Your Cart is Empty</Text>
+
+						<OkayButton
+							style={{
+								minWidth:"70%",
+							}}
+							textStyle={{
+								fontSize: 16,
+							}}
+							onClick={() => {
+								props.navigation.navigate("Main Menu");
+							}}
+							text={"Visit Main Menu"} />
+
+						<OkayButton
+							style={{
+								marginTop: 10,
+								minWidth:"70%",
+							}}
+							textStyle={{
+								fontSize: 16,
+							}}
+							onClick={() => {
+								props.navigation.navigate("Main Menu");
+							}}
+							text={"Visit Categories"} />
+					</View>
+				</>
+				);
 		else
 			return(
+				<>
+				<Header style={styles.header}>
+					<TouchableOpacity
+						onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
+						<MaterialCommunityIcons name="menu" color={"white"} size={30} />
+					</TouchableOpacity>
+
+					<Text style={styles.headertitle}>Cart</Text>
+
+					<CartTrashCan
+						cart={props.cart}
+						updateCart={props.updateCart}/>
+				</Header>
+
 				<View style={{flex:1, }} >
 					<SelectAllBar
 						allSelected={allSelected}
@@ -137,38 +214,36 @@ const Cart = props => {
 						onClick={buyNow} />
 
 				</View>
+				</>
+				);
+	};
+
+	const checkoutOrCart = () => {
+		if(props.checkoutList){
+			return(
+				<CheckOut
+                    navigation={props.navigation}
+					setRemoteOrdersOpen={props.setRemoteOrdersOpen}
+					sender={"Cart"}
+					uid={props.uid}
+					setProductPreviewed={props.setProductPreviewed}
+					productPreviewed={props.productPreviewed}
+				  	userInfo={props.userInfo}
+					cart={props.cart}
+					updateCart={props.updateCart}
+					checkoutList={props.checkoutList}
+					setCheckoutList={props.setCheckoutList}/>
 			);
+		}
+		return(
+			Listpage()
+		);
 	};
 
 	return(
 		<SafeAreaView style={{ flex: 1 }} forceInset={{ bottom: 'never' }}>
-
-			<CheckOut
-				sender={"Cart"}
-				uid={props.uid}
-				setProductPreviewed={props.setProductPreviewed}
-				productPreviewed={props.productPreviewed}
-			  	userInfo={props.userInfo}
-				cart={props.cart}
-				updateCart={props.updateCart}
-				checkoutList={props.checkoutList}
-				setCheckoutList={props.setCheckoutList}/>
-
-			<Header style={styles.header}>
-				<TouchableOpacity
-					onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
-					<MaterialCommunityIcons name="menu" color={"white"} size={30} />
-				</TouchableOpacity>
-
-				<Text style={styles.headertitle}>Cart</Text>
-
-				<CartTrashCan
-					cart={props.cart}
-					updateCart={props.updateCart}/>
-			</Header>
-
-			{Listpage()}
-
+			{checkoutOrCart()}
+			<Taboo focus={"Cart"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
 		</SafeAreaView>
 	);
 }

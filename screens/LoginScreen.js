@@ -67,7 +67,7 @@ const LoginScreen = props => {
 							.database()
 							.ref('/userList/' + result.user.uid)
 							.set({
-								n: moment().format('YYYYMMDDhmmssa')
+								n: moment().format('YYYYMMDDhhmmssa')
 							});
 						}
 					});
