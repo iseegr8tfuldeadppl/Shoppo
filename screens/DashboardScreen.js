@@ -23,6 +23,7 @@ const DashboardScreen = props =>  {
 	const [checkoutList, setCheckoutList] = useState();
 	const [contact, setContact] = useState();
 	const [loading, setLoading] = useState(true);
+	const [focusedPage, setFocusedPage] = useState("Main");
 
 	// admin stuff
 	const [adminList, setAdminList] = useState([]);
@@ -182,6 +183,8 @@ const DashboardScreen = props =>  {
 	};
 
 	const page = () => {
+
+
 		if(!props.connection){
 			return(
 				<View style={styles.screen}>
@@ -191,92 +194,99 @@ const DashboardScreen = props =>  {
 			);
 		} else {
 			return(
-					<View style={{flex: 1, width:"100%"}}>
+				<View style={{flex: 1, width:"100%"}}>
+					<NavigationContainer>
+					<Drawer.Navigator initialRouteName="Main Page" drawerContent={propss => {
+							return (
+								<DrawerContentScrollView {...propss}>
+								<DrawerItemList {...propss} />
+								<DrawerItem label="Logout" onPress={() =>
+									Alert.alert(
+										'Logout',
+										'Are you sure you want to log out?',
+										[{text: 'No', style: 'cancel'},
+											{text: 'Yes', style: 'destructive', onPress: () => logOut(props) }],
+										{ cancelable: true }
+									)} />
+								</DrawerContentScrollView>
+							)
+					}}>
 
-						<NavigationContainer>
-						<Drawer.Navigator initialRouteName="Main Page" drawerContent={propss => {
-								return (
-									<DrawerContentScrollView {...propss}>
-									<DrawerItemList {...propss} />
-									<DrawerItem label="Logout" onPress={() =>
-										Alert.alert(
-											'Logout',
-											'Are you sure you want to log out?',
-											[{text: 'No', style: 'cancel'},
-												{text: 'Yes', style: 'destructive', onPress: () => logOut(props) }],
-											{ cancelable: true }
-										)} />
-									</DrawerContentScrollView>
-								)
-							}}>
+					<Drawer.Screen name="Main Page">{propss =>
+						<Tabs.MainMenuPage {...props}
+							adminList={adminList}
+							contact={contact}
+							setFocusedPage={setFocusedPage}
+							focusedPage={focusedPage}
+							setCheckoutList={setCheckoutList}
+							checkoutList={checkoutList}
+							userInfo={userInfo}
+							updateCart={updateCart}
+							cart={cart}
+							setProductPreviewed={setProductPreviewed}
+							productPreviewed={productPreviewed}
+							uid={props.uid}
+							usersLatest={usersLatest}
+							categories={categories}
+							addToCart={addToCart}
+							adminList={adminList}
+							finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
+					</Drawer.Screen>
 
-							<Drawer.Screen name="Main Page">{propss =>
-								<Tabs.MainMenuPage {...props}
-									adminList={adminList}
-									contact={contact}
-									setCheckoutList={setCheckoutList}
-									checkoutList={checkoutList}
-									userInfo={userInfo}
-									updateCart={updateCart}
-									cart={cart}
-									setProductPreviewed={setProductPreviewed}
-									productPreviewed={productPreviewed}
-									uid={props.uid}
-									usersLatest={usersLatest}
-									categories={categories}
-									addToCart={addToCart}
-									adminList={adminList}
-									finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
-							</Drawer.Screen>
+					<Drawer.Screen name="Categories" >{propss =>
+						<Tabs.CategoriesPage {...props}
+							categories={categories}
+							setFocusedPage={setFocusedPage}
+							focusedPage={focusedPage}
+							adminList={adminList}
+							contact={contact}
+							setCheckoutList={setCheckoutList}
+							usersLatest={usersLatest}
+							checkoutList={checkoutList}
+							userInfo={userInfo}
+							uid={props.uid}
+							cart={cart}
+							updateCart={updateCart} />}
+					</Drawer.Screen>
 
-							<Drawer.Screen name="Categories" >{propss =>
-								<Tabs.CategoriesPage {...props}
-									categories={categories}
-									adminList={adminList}
-									contact={contact}
-									setCheckoutList={setCheckoutList}
-									usersLatest={usersLatest}
-									checkoutList={checkoutList}
-									userInfo={userInfo}
-									uid={props.uid}
-									cart={cart}
-									updateCart={updateCart} />}
-							</Drawer.Screen>
+					<Drawer.Screen name="Cart" >{propss =>
+						<Tabs.CartPage {...props}
+							categories={categories}
+							adminList={adminList}
+							setFocusedPage={setFocusedPage}
+							focusedPage={focusedPage}
+							contact={contact}
+							setCheckoutList={setCheckoutList}
+							checkoutList={checkoutList}
+							userInfo={userInfo}
+							uid={props.uid}
+							usersLatest={usersLatest}
+							cart={cart}
+							updateCart={updateCart} />}
+					</Drawer.Screen>
 
-							<Drawer.Screen name="Cart" >{propss =>
-								<Tabs.CartPage {...props}
-									categories={categories}
-									adminList={adminList}
-									contact={contact}
-									setCheckoutList={setCheckoutList}
-									checkoutList={checkoutList}
-									userInfo={userInfo}
-									uid={props.uid}
-									usersLatest={usersLatest}
-									cart={cart}
-									updateCart={updateCart} />}
-							</Drawer.Screen>
+					<Drawer.Screen name="Profile" >{propss =>
+						<Tabs.ProfilePage {...props}
+							usersLatest={usersLatest}
+							categories={categories}
+							adminList={adminList}
+							contact={contact}
+							setFocusedPage={setFocusedPage}
+							focusedPage={focusedPage}
+							setCheckoutList={setCheckoutList}
+							checkoutList={checkoutList}
+							uid={props.uid}
+							userInfo={userInfo}
+							cart={cart}
+							updateCart={updateCart} />}
+					</Drawer.Screen>
 
-							<Drawer.Screen name="Profile" >{propss =>
-								<Tabs.ProfilePage {...props}
-									usersLatest={usersLatest}
-									categories={categories}
-									adminList={adminList}
-									contact={contact}
-									setCheckoutList={setCheckoutList}
-									checkoutList={checkoutList}
-									uid={props.uid}
-									userInfo={userInfo}
-									cart={cart}
-									updateCart={updateCart} />}
-							</Drawer.Screen>
+					</Drawer.Navigator>
+					</NavigationContainer>
 
-						</Drawer.Navigator>
-						</NavigationContainer>
-
-						{loadingPage()}
-					</View>
-				);
+					{loadingPage()}
+				</View>
+			);
 		}
 	};
 

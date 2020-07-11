@@ -6,6 +6,7 @@ import OkayButton from './OkayButton';
 import Colors from '../constants/Colors';
 import moment from 'moment';
 import firebase from 'firebase';
+import Banner from './Banner';
 
 // admin stuff
 import Client from './Admins/Product/Client';
@@ -57,9 +58,9 @@ const Orders = props => {
     const picture = url => {
         if(url){
             return(
-                <Image
-                    style={{width: "70%", height: 100, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}
-                    source={{ uri:url }} />
+				<Banner
+					style={{width: "65%", height: 150, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}
+					images={url} />
             );
         }
     };

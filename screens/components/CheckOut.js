@@ -167,21 +167,24 @@ const CheckOut = props => {
 		let yes = imageUrl? imageUrl : "";
 		let message = "";
 		for(let i=0; i<props.checkoutList.length; i++){
+
 			message += "Product: " + props.checkoutList[i].data.title + '\n';
 			message += "Quantity: " + props.checkoutList[i].data.quantity + '\n';
-			message += "Total: " + calculateTotalForThisProduct(props.checkoutList[i]) + " DA" + "\n\n";
+			message += "Total: " + calculateTotalForThisProduct(props.checkoutList[i]) + " DA" + "\n";
+
+			if(props.checkoutList[i].requirements.length!==0)
+				message += '\n';
+
 			for(let j=0; j<props.checkoutList[i].requirements.length; j++){
 				message += props.checkoutList[i].requirements[j].title + ": " + props.checkoutList[i].requirements[j].slot + '\n';
 			}
-		}
 
+		}
 
 		let orders_counted = (orders_count() + 1).toString();
 
 		message = message.substring(0, message.length-1);
-		if(props.checkoutList[i].requirements.length===0)
-			message = message.substring(0, message.length-1);
-			
+
 		let ref = firebase.database().ref('/users/' + props.uid + "/orders");
 		ref.push({
 				state: "pending",

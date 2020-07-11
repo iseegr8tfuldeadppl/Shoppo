@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, Modal, TextInput, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Image, Alert } from 'react-native';
+import { StyleSheet, View, Text, Modal, TextInput, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Image, Alert, BackHandler } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from './Header';
 import Colors from '../constants/Colors';
@@ -9,12 +9,31 @@ import OkayButton from './OkayButton';
 import firebase from 'firebase';
 //admin stuff
 import EditProduct from './Admins/Product/EditProduct';
+import Banner from './Banner';
+
 
 
 const ProductPreviewModal = props => {
 
 	const IsOriginallyCurrency = () => {
 		return props.productPreviewed.data.type==="currency" || props.productPreviewed.data.type==="account-charging";
+	};
+
+	BackHandler.addEventListener('hardwareBackPress', function() {
+		back();
+	    return true;
+	});
+
+	const back = () => {
+		if(isNaN(index)){
+			reset();
+			props.setProductPreviewed();
+		} else {
+			if(index>0)
+				setIndex(index-1);
+			else
+				setIndex("nigger");
+		}
 	};
 
 	const stuff = () => {
@@ -210,23 +229,23 @@ const ProductPreviewModal = props => {
 				);
 			}
 		}
+
 		return(
 		<View style={styles.flexer}>
-			<View style={styles.flexer}>
-				<Image
-					style={styles.banner}
-					source={{
-						uri:props.productPreviewed.data.banner, }} />
+			<View
+				style={{width:"100%", flex: 1 }}>
+				<View style={styles.banner}>
+					<Banner
+						style={styles.banner}
+						images={props.productPreviewed.data.banner} />
+				</View>
+
 				<View style={styles.costHolder}>
-					<Text numberOfLines={3} ellipsizeMode='tail' style={styles.cost}>{props.productPreviewed.data.cost} DA</Text>
+					<Text numberOfLines={1} ellipsizeMode='tail' style={styles.cost}>{props.productPreviewed.data.cost} DA</Text>
 				</View>
-
-				<View style={styles.content}>
-					<Text style={styles.title}>{props.productPreviewed.data.title}</Text>
-					<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
-				</View>
+				<Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.productPreviewed.data.title}</Text>
+				<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
 			</View>
-
 			<View style={styles.quantityOuterHolder}>
 				<View style={styles.quantityInnerHolder}>
 					<TouchableOpacity
@@ -261,20 +280,18 @@ const ProductPreviewModal = props => {
 						<MaterialCommunityIcons name={"plus"} color={"white"} size={20} />
 					</TouchableOpacity>
 				</View>
-
-
-	              <OkayButton
-	                  style={{ marginTop:10, width: "70%", paddingVertical: 8, }}
-	                  textStyle={{ fontSize: 14 }}
-	                  onClick={() => {setBuyNowClicked(true);setIndex(check(true, false)); }}
-	                  text={"Buy Now"} />
-
-	              <OkayButton
-	                  style={{ marginTop:10, marginBottom: 15, width: "70%", paddingVertical: 8, }}
-	                  textStyle={{ fontSize: 14 }}
-	                  onClick={() => {setAddToCartClicked(true);setIndex(check(false, true)); }}
-	                  text={"Add To Cart"} />
-
+				<View style={{flexDirection:"row", marginBottom: 10, paddingHorizontal: 8,}}>
+				  <OkayButton
+					  style={{ marginTop:10, flex: 1, paddingVertical: 8, marginEnd:4, }}
+					  textStyle={{ fontSize: 16, textAlign:"center" }}
+					  onClick={() => {setBuyNowClicked(true);setIndex(check(true, false)); }}
+					  text={"Buy Now"} />
+				  <OkayButton
+					  style={{ marginTop:10, flex: 1, paddingVertical: 8, marginStart:4, }}
+					  textStyle={{ fontSize: 16, textAlign:"center" }}
+					  onClick={() => {setAddToCartClicked(true);setIndex(check(false, true)); }}
+					  text={"Add To Cart"} />
+				</View>
 			</View>
 		</View>
 		);
@@ -311,7 +328,7 @@ const ProductPreviewModal = props => {
 						<Header
 							style={styles.customHeader}>
 							<TouchableOpacity
-								onPress={() => {reset(); props.setProductPreviewed();} }>
+								onPress={() => {back();} }>
 								<MaterialCommunityIcons name={"arrow-left"} color={"white"} size={32} />
 							</TouchableOpacity>
 							{adminControls()}
@@ -329,8 +346,8 @@ const ProductPreviewModal = props => {
 	};
 
 	const reset = () => {
-		if(requirements)
-			setRequirements();
+		//if(requirements)
+		//	setRequirements();
 		if(!isNaN(index))
 			setIndex("nigger");
 		if(buyNowClicked)
@@ -477,7 +494,7 @@ const styles = StyleSheet.create({
 	},
 	flexer: {
 		width:"100%",
-		flex:1
+		flex:1,
 	},
 	wholedamnting: {
 		flex:1,
@@ -485,7 +502,7 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		marginHorizontal:20,
-		marginTop:10
+		marginTop:10,
 	},
 	banner: {
 		width:"100%",
@@ -500,16 +517,17 @@ const styles = StyleSheet.create({
 	cost: {
 		fontSize:23,
 		flexWrap: 'wrap',
-		fontWeight:"bold",
 		maxWidth:"100%",
+		fontWeight:"bold",
+		marginTop: -20,
 		paddingHorizontal:10,
-		marginTop:-20,
 		backgroundColor:Colors.lowPrimary,
 		color:"white",
 	},
 	description: {
 		fontSize:13,
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
+		flex: 1,
 	},
 	quantityOuterHolder: {
 		paddingTop: 10,
@@ -544,11 +562,12 @@ const styles = StyleSheet.create({
 		justifyContent:'center',
 	},
 	title: {
+		flexWrap: 'wrap',
+		maxWidth:"100%",
 		color: Colors.Accent,
-		fontSize:18,
+		fontSize:20,
+		paddingHorizontal: 10,
 		fontWeight:"bold",
-		marginBottom:10,
-		marginTop: -7
 	},
 	customHeader: {
 		justifyContent:"space-between",
@@ -566,7 +585,6 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 
 		paddingVertical: 3,
-		fontWeight: "bold",
 		paddingHorizontal: 15,
 		borderWidth: 2,
 		fontSize:18,

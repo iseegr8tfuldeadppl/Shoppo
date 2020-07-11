@@ -18,6 +18,7 @@ const MainMenu = props => {
   const [categoryPreviewed, setCategoryPreviewed] = useState();
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
+        console.log("caught it");
 		if(props.productPreviewed)
 			props.setProductPreviewed();
 		else if(categoryPreviewed){
@@ -25,7 +26,6 @@ const MainMenu = props => {
 		}
 	    return true;
 	});
-
 
   // Admin Stuff
   const [data, setData] = useState();
@@ -48,16 +48,6 @@ const MainMenu = props => {
         } else
             return(null);
     };
-
-
-  // show loader until we have checked firebase
-  const loading = () => {
-    if(props.finishedLoadingFromFirebase){
-        return(null);
-    }  else {
-        return(<View style={{marginTop:20}}><ActivityIndicator color={Colors.Accent} size="large" /></View>);
-    }
-  };
 
   const categoryPreviewedTitle = () =>{
       if(categoryPreviewed)
@@ -127,7 +117,6 @@ const MainMenu = props => {
 		  	    </Header>
 
 		      	{addCategoryButton()}
-		      	{loading()}
 
 		      	<FlatList
 		      		style={styles.list}

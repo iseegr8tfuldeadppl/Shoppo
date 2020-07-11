@@ -9,7 +9,6 @@ import Profile from './Profile';
 import Categories from './Categories';
 
 const Tab = createBottomTabNavigator();
-
 const MainMenuPage = props => {
 	return(
 		<Tab.Navigator
@@ -27,6 +26,8 @@ const MainMenuPage = props => {
 				),
 			  }} >
 			  {propss => <MainMenu {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 						  	setCheckoutList={props.setCheckoutList}
 						  	checkoutList={props.checkoutList}
   							userInfo={props.userInfo}
@@ -49,6 +50,8 @@ const MainMenuPage = props => {
 				),
 			}} >
 			{propss => <Categories {...propss}
+						  setFocusedPage={props.setFocusedPage}
+						  focusedPage={props.focusedPage}
 						  categories={props.categories}
 						  setProductPreviewed={props.setProductPreviewed}
 						  productPreviewed={props.productPreviewed}/>}
@@ -62,6 +65,8 @@ const MainMenuPage = props => {
 				),
 			  }} >
 			  {propss => <Cart {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 						  	setCheckoutList={props.setCheckoutList}
 						  	checkoutList={props.checkoutList}
   							userInfo={props.userInfo}
@@ -82,6 +87,8 @@ const MainMenuPage = props => {
 				),
 			  }} >
 			  {propss => <Profile {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
 			  				uid={props.uid}
@@ -113,6 +120,8 @@ const CategoriesPage = props => {
 				),
 			  }} >
 			  {propss => <MainMenu {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 						  	setCheckoutList={props.setCheckoutList}
 						  	checkoutList={props.checkoutList}
   							userInfo={props.userInfo}
@@ -135,6 +144,8 @@ const CategoriesPage = props => {
 				),
 			  }} >
   			{propss => <Categories {...propss}
+						  setFocusedPage={props.setFocusedPage}
+						  focusedPage={props.focusedPage}
   						  categories={props.categories}
 						  setProductPreviewed={props.setProductPreviewed}
 						  productPreviewed={props.productPreviewed}/>}
@@ -149,6 +160,8 @@ const CategoriesPage = props => {
 				),
 			  }} >
 			  {propss => <Cart {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 						  	setCheckoutList={props.setCheckoutList}
 						  	checkoutList={props.checkoutList}
   							userInfo={props.userInfo}
@@ -170,6 +183,8 @@ const CategoriesPage = props => {
 				),
 			  }} >
 			  {propss => <Profile {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
 			  				uid={props.uid}
@@ -202,6 +217,8 @@ const CartPage = props => {
 				),
 			  }} >
 			  {propss => <MainMenu {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 						  	setCheckoutList={props.setCheckoutList}
 						  	checkoutList={props.checkoutList}
   							userInfo={props.userInfo}
@@ -224,6 +241,8 @@ const CartPage = props => {
 				),
 			  }} >
   			{propss => <Categories {...propss}
+						  setFocusedPage={props.setFocusedPage}
+						  focusedPage={props.focusedPage}
   						  categories={props.categories}
 						  setProductPreviewed={props.setProductPreviewed}
 						  productPreviewed={props.productPreviewed}/>}
@@ -237,6 +256,8 @@ const CartPage = props => {
 				),
 			  }} >
 			  {propss => <Cart {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 						  	setCheckoutList={props.setCheckoutList}
 						  	checkoutList={props.checkoutList}
   							userInfo={props.userInfo}
@@ -257,6 +278,8 @@ const CartPage = props => {
 				),
 			  }}  >
 			  {propss => <Profile {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
 			  				uid={props.uid}
@@ -286,6 +309,8 @@ const ProfilePage = props => {
 				),
 			  }} >
 			  {propss => <MainMenu {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 						  	setCheckoutList={props.setCheckoutList}
 						  	checkoutList={props.checkoutList}
   							userInfo={props.userInfo}
@@ -308,6 +333,8 @@ const ProfilePage = props => {
 				),
 			  }} >
   			{propss => <Categories {...propss}
+						  setFocusedPage={props.setFocusedPage}
+						  focusedPage={props.focusedPage}
   						  categories={props.categories}
 						  setProductPreviewed={props.setProductPreviewed}
 						  productPreviewed={props.productPreviewed}/>}
@@ -321,6 +348,8 @@ const ProfilePage = props => {
 				),
 			  }} >
 			  {propss => <Cart {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
   							userInfo={props.userInfo}
 							setCheckoutList={props.setCheckoutList}
 							checkoutList={props.checkoutList}
@@ -341,6 +370,8 @@ const ProfilePage = props => {
 				),
 			  }}  >
 			  {propss => <Profile {...propss}
+						  	setFocusedPage={props.setFocusedPage}
+						  	focusedPage={props.focusedPage}
 				  			usersLatest={props.usersLatest}
 			  				categories={props.categories}
 			  				uid={props.uid}
