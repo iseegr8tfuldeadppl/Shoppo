@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, FlatList, TextInput, StyleSheet, SafeAreaView, Text, BackHandler } from 'react-native';
+import { View, FlatList, TextInput, StyleSheet, SafeAreaView, Text, BackHandler, Alert } from 'react-native';
 import firebase from 'firebase';
 import ArrowedHeader from './ArrowedHeader';
 import OkayButton from './OkayButton';
@@ -12,6 +12,7 @@ import StateSelector from './Admins/Product/StateSelector';
 
 const Chat = props => {
 
+    const [previewedImage, setPreviewedImage] = useState();
     const [messageInput, setMessage] = useState("");
 
     BackHandler.addEventListener('hardwareBackPress', function() {
@@ -39,8 +40,11 @@ const Chat = props => {
         if(url){
             return(
 				<Banner
+                    url={url}
+                    setPreview={setPreviewedImage}
+                    preview={previewedImage}
 					style={{width: "65%", height: 150, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}
-					images={url} />
+					images={[url]} />
             );
         }
     };
@@ -145,40 +149,55 @@ const Chat = props => {
                 let array2 = props.turnIntoMessages();
                 props.setMessages(array2);
 
-				let ref2 = firebase.database().ref('/userList/' + props.uid + ' /n');
-				ref2.set(moment().format('YYYYMMDDhhmmssa'))
+				let ref2 = firebase.database().ref('/userList/' + props.uid);
+				ref2.set({"n":moment().format('YYYYMMDDhhmmssa')})
 				.then(function(snapshot) {
 					//console.log('Snapshot', snapshot);
 				});
 		});
     };
 
-    return(
-        <SafeAreaView style={styles.letout}>
-            <ArrowedHeader backToRoot={back} title={"Chat"}/>
-            <FlatList
-                inverted={true}
-                style={styles.flexer}
-                data={props.messago}
-                renderItem={productData => message(productData.item)}
-            />
+    const display = () =>{
+        if(previewedImage){
+            return(
+				<Banner
+                    setPreview={setPreviewedImage}
+                    preview={previewedImage}
+					style={{width: "65%", height: 150, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}
+					images={[previewedImage]} />
+            );
+        }
 
-            <View style={{flexDirection:"row", width:"100%", paddingHorizontal: 10, borderTopWidth: 1, borderTopColor:Colors.Primary, paddingVertical: 10}}>
-                <TextInput
-                    multiline={true}
-                    style={styles.quantityInputCurrency}
-                    placeholder={"Aa"}
-                    onChangeText={setMessage}
-                    value={messageInput} />
-                <OkayButton
-                    style={{ backgroundColor:Colors.Primary, borderRadius: 15, marginStart: 10 }}
-                    onClick={() => {if(messageInput.length>0) submitMessage()}}
-                    textStyle={{ fontSize: 17, color:"white", fontWeight:"bold" }}
-                    text={"Send"} />
-            </View>
+        return(
+            <SafeAreaView style={styles.letout}>
+                <ArrowedHeader backToRoot={back} title={"Chat"}/>
+                <FlatList
+                    inverted={true}
+                    style={styles.flexer}
+                    data={props.messago}
+                    renderItem={productData => message(productData.item)}
+                />
 
-        </SafeAreaView>
-    );
+                <View style={{flexDirection:"row", width:"100%", paddingHorizontal: 10, borderTopWidth: 1, borderTopColor:Colors.Primary, paddingVertical: 10}}>
+                    <TextInput
+                        multiline={true}
+                        style={styles.quantityInputCurrency}
+                        placeholder={"Aa"}
+                        onChangeText={setMessage}
+                        value={messageInput} />
+                    <OkayButton
+                        style={{ backgroundColor:Colors.Primary, borderRadius: 15, marginStart: 10 }}
+                        onClick={() => {if(messageInput.length>0) submitMessage()}}
+                        textStyle={{ fontSize: 17, color:"white", fontWeight:"bold" }}
+                        text={"Send"} />
+                </View>
+
+            </SafeAreaView>
+        );
+    };
+
+    return(display());
+
 };
 
 

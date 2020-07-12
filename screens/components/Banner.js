@@ -1,45 +1,89 @@
 import React, {useState} from 'react';
-import {Image, TouchableOpacity, Modal, View, StyleSheet} from 'react-native';
+import { TouchableOpacity, Modal, View, StyleSheet, Text, BackHandler } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import CachedImage from './CachedImage';
 
 
 const Banner = props => {
 
-    const [preview, setPreview] = useState(false);
-
     // source: https://github.com/ascoders/react-native-image-viewer
-    const images = [{
-        url: props.images,
-    }];
 
-    return(
-        <View style={{flex: 1, width:"100%"}}>
-            <Modal visible={preview} transparent={true}>
-                <ImageViewer imageUrls={images}/>
-                <View style={{flexDirection:"row", position:"absolute", alignItems:"center"}}>
+    if(props.preview){
+    	BackHandler.addEventListener('hardwareBackPress', function() {
+    		props.setPreview(false);
+    	    return true;
+    	});
+    }
+
+    const urls = () => {
+        let urlss = [];
+        for(let i=0; i<props.images.length; i++){
+            urlss.push({url: props.images[i]});
+        }
+        return urlss;
+    };
+
+    const thumbnailOrNot = () => {
+        if(props.showThumbnail)
+            return(
+                <CachedImage
+                    source={props.images[0]}
+                    style={props.style}/>
+            );
+
+        return(
+            <View style={{...{alignItems:"center", backgroundColor:"gray", justifyContent:"center"}, ...props.style}}>
+                <Text style={{fontSize: 20, fontWeight:"bold", color:"white"}}>Press to view photo</Text>
+            </View>
+        );
+    };
+
+    const display = () => {
+        if(props.preview){
+            return(
+                <>
+                <ImageViewer imageUrls={urls()}/>
+                <View style={styles.header}>
                     <TouchableOpacity
                         activeOpacity={0.60}
-                        onPress={() => {setPreview(false);}}>
-                        <MaterialCommunityIcons style={{paddingStart: 9, paddingVertical: 18}} name={"arrow-left"} color={"white"} size={30} />
+                        onPress={() => {props.setPreview(false);}}>
+                        <MaterialCommunityIcons style={styles.icon} name={"arrow-left"} color={"white"} size={30} />
                     </TouchableOpacity>
                 </View>
-            </Modal>
+                </>
+            );
+        }
+
+        return(
             <TouchableOpacity
                 activeOpacity={0.85}
-                onPress={() => {setPreview(true);}}>
-                <Image
-                    style={props.style}
-                    source={{uri:props.images}} />
+                onPress={() => {props.setPreview(props.url? props.url : true);}}>
+                {thumbnailOrNot()}
             </TouchableOpacity>
-        </View>
+        );
+    };
+
+    return(
+    <View style={styles.page}>
+        {display()}
+    </View>
     );
 };
 
 const styles = StyleSheet.create({
-    display: {
-        width:"100%",
+    header: {
+        flexDirection:"row",
+        position:"absolute",
+        alignItems:"center"
+    },
+    icon: {
+        paddingStart: 9,
+        paddingVertical: 32
+    },
+    page: {
         flex: 1,
+        width:"100%"
     },
 });
 

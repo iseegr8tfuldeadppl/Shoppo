@@ -7,7 +7,12 @@ import Card from './Card';
 const SideCategoryItem = props => {
 
     const productCount = () =>  {
-        let productCountos = props.item.products.length;
+        let productCountos = 0;
+        for(let i=0; i<props.item.products.length; i++){
+            if(!props.item.products[i].showmore)
+                productCountos ++;
+        }
+
         if(productCountos===0)
             return "No Product";
         else

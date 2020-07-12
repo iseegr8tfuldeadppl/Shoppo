@@ -3,7 +3,7 @@
 
 //import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-import { Alert, View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { Alert, View, StyleSheet, Text, ActivityIndicator, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
@@ -17,11 +17,18 @@ const Drawer = createDrawerNavigator();
 
 const DashboardScreen = props =>  {
 
+		BackHandler.addEventListener('hardwareBackPress', function() {
+	        console.log("heree");
+		    return true;
+		});
+
 	const [remoteOrdersOpen, setRemoteOrdersOpen] = useState();
 	const [cart, updateCart] = useState([]);
 	const [finishedLoadingFromFirebase, setFinishedLoadingFromFirebase] = useState(false);
 	const [categories, setCategories] = useState([]);
 	const [productPreviewed, setProductPreviewed] = useState();
+    const [categoryPreviewed, setCategoryPreviewed] = useState();
+    const [categoryPreviewed2, setCategoryPreviewed2] = useState();
 	const [userInfo, setUserInfo] = useState(userInfo);
 	const [checkoutList, setCheckoutList] = useState();
 	const [contact, setContact] = useState();
@@ -41,36 +48,68 @@ const DashboardScreen = props =>  {
 
 			firebase.database().ref('/categories').on('value', querySnapShot => {
 				let productPreviewedIsPresent = false;
+				let categoryPreviewedIsPresent = false;
+				let categoryPreviewedIsPresent2 = false;
 				let dataa = querySnapShot.val() ? querySnapShot.val() : {};
 				let cateogoriesSnapshot = {...dataa};
 				let categoriesList = [];
 				let KeysOfCategories = Object.keys(cateogoriesSnapshot);
 				for(var i=0; i<KeysOfCategories.length; i++){
-					let productList = [];
-					let productsInCategory = Object.values(cateogoriesSnapshot)[i].products;
-					if(productsInCategory){
-						let KeysOfproductsInCategory = Object.keys(productsInCategory);
-						productsInCategory = Object.values(productsInCategory);
-						for(var j=0; j<KeysOfproductsInCategory.length; j++){
+					let visibilityOfCategory = Object.values(cateogoriesSnapshot)[i].invisible;
+					let nameOfCategory = Object.values(cateogoriesSnapshot)[i].name;
+					let priorityOfCategory = Object.values(cateogoriesSnapshot)[i].priority;
 
-							// this only shows people products that are visible or shows the admins the product
-							if(productsInCategory[j].data.visible || adminListTemp.includes(props.uid)){
-								// this little check is to hide currently previewed product if it was deleted from firebase
-								if(productPreviewed)
-									if(!productPreviewedIsPresent)
-										if(KeysOfproductsInCategory[j]===productPreviewed.key)
-											productPreviewedIsPresent = true;
+					// if currently displayed category shows up online then keep it visible, or else close the preview
+					if(categoryPreviewed){
+						if(KeysOfCategories[i]===categoryPreviewed.key)
+							categoryPreviewedIsPresent = true;
+					}
+					if(categoryPreviewed2){
+						if(KeysOfCategories[i]===categoryPreviewed2.key)
+							categoryPreviewedIsPresent2 = true;
+					}
 
-								productList.push({ showmore: false, key: KeysOfproductsInCategory[j], data: productsInCategory[j].data });
+					if(!visibilityOfCategory || adminListTemp.includes(props.uid)){
+						let productList = [];
+						let productsInCategory = Object.values(cateogoriesSnapshot)[i].products;
+						if(productsInCategory){
+							let KeysOfproductsInCategory = Object.keys(productsInCategory);
+							productsInCategory = Object.values(productsInCategory);
+							for(var j=0; j<KeysOfproductsInCategory.length; j++){
+
+								// this only shows people products that are visible or shows the admins the product
+								if(productsInCategory[j].data.visible || adminListTemp.includes(props.uid)){
+									// this little check is to hide currently previewed product if it was deleted from firebase
+									if(productPreviewed)
+										if(!productPreviewedIsPresent)
+											if(KeysOfproductsInCategory[j]===productPreviewed.key)
+												productPreviewedIsPresent = true;
+
+									productList.push({ showmore: false, key: KeysOfproductsInCategory[j], data: productsInCategory[j].data });
+								}
 							}
 						}
-					}
-					if(productList.length>0)
-						productList.push({ showmore: true, key: "0", data: {visible: true} });
 
-					let nameOfCategory = Object.values(cateogoriesSnapshot)[i].name;
-					if((productList.length>0 && !productList[0].showmore) || adminListTemp.includes(props.uid))
-						categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, products: productList });
+						// order products acoording to priority
+						for(let i=0;i<productList.length; i++){
+							for(let j=0;j<productList.length; j++){
+								if(productList.length===j+1)
+									break;
+								if(productList[j].priority<productList[j+1].priority){
+									let temp = productList[j+1];
+									productList[j+1] = productList[j];
+									productList[j] = temp;
+								}
+							}
+						}
+
+						if(productList.length>0){
+							productList.push({ showmore: true, key: "0", data: {visible: true} });
+						}
+
+						if((productList.length>0 && !productList[0].showmore) || adminListTemp.includes(props.uid))
+							categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, priority: parseInt(priorityOfCategory), products: productList, invisible: visibilityOfCategory });
+					}
 				}
 
 
@@ -97,6 +136,14 @@ const DashboardScreen = props =>  {
 
 					if(!finishedLoadingFromFirebase)
 						setFinishedLoadingFromFirebase(true);
+
+					// if currently displayed categorydisappears from firebase then remove it from being displayed
+					if(!categoryPreviewedIsPresent){
+						setCategoryPreviewed();
+					}
+					if(!categoryPreviewedIsPresent2){
+						setCategoryPreviewed2();
+					}
 
 					if(!productPreviewedIsPresent){
 						let cartCopy = cart.slice();
@@ -125,6 +172,20 @@ const DashboardScreen = props =>  {
 					}
 
 					if(categoriesList.length>0){
+
+						// order categories acoording to priority
+						for(let i=0;i<categoriesList.length; i++){
+							for(let j=0;j<categoriesList.length; j++){
+								if(categoriesList.length===j+1)
+									break;
+								if(categoriesList[j].priority<categoriesList[j+1].priority){
+									let temp = categoriesList[j+1];
+									categoriesList[j+1] = categoriesList[j];
+									categoriesList[j] = temp;
+								}
+							}
+						}
+
 						setCategories(categoriesList);
 						if(loading)
 							setLoading(false);
@@ -217,6 +278,8 @@ const DashboardScreen = props =>  {
 
 					<Drawer.Screen name="Main Menu">{propss =>
 	  			  		<MainMenu {...propss}
+							setCategoryPreviewed={setCategoryPreviewed2}
+							categoryPreviewed={categoryPreviewed2}
 							setRemoteOrdersOpen={setRemoteOrdersOpen}
   						  	setFocusedPage={setFocusedPage}
   						  	focusedPage={focusedPage}
@@ -238,6 +301,8 @@ const DashboardScreen = props =>  {
 						<Categories {...propss}
 							updateCart={updateCart}
 							uid={props.uid}
+							setCategoryPreviewed={setCategoryPreviewed}
+							categoryPreviewed={categoryPreviewed}
 							userInfo={userInfo}
 		  				  	checkoutList={checkoutList}
 		  				  	adminList={adminList}

@@ -14,8 +14,15 @@ const CategoryPreview = props => {
 	});
 
     const data = () => {
-        let products = props.item.products.slice();
-        return products.splice(0, 1);
+
+		// remove the showmore button
+        let products = [];
+		for(let i=0; i<props.item.products.length; i++){
+			if(!props.item.products[i].showmore){
+				products.push(props.item.products[i]);
+			}
+		}
+        return products;
     };
 
     return(

@@ -18,6 +18,31 @@ const MainProductItem = props => {
         }
     };
 
+    const outOfStockWarning = () => {
+        if(props.item.data.stock){
+            if(parseFloat(props.item.data.stock)===0){
+                return(
+                    <View style={{borderRadius: 80, marginTop: 5, marginEnd: 5, paddingHorizontal: 9, paddingBottom: 7, backgroundColor:"red", alignItems:"center", justifyContent:"center"}}>
+                        <MaterialCommunityIcons name={"question-circle"} color={"white"} size={26} />
+                    </View>
+                );
+            }
+        }
+    };
+
+    const stockAvailable = () => {
+        if(props.adminList.includes(props.uid)){
+            if(props.item.data.stock)
+                return(
+                    <View style={{flexDirection:"row", position:"absolute", justifyContent:"space-between"}}>
+                    <Text style={{...styles.title, ...{color:"white", fontWeight:"bold", fontSize: 27, marginTop: 0}}}>{props.item.data.sneak}</Text>
+                    <View style={{flex: 1}}></View>
+                        {outOfStockWarning()}
+                    </View>
+                );
+        }
+    };
+
     const product = () => {
         if(props.item.showmore){
             return(
@@ -41,6 +66,7 @@ const MainProductItem = props => {
 
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
+                    {stockAvailable()}
                     {visible()}
                 </Card>
             );
@@ -57,8 +83,8 @@ const styles = StyleSheet.create({
     showmoreCard: {
         alignItems:"center",
         justifyContent:"center",
-        backgroundColor:Colors.Accent,
-        height: 140,
+        backgroundColor:Colors.Primary,
+        height: 150,
     },
     showmoreText: {
         marginTop: 18,

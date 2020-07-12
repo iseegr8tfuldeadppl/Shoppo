@@ -3,15 +3,17 @@ import { View, StyleSheet, TextInput, Text } from 'react-native';
 import Colors from '../../../constants/Colors';
 
 
-const QuantityPage = props => {
+const PriorityPage = props => {
 
     const update = enteredText => {
-        enteredText = enteredText.replace(",", "");
-        enteredText = enteredText.replace(".", "");
-        enteredText = enteredText.replace("-", "");
-		enteredText = enteredText.replace(/\s/g, "");
+        if(props.type==="item"){
+            enteredText = enteredText.replace(",", "");
+            enteredText = enteredText.replace(".", "");
+            enteredText = enteredText.replace("-", "");
+    		enteredText = enteredText.replace(/\s/g, "");
+        }
 
-        props.setQuantity(enteredText);
+        props.setPriority(enteredText);
     };
 
     return(
@@ -23,8 +25,8 @@ const QuantityPage = props => {
                 placeholder={props.hint}
                 autoCorrect={false}
                 keyboardType="number-pad"
-                onChangeText={update}
-                value={props.quantity} />
+                onChangeText={(enteredText) => {update(enteredText);} }
+                value={props.priority} />
         </View>
     );
 };
@@ -56,4 +58,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default QuantityPage;
+export default PriorityPage;

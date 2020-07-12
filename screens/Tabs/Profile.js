@@ -1,7 +1,7 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 import React, {useState} from 'react';
-import { TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ScrollView, Image, BackHandler } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ScrollView, BackHandler } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerActions } from '@react-navigation/native';
 import Header from '../components/Header';
@@ -14,6 +14,7 @@ import firebase from 'firebase';
 import moment from 'moment';
 import Taboo from '../components/Taboo';
 import Chat from '../components/Chat';
+import CachedImage from '../components/CachedImage';
 
 
 const Profile = props => {
@@ -193,6 +194,7 @@ const Profile = props => {
                 return(
                     <SafeAreaView style={styles.letout}>
                         <Chat
+                            clientSelected={clientSelected}
                             setPage={setPage}
                             setClientSelected={setClientSelected}
                             uid={props.uid}
@@ -266,9 +268,9 @@ const Profile = props => {
                                               ellipsizeMode='tail'>
                                           {ordersCounted()}</Text>
                                   </View>
-                                  <Image
-                                      style={styles.image}
-                                      source={{ uri:profile_pic() }} />
+                                  <CachedImage
+                                      source={profile_pic()}
+                                      style={styles.image}/>
                               </View>
                           </View>
 

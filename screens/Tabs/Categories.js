@@ -13,15 +13,13 @@ import Taboo from '../components/Taboo';
 
 const Categories = props => {
 
-    const [categoryPreviewed, setCategoryPreviewed] = useState();
-
     if(props.tabPressedWhileWereStillInThePage){
-        setCategoryPreviewed();
+        props.setCategoryPreviewed();
     }
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
-	    if(categoryPreviewed)
-            setCategoryPreviewed();
+	    if(props.categoryPreviewed)
+            props.setCategoryPreviewed();
 	    return true;
 	});
 
@@ -30,9 +28,10 @@ const Categories = props => {
             props.setProductPreviewed();
             return;
         }
-        if(categoryPreviewed)
-            setCategoryPreviewed();
+        if(props.categoryPreviewed)
+            props.setCategoryPreviewed();
     };
+
 
     const list = () => {
         return(
@@ -41,20 +40,20 @@ const Categories = props => {
         		data={props.categories}
         		renderItem={categoryData =>
                     <SideCategoryItem
-                        setCategoryPreviewed={setCategoryPreviewed}
+                        setCategoryPreviewed={props.setCategoryPreviewed}
                         item={categoryData.item}/>
         		}/>
         );
     };
 
     const categoryPreviewedTitle = () =>{
-        if(categoryPreviewed)
-            return categoryPreviewed.category;
+        if(props.categoryPreviewed)
+            return props.categoryPreviewed.category;
         return "";
     };
 
     const title = () => {
-        if(categoryPreviewed)
+        if(props.categoryPreviewed)
             return categoryPreviewedTitle();
         return "Categories";
     };
@@ -77,19 +76,19 @@ const Categories = props => {
 				  setProductPreviewed={props.setProductPreviewed}
 				  productPreviewed={props.productPreviewed}/>
             );
-        else if(categoryPreviewed)
+        else if(props.categoryPreviewed)
             return(
                 <>
                 <Header style={styles.header}>
                     <TouchableOpacity
-                        onPress={() => {if(categoryPreviewed) setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
+                        onPress={() => {if(props.categoryPreviewed) props.setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
                         <MaterialCommunityIcons name={headerIcon()} color={"white"} size={30} />
                     </TouchableOpacity>
                     <View style={styles.headertitleholder}><Text style={styles.headertitle}>{title()}</Text></View>
                 </Header>
                 <CategoryPreview
-                    setCategoryPreviewed={setCategoryPreviewed}
-                    item={categoryPreviewed}
+                    setCategoryPreviewed={props.setCategoryPreviewed}
+                    item={props.categoryPreviewed}
                     setProductPreviewed={props.setProductPreviewed}/>
                 </>
             );
@@ -98,7 +97,7 @@ const Categories = props => {
             <>
             <Header style={styles.header}>
                 <TouchableOpacity
-                    onPress={() => {if(categoryPreviewed) setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
+                    onPress={() => {if(props.categoryPreviewed) props.setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
                     <MaterialCommunityIcons name={headerIcon()} color={"white"} size={30} />
                 </TouchableOpacity>
                 <View style={styles.headertitleholder}><Text style={styles.headertitle}>{title()}</Text></View>
@@ -109,7 +108,7 @@ const Categories = props => {
     };
 
     const headerIcon = () => {
-        if(categoryPreviewed)
+        if(props.categoryPreviewed)
             return "arrow-left";
         return "menu";
     };

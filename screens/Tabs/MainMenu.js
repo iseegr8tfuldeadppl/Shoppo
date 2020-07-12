@@ -1,7 +1,7 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator, BackHandler } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Colors from '../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerActions } from '@react-navigation/native';
@@ -12,136 +12,155 @@ import ProductPreviewModal from '../components/ProductPreviewModal';
 import MainCategoryItem from '../components/MainCategoryItem';
 import CategoryPreview from '../components/CategoryPreview';
 import Taboo from '../components/Taboo';
+import CategorySettingsModal from '../components/Admins/Category/CategorySettingsModal';
 
 
 const MainMenu = props => {
 
-  const [categoryPreviewed, setCategoryPreviewed] = useState();
+    // Admin Stuff
+    const [data, setData] = useState();
+    const [categorySettings, setCategorySettings] = useState();
+    const [NewItemPage, setNewItemPage] = useState(false);
 
-	BackHandler.addEventListener('hardwareBackPress', function() {
-		if(props.productPreviewed)
-			props.setProductPreviewed();
-		else if(categoryPreviewed){
-			setCategoryPreviewed();
-		}
-	    return true;
-	});
-
-  // Admin Stuff
-  const [data, setData] = useState();
-  const [NewItemPage, setNewItemPage] = useState(false);
-
-    const addCategoryButton = () => {
-      if(props.adminList.includes(props.uid)){
-          return(<TouchableOpacity
-    				style={styles.addCategory}
-    				onPress={() => {setNewItemPage(true);}}>
-    				<Text style={{color:"blue", fontSize:15}}>Add Category</Text>
-    			</TouchableOpacity>);
-      } else
-          return(null);
+    const openAddProductModal = () => {
+        setNewItemPage(true); let nigger = props.categoryPreviewed; nigger.nigger=true; setData(nigger);
     };
 
-    const addProductButton = () => {
+  const addNewItemModal = () => {
+    if(props.adminList.includes(props.uid))
+        return(
+            <AddNewItemModal
+              setData={setData}
+              categories={props.categories}
+              data={data}
+              doIShowUp={NewItemPage}
+              onCancel={() => {setNewItemPage(false); setData();}} />
+        );
+  };
+
+    const adminCategoryAdd = () => {
         if(props.adminList.includes(props.uid)){
-            return(<Text style={{color:"blue", marginStart:5, fontSize:14}}>Add Product</Text>);
-        } else
-            return(null);
+            return(
+                <TouchableOpacity
+                    style={{paddingStart: 10}}
+                    onPress={() => {if(props.categoryPreviewed) openAddProductModal(); else setNewItemPage(true);} }>
+                    <MaterialCommunityIcons name="plus" color={"white"} size={30} />
+                </TouchableOpacity>
+            );
+        }
     };
 
-  const categoryPreviewedTitle = () =>{
-      if(categoryPreviewed)
-          return categoryPreviewed.category;
-      else
-          return "";
-  };
+    const categoryPreviewedTitle = () =>{
+        if(props.categoryPreviewed)
+            return props.categoryPreviewed.category;
+        else
+            return "";
+    };
 
-  const doubleTabPress = () => {
-    console.log("double tab press");
-  };
+    const doubleTabPress = () => {
+        if(props.categoryPreviewed)
+            props.setCategoryPreviewed();
+        if(props.productPreviewed)
+            props.setProductPreviewed();
+    };
 
-  const page = () => {
-	  // category preview
-	  if(props.productPreviewed && props.navigation.isFocused()){
-		return(
-		  	<SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
-			  	<ProductPreviewModal
-                    navigation={props.navigation}
-                    setRemoteOrdersOpen={props.setRemoteOrdersOpen}
-  	            	checkoutList={props.checkoutList}
-  	            	setCheckoutList={props.setCheckoutList}
-  					adminList={props.adminList}
-  	            	uid={props.uid}
-  			  		userInfo={props.userInfo}
-  	            	navigation={props.navigation}
-  	            	addToCart={props.addToCart}
-  	            	cart={props.cart}
-  	            	updateCart={props.updateCart}
-  	            	setProductPreviewed={props.setProductPreviewed}
-  	            	productPreviewed={props.productPreviewed}/>
-			</SafeAreaView>
+    const page = () => {
+
+       // category preview
+      if(props.productPreviewed && props.navigation.isFocused()){
+        return(
+		  	<ProductPreviewModal
+                navigation={props.navigation}
+                setRemoteOrdersOpen={props.setRemoteOrdersOpen}
+	            	checkoutList={props.checkoutList}
+	            	setCheckoutList={props.setCheckoutList}
+					adminList={props.adminList}
+	            	uid={props.uid}
+			  		userInfo={props.userInfo}
+	            	navigation={props.navigation}
+	            	addToCart={props.addToCart}
+	            	cart={props.cart}
+	            	updateCart={props.updateCart}
+	            	setProductPreviewed={props.setProductPreviewed}
+	            	productPreviewed={props.productPreviewed}/>
 		);
-	  } else if(categoryPreviewed){
-		  return(
-			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
-	              <Header style={styles.header}>
-	                  <TouchableOpacity
-	                      onPress={() => {setCategoryPreviewed();} }>
-	                      <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
-	                  </TouchableOpacity>
-	                  <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
-	              </Header>
-	              <CategoryPreview
-				  	setCategoryPreviewed={setCategoryPreviewed}
-	                  item={categoryPreviewed}
-	                  setProductPreviewed={props.setProductPreviewed}/>
-			  </SafeAreaView>
-		  );
-	  } else {
-		  // main page
-		  return(
-			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
-		          <AddNewItemModal
-		            setData={setData}
-		  		  categories={props.categories}
-		            data={data}
-		            doIShowUp={NewItemPage}
-		            onCancel={() => {setNewItemPage(false); setData();}} />
+	  }
 
-		  	  	<Header style={{height: 90,}}>
-		  	  		<TouchableOpacity
-		  	  		  onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
-		  	  		  <MaterialCommunityIcons name="menu" color={"white"} size={30} />
-		  	  	  </TouchableOpacity>
-		  	  	  <Card style={styles.searchHolder}>
-		  	  		  <MaterialCommunityIcons name="magnify" color={"black"} size={20} />
-		  	  		  <Text style={styles.searchText}>Search</Text>
-		  	  	  </Card>
-		  	    </Header>
-
-		      	{addCategoryButton()}
-		      	<FlatList
-		      		style={styles.list}
-		      		data={props.categories}
-		      		renderItem={categoryData =>
-		                  <MainCategoryItem
-						  	style={styles.mainCategoryItem}
-		  					setCategoryPreviewed={setCategoryPreviewed}
-		                      setNewItemPage={setNewItemPage}
-		                      setData={setData}
-		                      setProductPreviewed={props.setProductPreviewed}
-		                      addProductButton={addProductButton}
-		                      item={categoryData.item}/>
-		      		}/>
-                    <Taboo focus={"Main Menu"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
-		      </SafeAreaView>
+      if(props.categoryPreviewed){
+		  return(
+                <>
+                {addNewItemModal()}
+                <Header style={styles.header}>
+                    <TouchableOpacity
+                        onPress={() => {props.setCategoryPreviewed();} }>
+                        <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
+                    </TouchableOpacity>
+                    {adminCategoryAdd()}
+                    <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
+                </Header>
+                <CategoryPreview
+		  	          setCategoryPreviewed={props.setCategoryPreviewed}
+                      item={props.categoryPreviewed}
+                      setProductPreviewed={props.setProductPreviewed}/>
+                  <Taboo focus={"Main Menu"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                </>
 		  );
 	  }
+
+      const categorySettingsModal = () => {
+          if(categorySettings){
+            return(
+                <CategorySettingsModal
+                    setCategorySettings={setCategorySettings}
+                    visible={categorySettings} />
+            );
+          }
+      };
+
+	  // main page
+	  return(
+          <>
+          {addNewItemModal()}
+
+          {categorySettingsModal()}
+
+        <Header style={{height: 90,}}>
+            <TouchableOpacity
+              onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
+              <MaterialCommunityIcons name="menu" color={"white"} size={30} />
+          </TouchableOpacity>
+          <Card style={styles.searchHolder}>
+              <MaterialCommunityIcons name="magnify" color={"black"} size={20} />
+              <Text style={styles.searchText}>Search</Text>
+          </Card>
+          {adminCategoryAdd()}
+        </Header>
+
+        <FlatList
+            style={styles.list}
+            data={props.categories}
+            renderItem={categoryData =>
+              <MainCategoryItem
+                    setCategorySettings={setCategorySettings}
+                    adminList={props.adminList}
+                    uid={props.uid}
+                    style={styles.mainCategoryItem}
+                    setCategoryPreviewed={props.setCategoryPreviewed}
+                    setNewItemPage={setNewItemPage}
+                    setData={setData}
+                    setProductPreviewed={props.setProductPreviewed}
+                    item={categoryData.item}/>
+            }/>
+            <Taboo focus={"Main Menu"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+          </>
+		  );
   };
 
-  return (
-    	page()
-  );
+    return(
+        <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
+            {page()}
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -154,6 +173,7 @@ const styles = StyleSheet.create({
 	},
 	addCategory: {
 		padding:10,
+        backgroundColor:Colors.Accent,
 		width:"100%",
 		justifyContent:'center',
 		alignItems:'center'

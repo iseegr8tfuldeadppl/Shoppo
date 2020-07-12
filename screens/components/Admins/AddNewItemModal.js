@@ -6,11 +6,15 @@ import firebase from 'firebase';
 
 const AddNewItemModal = props => {
 
-  const onAdd = (name) => {
-	firebase.database()
+  const onAdd = (name, priority) => {
+        if(!priority)
+            priority = '1';
+
+        firebase.database()
 		.ref('/categories/')
 		.push({
 			name: name,
+    		priority: parseInt(priority)
 		})
 		.then(function(snapshot) {
 			props.setData();

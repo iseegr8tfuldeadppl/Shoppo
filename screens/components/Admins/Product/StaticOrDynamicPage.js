@@ -6,7 +6,7 @@ import Header from '../../Header';
 
 const StaticOrDynamicPage = props => {
 
-	const [selection, setSelection] = useState(props.selected? true : props.type==="currency");
+	const [selection, setSelection] = useState(props.selected? true : props.selected.type==="currency");
 
 	const setChecked = () => {
 		if(props.selected){
@@ -26,7 +26,9 @@ const StaticOrDynamicPage = props => {
 				props.setSelected(temp);
 			}
 		} else {
-			props.setType(props.original_type);
+			let ah = props.selected;
+			ah.type = ah.originaltype;
+			props.setSelected(ah);
 		}
 	};
 
@@ -49,7 +51,9 @@ const StaticOrDynamicPage = props => {
 				props.setSelected(temp);
 			}
 		} else {
-			props.setType("item");
+			let ah = props.selected;
+			ah.type = "item";
+			props.setSelected(ah);
 		}
 	};
 
@@ -69,8 +73,16 @@ const StaticOrDynamicPage = props => {
 					onValueChange={(yes) => {
 						setSelection(yes);
 						if(!props.selected){
-							if(yes) props.setType(props.original_type);
-							else props.setType("item");
+							if(yes){
+								let ah = props.selected;
+								ah.type = ah.originaltype;
+								props.setSelected(ah);
+							}
+							else{
+								let ah = props.selected;
+								ah.type = "item";
+								props.setSelected(ah);
+							}
 						}
 					}}
 					style={{alignSelf: "center"}}
@@ -82,8 +94,11 @@ const StaticOrDynamicPage = props => {
 					value={!selection}
 					onValueChange={() => {
 						setSelection(false);
-						if(!props.selected)
-							props.setType("item");
+						if(!props.selected){
+							let ah = props.selected;
+							ah.type = "item";
+							props.setSelected(ah);
+						}
 					}}
 					style={{alignSelf: "center"}}
 				/>

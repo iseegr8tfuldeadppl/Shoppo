@@ -67,7 +67,7 @@ const CheckOut = props => {
 		//setTitle("Payment Method");
 	};
 
-	const Buy = () => {
+	const next = () => {
 		if(title==="Payment Method"){
 			if(selected)
 				setTitle("Confirm Order");
@@ -154,6 +154,32 @@ const CheckOut = props => {
 
 			submitOrder(downloadURL);
 	    });
+	};
+
+	console.log(props.checkoutList);
+
+	for(let i=0; i<props.checkoutList.length; i++){
+		if(parseFloat(props.checkoutList[i].quantity)>parseFloat(props.checkoutList[i].data.stock)){
+
+			Alert.alert(
+				'Stock Is Limited!',
+				'There is only ' + props.checkoutList[i].data.stock + ' ' + props.checkoutList[i].data.title + ' left in stock.',
+				[
+					{text: 'Ok', style: 'cancel'},
+					{
+						text: 'Set it to ' + props.checkoutList[i].data.stock,
+						style: 'destructive',
+						onPress: () => {
+							let checkoutList = props.checkoutList.slice();
+							checkoutList[i].quantity = props.checkoutList[i].data.stock;
+							props.setCheckoutList(checkoutList);
+						}
+					}
+				],
+				{ cancelable: true }
+			);
+			break;
+		}
 	}
 
 	const submitOrder = imageUrl => {
@@ -214,6 +240,7 @@ const CheckOut = props => {
 				});
 		});
 	};
+
 	const orders_count = () => {
 
 		let counter = 0;
@@ -284,7 +311,7 @@ const CheckOut = props => {
 			   <CheckoutBar
 				   text={"Next"}
 				   calculateTotal={calculateTotal}
-				   onClick={Buy} />
+				   onClick={next} />
 			   </>
 		   );
 	   } else if(title==="Confirm Order"){
@@ -301,7 +328,7 @@ const CheckOut = props => {
 			   <CheckoutBar
 				   text={buttonText()}
 				   calculateTotal={calculateTotal}
-				   onClick={Buy} />
+				   onClick={next} />
 			   </>
 		   );
 	   } else if(title==="Submit Picture"){
@@ -326,7 +353,7 @@ const CheckOut = props => {
 						  <CheckoutBar
 							  text={"Submit"}
 							  calculateTotal={calculateTotal}
-							  onClick={Buy} />
+							  onClick={next} />
 
 					   </View>
 				   );
@@ -359,7 +386,7 @@ const CheckOut = props => {
 						  <CheckoutBar
 							  text={"Submit"}
 							  calculateTotal={calculateTotal}
-							  onClick={Buy} />
+							  onClick={next} />
 					   </View>
 				   );
 			   }
@@ -390,7 +417,7 @@ const CheckOut = props => {
  					<OkayButton
 						style={{ minWidth: "75%", marginTop: 10 }}
  						textStyle={{ fontSize: 16 }}
- 						onClick={() => { if(props.productPreviewed) props.setProductPreviewed(); exit(); }}
+ 						onClick={() => { if(props.productPreviewed && props.sender==="Cart") props.setProductPreviewed(); exit(); }}
  						text={"Back to " + props.sender} />
 
  					<OkayButton

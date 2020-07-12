@@ -43,8 +43,8 @@ const CachedImage = props => {
             //setHeight((height/width)*Dimensions.get('window').width);
         }, (e) => {
             // As always include an error fallback
-            //console.log('getSize error:', e);
-            if(e.contains("Unsupported uri")){
+            console.log('getSize error:' + " typeof(e) " + typeof(e) + " e " +  e);
+            if(String(e).includes("Unsupported uri")){
                 setImgeUri(uri);
             } else {
                 let title = prepareLink(props.source);

@@ -6,27 +6,29 @@ import DoubleArrowedHeader from './DoubleArrowedHeader';
 import CostPage from './CostPage';
 import ImageSubmission from './ImageSubmission';
 import StaticOrDynamicPage from './StaticOrDynamicPage';
-import QuantityPage from './QuantityPage';
 import TitlePage from './TitlePage';
 import StockPage from './StockPage';
+import PriorityPage from './PriorityPage';
 import RequirementsPage from './RequirementsPage';
 import DescriptionPage from './DescriptionPage';
 import Preview from './Preview';
 import firebase from 'firebase';
 import SubmittedPage from './SubmittedPage';
+import SneakPage from './SneakPage';
 
 
 const pages = [
-	"Root", "Title", "Description", "Cost", "StaticOrDynamic", "Quantity", "Stock", "Requirements", "Picture", "Preview", "Submitting Post...", "Submitted"
+	"Root", "Title", "Description", "Cost", "StaticOrDynamic", "Stock", "Requirements", "Picture", "Preview", "Submitting Post...", "Submitted"
 ]
 
 const Product = props => {
 
 	const [stock, setStock] = useState("");
+	const [sneak, setSneak] = useState("");
+	const [priority, setPriority] = useState("");
 	const [page, setPage] = useState("Root");
 	const [selected, setSelected] = useState();
 	const [cost, setCost] = useState("");
-	const [quantity, setQuantity] = useState("1");
 	const [title, setTitle] = useState("");
 	const [imageUri, setImageUri] = useState();
 	const [description, setDescription] = useState("");
@@ -121,13 +123,14 @@ const Product = props => {
 		let ref = firebase.database().ref('/categories/' + props.data.key + '/products');
 		ref.push({
 			data: {
+				sneak: sneak,
 				visible: true,
+				priority: !priority? 1 : parseInt(priority),
 				banner: downloadURL,
 				title: title,
 				description: description,
 				stock: stock,
 				submittable_requirements: submittable_requirements,
-				quantity: quantity,
 				cost: cost,
 				background: selected.background,
 				type: selected.type,
@@ -147,9 +150,12 @@ const Product = props => {
 				break;
 			case "Title":
 				if(title!==""){
-					setPage("Description");
+					setPage("Sneak");
 				} else
 					Alert.alert('Wait!', 'You should enter a title first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+				break;
+			case "Sneak":
+				setPage("Description");
 				break;
 			case "Description":
 				if(description!==""){
@@ -162,13 +168,6 @@ const Product = props => {
 				break;
 			case "StaticOrDynamic":
 				setPage("Cost");
-				if(IsCurrency()){
-					setPage("Cost");
-				} else
-					setPage("Quantity");
-				break;
-			case "Quantity":
-				setPage("Cost");
 				break;
 			case "Cost":
 				if(cost!==""){
@@ -177,6 +176,9 @@ const Product = props => {
 					Alert.alert('Wait!', 'You should select a price first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Stock":
+				setPage("Priority");
+				break;
+			case "Priority":
 				setPage("Requirements");
 				break;
 			case "Requirements":
@@ -215,8 +217,6 @@ const Product = props => {
 		if(imageUrl)
 			if(imageUrl.length)
 				setImageUrl("");
-		if(quantity!=="1")
-			setQuantity("1");
 		if(imageUri)
 			setImageUri();
 	};
@@ -233,29 +233,32 @@ const Product = props => {
 				setSelected();
 				setPage("Root");
 				break;
-			case "Description":
+			case "Sneak":
 				setPage("Title");
+				break;
+			case "Description":
+				setPage("Sneak");
 				break;
 			case "StaticOrDynamic":
 				setPage("Description");
 				break;
 			case "Cost":
+				let ah = selected;
+				ah.type = ah.originaltype;
+				setSelected(ah);
 				if(IsCurrency()){
 					setPage("StaticOrDynamic");
 				} else
 					setPage("Description");
 				break;
-			case "Quantity":
+			case "Stock":
 				setPage("Cost");
 				break;
-			case "Stock":
-				if(IsCurrency()){
-					setPage("Cost");
-				} else
-					setPage("Quantity");
+			case "Priority":
+				setPage("Stock");
 				break;
 			case "Requirements":
-				setPage("Stock");
+				setPage("Priority");
 				break;
 			case "Picture":
 				setPage("Requirements");
@@ -290,6 +293,14 @@ const Product = props => {
 							setTitle={setTitle}/>
 					);
 					break;
+				case "Sneak":
+					return(
+						<SneakPage
+							hint={"Short title (6 characters max)"}
+							setSneak={setSneak}
+							sneak={sneak} />
+					);
+					break;
 				case "Description":
 					return(
 						<DescriptionPage
@@ -303,14 +314,6 @@ const Product = props => {
 						<StaticOrDynamicPage
 							setSelected={setSelected}
 							selected={selected} />
-					);
-					break;
-				case "Quantity":
-					return(
-						<QuantityPage
-							hint={"Quantity"}
-							setQuantity={setQuantity}
-							quantity={quantity}/>
 					);
 					break;
 				case "Cost":
@@ -334,9 +337,18 @@ const Product = props => {
 					return(
 						<StockPage
 							type={selected.type}
-							hint={"How much stock do you have"}
+							hint={"Stock (leave empty for infinite)"}
 							setStock={setStock}
 							stock={stock} />
+					);
+					break;
+				case "Priority":
+					return(
+						<PriorityPage
+							type={selected.type}
+							hint={"Priority (Optional)"}
+							setPriority={setPriority}
+							priority={priority} />
 					);
 					break;
 				case "Requirements":

@@ -15,14 +15,16 @@ import Banner from './Banner';
 
 const ProductPreviewModal = props => {
 
-	const IsOriginallyCurrency = () => {
-		return props.productPreviewed.data.type==="currency" || props.productPreviewed.data.type==="account-charging";
-	};
-
 	BackHandler.addEventListener('hardwareBackPress', function() {
 		back();
 	    return true;
 	});
+
+    const [preview, setPreview] = useState(false);
+
+	const IsOriginallyCurrency = () => {
+		return props.productPreviewed.data.type==="currency" || props.productPreviewed.data.type==="account-charging";
+	};
 
 	const back = () => {
 		if(isNaN(index)){
@@ -82,48 +84,94 @@ const ProductPreviewModal = props => {
 
 		if(isNaN(parseFloat(quantity))) {
 			invalidQuantity();
-		} else {
-
-			let cartCopy = props.cart.slice();
-			for(let i=0; i<cartCopy.length; i++){
-				if(cartCopy[i].key===props.productPreviewed.key){
-
-					if(IsOriginallyCurrency()){
-						cartCopy[i].quantity = ( parseFloat(cartCopy[i].quantity) + parseFloat(quantity)).toFixed(2).toString();
-						cartCopy[i].original_quantity = cartCopy[i].quantity;
-					} else {
-						cartCopy[i].quantity = (parseInt(cartCopy[i].quantity) + parseInt(quantity)).toString();
-						cartCopy[i].original_quantity = cartCopy[i].quantity;
-					}
-					cartCopy[i].quantity.requirements = requirements;
-					props.updateCart(cartCopy);
-
-					Alert.alert(
-						'Added To Cart!',
-						'You now have ' + cartCopy[i].quantity + ' '  + props.productPreviewed.data.title + ' in your cart!',
-						[
-							{text: 'Go To Cart', style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate("Cart"); } },
-							{text: 'Ok', style: 'cancel'}],
-						{ cancelable: true }
-					);
-
-					return;
-				}
-			}
-
-			Alert.alert(
-				'Added To Cart!',
-				'You have added ' + quantity + ' ' + props.productPreviewed.data.title + ' to your cart!',
-				[
-					{text: 'Go To Cart', style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate('Cart'); } },
-					{text: 'Ok', style: 'cancel'}],
-				{ cancelable: true }
-			);
-			props.productPreviewed.quantity = quantity;
-			props.productPreviewed.original_quantity = props.productPreviewed.quantity;
-			props.productPreviewed.requirements = requirements;
-			props.addToCart(props.productPreviewed);
+			return;
 		}
+		if(props.productPreviewed.data.stock){
+			if(parseFloat(quantity)>parseFloat(props.productPreviewed.data.stock)){
+				setQuantity(props.productPreviewed.data.stock);
+				Alert.alert(
+					'Stock Is Limited!',
+					'There is only ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' left in stock.',
+					[
+						{text: "Ok", style: 'cancel'}
+					],
+					{ cancelable: true }
+				);
+				return;
+			}
+		}
+
+		let cartCopy = props.cart.slice();
+		for(let i=0; i<cartCopy.length; i++){
+			if(cartCopy[i].key===props.productPreviewed.key){
+
+				if(IsOriginallyCurrency()){
+
+					if(props.productPreviewed.data.stock){
+						if((parseFloat(cartCopy[i].quantity) + parseFloat(quantity)).toFixed(2)> parseFloat(props.productPreviewed.data.stock) ){
+							setQuantity((parseFloat(props.productPreviewed.data.stock) - parseFloat(cartCopy[i].quantity) ).toString());
+							Alert.alert(
+								'Stock Is Limited!',
+								'There is only ' + (parseFloat(props.productPreviewed.data.stock) - parseFloat(cartCopy[i].quantity) ).toString() + ' ' + props.productPreviewed.data.title + ' left in stock.',
+								[
+									{text: "Ok", style: 'cancel'}
+								],
+								{ cancelable: true }
+							);
+							return;
+						}
+					}
+
+					cartCopy[i].quantity = ( parseFloat(cartCopy[i].quantity) + parseFloat(quantity)).toFixed(2).toString();
+					cartCopy[i].original_quantity = cartCopy[i].quantity;
+				} else {
+
+					if(props.productPreviewed.data.stock){
+						if((parseFloat(cartCopy[i].quantity) + parseInt(quantity)).toFixed(2) > parseFloat(props.productPreviewed.data.stock) ){
+							setQuantity((parseFloat(props.productPreviewed.data.stock) - parseFloat(cartCopy[i].quantity) ).toString());
+							Alert.alert(
+								'Stock Is Limited!',
+								'There is only ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' left in stock.',
+								[
+									{text: "Ok", style: 'cancel'}
+								],
+								{ cancelable: true }
+							);
+							return;
+						}
+					}
+
+					cartCopy[i].quantity = (parseInt(cartCopy[i].quantity) + parseInt(quantity)).toString();
+					cartCopy[i].original_quantity = cartCopy[i].quantity;
+				}
+				cartCopy[i].quantity.requirements = requirements;
+				props.updateCart(cartCopy);
+
+				Alert.alert(
+					'Added To Cart!',
+					'You now have ' + cartCopy[i].quantity + ' '  + props.productPreviewed.data.title + ' in your cart!',
+					[
+						{text: 'Go To Cart', style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate("Cart"); } },
+						{text: 'Ok', style: 'cancel'}],
+					{ cancelable: true }
+				);
+
+				return;
+			}
+		}
+
+		Alert.alert(
+			'Added To Cart!',
+			'You have added ' + quantity + ' ' + props.productPreviewed.data.title + ' to your cart!',
+			[
+				{text: 'Go To Cart', style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate('Cart'); } },
+				{text: 'Ok', style: 'cancel'}],
+			{ cancelable: true }
+		);
+		props.productPreviewed.quantity = quantity;
+		props.productPreviewed.original_quantity = props.productPreviewed.quantity;
+		props.productPreviewed.requirements = requirements;
+		props.addToCart(props.productPreviewed);
 	};
 
 	const invalidQuantity = () => {
@@ -137,16 +185,33 @@ const ProductPreviewModal = props => {
 		);
 	};
 
+	console.log(props.productPreviewed.data.stock);
 	const buyNow = () => {
 
 		if(isNaN(parseFloat(quantity))) {
 			invalidQuantity();
-		} else {
-			props.productPreviewed.quantity = quantity;
-			props.productPreviewed.selected_in_cart = true;
-			props.productPreviewed.requirements = requirements;
-			props.setCheckoutList([props.productPreviewed]);
+			return;
 		}
+
+		if(props.productPreviewed.data.stock){
+			if(parseFloat(quantity)>parseFloat(props.productPreviewed.data.stock)){
+				setQuantity(props.productPreviewed.data.stock);
+				Alert.alert(
+					'Stock Is Limited!',
+					'There is only ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' left in stock.',
+					[
+						{text: "Ok", style: 'cancel'}
+					],
+					{ cancelable: true }
+				);
+				return;
+			}
+		}
+
+		props.productPreviewed.quantity = quantity;
+		props.productPreviewed.selected_in_cart = true;
+		props.productPreviewed.requirements = requirements;
+		props.setCheckoutList([props.productPreviewed]);
 	};
 
 	const sender = () => {
@@ -228,14 +293,18 @@ const ProductPreviewModal = props => {
 				);
 			}
 		}
+
 		return(
 		<View style={styles.flexer}>
 			<View
 				style={{width:"100%", flex: 1 }}>
 				<View style={styles.banner}>
 					<Banner
+						preview={preview}
+						setPreview={setPreview}
+						showThumbnail={true}
 						style={styles.banner}
-						images={props.productPreviewed.data.banner} />
+						images={[props.productPreviewed.data.banner]} />
 				</View>
 
 				<View style={styles.costHolder}>
@@ -245,6 +314,7 @@ const ProductPreviewModal = props => {
 				<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
 			</View>
 			<View style={styles.quantityOuterHolder}>
+			<Text style={{fontSize: 18,marginBottom: 7, fontWeight:"bold"}}>Stock: {props.productPreviewed.data.stock}</Text>
 				<View style={styles.quantityInnerHolder}>
 					<TouchableOpacity
 						onPress={() => {
@@ -344,6 +414,19 @@ const ProductPreviewModal = props => {
 					productPreviewed={props.productPreviewed}
 					setEditMode={setEditMode}
 					productPreviewed={props.productPreviewed}/>
+			);
+		}
+
+		if(preview){
+			return(
+				<View style={styles.letout}>
+					<Banner
+						preview={preview}
+						setPreview={setPreview}
+						showThumbnail={true}
+						style={styles.banner}
+						images={[props.productPreviewed.data.banner]} />
+				</View>
 			);
 		}
 

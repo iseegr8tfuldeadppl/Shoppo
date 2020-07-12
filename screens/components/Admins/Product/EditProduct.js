@@ -4,8 +4,6 @@ import Colors from '../../../constants/Colors';
 import DoubleArrowedHeader from './DoubleArrowedHeader';
 import CostPage from './CostPage';
 import ImageSubmission from './ImageSubmission';
-import StaticOrDynamicPage from './StaticOrDynamicPage';
-import QuantityPage from './QuantityPage';
 import TitlePage from './TitlePage';
 import StockPage from './StockPage';
 import RequirementsPage from './RequirementsPage';
@@ -13,18 +11,19 @@ import DescriptionPage from './DescriptionPage';
 import Preview from './Preview';
 import firebase from 'firebase';
 import SubmittedPage from './SubmittedPage';
+import SneakPage from './SneakPage';
 
 
 const pages = [
-	"Title", "Description", "Cost", "StaticOrDynamic", "Quantity", "Stock", "Requirements", "Picture", "Preview", "Submitting Post...", "Submitted"
+	"Title", "Description", "Cost", "Stock", "Requirements", "Picture", "Preview", "Submitting Post...", "Submitted"
 ]
 
 const EditProduct = props => {
 
 	const [stock, setStock] = useState(props.productPreviewed.data.stock);
 	const [page, setPage] = useState("Title");
+	const [sneak, setSneak] = useState(props.productPreviewed.data.sneak);
 	const [cost, setCost] = useState(props.productPreviewed.data.cost);
-	const [quantity, setQuantity] = useState("1");
 	const [type, setType] = useState(props.productPreviewed.data.type);
 	const [title, setTitle] = useState(props.productPreviewed.data.title);
 	const [imageUri, setImageUri] = useState();
@@ -87,15 +86,15 @@ const EditProduct = props => {
 			submittable_requirements = submittable_requirements.substring(0, submittable_requirements.length-1);
 
 		let ref = firebase.database().ref('/categories/' + props.productPreviewed.category.key + '/products/' + props.productPreviewed.key);
-		ref.set({
+		ref.update({
 			data: {
+				sneak: sneak,
 				visible: true,
 				banner: downloadURL,
 				title: title,
 				description: description,
 				stock: stock,
 				submittable_requirements: submittable_requirements,
-				quantity: quantity,
 				cost: cost,
 				background: props.productPreviewed.data.background,
 				type: type,
@@ -118,22 +117,9 @@ const EditProduct = props => {
 				break;
 			case "Description":
 				if(description!==""){
-					if(IsCurrency())
-						setPage("StaticOrDynamic");
-					else
-						setPage("Cost");
-				} else
-					Alert.alert('Wait!', 'You should enter a short description first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
-				break;
-			case "StaticOrDynamic":
-				setPage("Cost");
-				if(IsCurrency()){
 					setPage("Cost");
 				} else
-					setPage("Quantity");
-				break;
-			case "Quantity":
-				setPage("Cost");
+					Alert.alert('Wait!', 'You should enter a short description first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Cost":
 				if(cost!==""){
@@ -179,8 +165,6 @@ const EditProduct = props => {
 		if(imageUrl)
 			if(imageUrl.length)
 				setImageUrl("");
-		if(quantity!=="1")
-			setQuantity("1");
 		if(imageUri)
 			setImageUri();
 	};
@@ -190,26 +174,17 @@ const EditProduct = props => {
 			case "Title":
 				props.setEditMode(false);
 				break;
-			case "Description":
+			case "Sneak":
 				setPage("Title");
 				break;
-			case "StaticOrDynamic":
-				setPage("Description");
+			case "Description":
+				setPage("Sneak");
 				break;
 			case "Cost":
-				if(IsCurrency()){
-					setPage("StaticOrDynamic");
-				} else
-					setPage("Description");
-				break;
-			case "Quantity":
-				setPage("Cost");
+				setPage("Description");
 				break;
 			case "Stock":
-				if(IsCurrency()){
-					setPage("Cost");
-				} else
-					setPage("Quantity");
+				setPage("Cost");
 				break;
 			case "Requirements":
 				setPage("Stock");
@@ -249,21 +224,12 @@ const EditProduct = props => {
 						description={description} />
 				);
 				break;
-			case "StaticOrDynamic":
+			case "Sneak":
 				return(
-					<StaticOrDynamicPage
-						type={type}
-						productPreviewed={props.productPreviewed}
-						original_type={props.productPreviewed.data.original_type}
-						setType={setType} />
-				);
-				break;
-			case "Quantity":
-				return(
-					<QuantityPage
-						hint={"Quantity"}
-						setQuantity={setQuantity}
-						quantity={quantity}/>
+					<SneakPage
+						hint={"Short title (6 characters max)"}
+						setSneak={setSneak}
+						sneak={sneak} />
 				);
 				break;
 			case "Cost":
