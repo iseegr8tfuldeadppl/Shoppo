@@ -30,17 +30,15 @@ const MainProductItem = props => {
         }
     };
 
-    const stockAvailable = () => {
-        if(props.adminList.includes(props.uid)){
-            if(props.item.data.stock)
-                return(
-                    <View style={{flexDirection:"row", position:"absolute", justifyContent:"space-between"}}>
-                    <Text style={{...styles.title, ...{color:"white", fontWeight:"bold", fontSize: 27, marginTop: 0}}}>{props.item.data.sneak}</Text>
-                    <View style={{flex: 1}}></View>
-                        {outOfStockWarning()}
-                    </View>
-                );
-        }
+    const sneak = () => {
+        if(props.item.data.sneak)
+            return(
+                <View style={{flexDirection:"row", position:"absolute", justifyContent:"space-between"}}>
+                <Text style={{...styles.title, ...{color:"white", fontWeight:"bold", fontSize: 27, marginTop: 0}}}>{props.item.data.sneak}</Text>
+                <View style={{flex: 1}}></View>
+                    {outOfStockWarning()}
+                </View>
+            );
     };
 
     const product = () => {
@@ -66,7 +64,7 @@ const MainProductItem = props => {
 
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
-                    {stockAvailable()}
+                    {sneak()}
                     {visible()}
                 </Card>
             );

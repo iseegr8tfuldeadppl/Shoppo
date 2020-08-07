@@ -88,7 +88,7 @@ const EditProduct = props => {
 		let ref = firebase.database().ref('/categories/' + props.productPreviewed.category.key + '/products/' + props.productPreviewed.key);
 		ref.update({
 			data: {
-				sneak: sneak,
+				sneak: sneak ? sneak: false,
 				visible: true,
 				banner: downloadURL,
 				title: title,
@@ -111,9 +111,12 @@ const EditProduct = props => {
 		switch(page){
 			case "Title":
 				if(title!==""){
-					setPage("Description");
+					setPage("Sneak");
 				} else
 					Alert.alert('Wait!', 'You should enter a title first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+				break;
+			case "Sneak":
+				setPage("Description");
 				break;
 			case "Description":
 				if(description!==""){
@@ -153,22 +156,6 @@ const EditProduct = props => {
 		}
 	};
 
-	const reset = () => {
-		if(cost.length)
-			setCost("");
-		if(stock.length)
-			setStock("");
-		if(description.length)
-			setDescription("");
-		if(title.length)
-			setTitle("");
-		if(imageUrl)
-			if(imageUrl.length)
-				setImageUrl("");
-		if(imageUri)
-			setImageUri();
-	};
-
 	const back = () => {
 		switch(page){
 			case "Title":
@@ -201,6 +188,23 @@ const EditProduct = props => {
 				break;
 		}
 	};
+
+	const reset = () => {
+		if(cost.length)
+			setCost("");
+		if(stock.length)
+			setStock("");
+		if(description.length)
+			setDescription("");
+		if(title.length)
+			setTitle("");
+		if(imageUrl)
+			if(imageUrl.length)
+				setImageUrl("");
+		if(imageUri)
+			setImageUri();
+	};
+
 
 	const hasRelevantBanner = () => {
 		return props.productPreviewed.banner!==""
@@ -315,6 +319,7 @@ const EditProduct = props => {
 		<SafeAreaView style={styles.letout}>
 
 			<DoubleArrowedHeader
+				style={{paddingTop:15}}
 				next={next}
 				back={back}/>
 			<Text style={styles.cuteTitle}>{page}</Text>

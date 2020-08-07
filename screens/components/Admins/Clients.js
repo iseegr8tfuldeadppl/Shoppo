@@ -12,7 +12,8 @@ const Clients = props => {
         props.backToRoot();
         return true;
     });
-/*
+
+    /*
     const statee = stuffos => {
         if(stuffos.order.state==="success")
             Alert.alert('Success!', 'Your order was successfully processed',
@@ -30,9 +31,9 @@ const Clients = props => {
                 {text: 'Ok', style: 'cancel'}
             ],{ cancelable: true });
     };
-*/
+    */
 
-/*
+    /*
     const usersLatestFiltered = () => {
         let usersLatest = [];
         let count = 1;
@@ -47,15 +48,17 @@ const Clients = props => {
         }
         return usersLatest;
     };
-*/
+    */
 
     const addNumbersToUsersLatest = () => {
         let usersLatest = [];
-        let count = 1;
-        for(let i=props.usersLatest.length-1; i>=0; i--){
-            props.usersLatest[i].count = count;
-            count += 1;
-            usersLatest.push(props.usersLatest[i]);
+        if(usersLatest){
+            let count = 1;
+            for(let i=props.usersLatest.length-1; i>=0; i--){
+                props.usersLatest[i].count = count;
+                count += 1;
+                usersLatest.push(props.usersLatest[i]);
+            }
         }
         return usersLatest;
     };

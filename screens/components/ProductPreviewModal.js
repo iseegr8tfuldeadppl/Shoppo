@@ -185,7 +185,6 @@ const ProductPreviewModal = props => {
 		);
 	};
 
-	console.log(props.productPreviewed.data.stock);
 	const buyNow = () => {
 
 		if(isNaN(parseFloat(quantity))) {

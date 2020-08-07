@@ -24,8 +24,8 @@ const Profile = props => {
     // this is for when they press "go to my orders" from <checkout>
     if(props.navigation.isFocused()){
         if(props.remoteOrdersOpen){
-            if(page!=="Clients"){
-                setPage("Clients");
+            if(page!=="Chat"){
+                setPage("Chat");
                 props.setRemoteOrdersOpen();
             }
         }
@@ -45,8 +45,7 @@ const Profile = props => {
     const [clientSelected, setClientSelected] = useState();
 
     const turnIntoMessages = () => {
-        let messages = [];
-        let orders = [];
+        let messagos = []
 
         if(props.adminList.includes(props.uid)){
     		firebase.database().ref('/users/' + clientSelected.key).on('value', userInfoSnapShot => {
@@ -56,14 +55,26 @@ const Profile = props => {
                     let ordersKeys = Object.keys(userInfoSnap.orders);
                     let orderst = Object.values(userInfoSnap.orders);
                     for(let i=0; i<orderst.length; i++){
-                        orders.push({key: ordersKeys[i].toString(), order:orderst[i]});
+                        messagos.push({
+                            key: ordersKeys[i].toString(),
+                            message: orderst[i].message,
+                            picture: orderst[i].picture,
+                            state: orderst[i].state,
+                            date: orderst[i].date
+                        });
                     }
                 }
                 if(userInfoSnap.messages){
                     let messagesKeys = Object.keys(userInfoSnap.messages);
                     let messagest = Object.values(userInfoSnap.messages);
                     for(let i=0; i<messagest.length; i++){
-                        messages.push({key: messagesKeys[i].toString(), message:messagest[i]});
+                        messagos.push({
+                            key: messagesKeys[i].toString(),
+                            message: messagest[i].message,
+                            picture: messagest[i].picture,
+                            date: messagest[i].date,
+                            admin: messagest[i].admin
+                        });
                     }
                 }
     		});
@@ -73,7 +84,13 @@ const Profile = props => {
                     let ordersKeys = Object.keys(props.userInfo.orders);
                     let orderst = Object.values(props.userInfo.orders);
                     for(let i=0; i<orderst.length; i++){
-                        orders.push({key: ordersKeys[i].toString(), order:orderst[i]});
+                        messagos.push({
+                            key: ordersKeys[i].toString(),
+                            message: orderst[i].message,
+                            picture: orderst[i].picture,
+                            state: orderst[i].state,
+                            date: orderst[i].date
+                        });
                     }
                 }
 
@@ -81,64 +98,62 @@ const Profile = props => {
                     let messagesKeys = Object.keys(props.userInfo.messages);
                     let messagest = Object.values(props.userInfo.messages);
                     for(let i=0; i<messagest.length; i++){
-                        messages.push({key: messagesKeys[i].toString(), message:messagest[i]});
+                        messagos.push({
+                            key: messagesKeys[i].toString(),
+                            message: messagest[i].message,
+                            picture: messagest[i].picture,
+                            date: messagest[i].date,
+                            admin: messagest[i].admin
+                        });
                     }
                 }
             }
         }
 
-        let messago = []
-        for(let i=0; i<orders.length; i++){
-            messago.push({
-                key: orders[i].key,
-                message: orders[i].order.message,
-                picture: orders[i].order.picture,
-                state: orders[i].order.state,
-                date: orders[i].order.date
-            });
-        }
-
-        for(let i=0; i<messages.length; i++){
-            messago.push({
-                key: messages[i].key,
-                message: messages[i].message.message,
-                picture: messages[i].message.picture,
-                date: messages[i].message.date,
-                admin: messages[i].message.admin
-            });
-        }
-
         // Order messages chronologically
-        for(let i=0; i<messago.length; i++){
-            for(let j=0; j<messago.length; j++){
-                if(messago.length===j+1)
+        for(let i=0; i<messagos.length; i++){
+            for(let j=0; j<messagos.length; j++){
+                if(messagos.length===j+1)
                     break;
-                if(getDate(messago[j].date) < getDate(messago[j+1].date) ){
-                    let temp = messago[j];
-                    messago[j] = messago[j+1];
-                    messago[j+1] = temp;
+                if(getDate(messagos[j].date) < getDate(messagos[j+1].date) ){
+                    let temp = messagos[j];
+                    messagos[j] = messagos[j+1];
+                    messagos[j+1] = temp;
                 }
             }
         }
 
-        return messago;
+        return messagos;
     };
 
     const getDate = date => {
-        let time = parseInt(date.substring(0, date.length-2));
-        if(date[date.length-2]=="p"){
-            if(date[8]==="1" && date[9]==="2")
-                return time - 120000;
-            return time + 120000;
+        var time = parseInt(date.substring(0, date.length-2));
+        if(date[8]==="1" && date[9]==="2"){
+            time -= 120000;
         }
+
+        if(date[date.length-2]==="p"){
+            time += 120000;
+        }
+
         return time;
     };
 
     const [messago, setMessages] = useState(props.adminList.includes(props.uid)? undefined : turnIntoMessages());
 
+    if(!props.adminList.includes(props.uid)){
+        let ah = turnIntoMessages();
+        if(String(messago)!==String(ah)){
+            setMessages(ah);
+        }
+
+    }
+
+    // admin if statement
     if(clientSelected){
-        if(!messago){
-            setMessages(turnIntoMessages());
+        let ah = turnIntoMessages();
+        if(String(messago)!==String(ah)){
+            setMessages(ah);
         }
     }
 

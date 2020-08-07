@@ -31,20 +31,24 @@ const Chat = props => {
     };
 
     const clientOrAdminDecision = admin => {
-        if(props.adminList.includes(props.uid))
+        if(props.adminList.includes(props.uid)){
             return admin;
+        }
         return !admin;
     };
 
-    const picture = url => {
+    const picture = (url, admin) => {
         if(url){
             return(
-				<Banner
-                    url={url}
-                    setPreview={setPreviewedImage}
-                    preview={previewedImage}
-					style={{width: "65%", height: 150, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}
-					images={[url]} />
+                <View
+                    style={{...{width: "65%", height: 150, marginTop:10}, ...leftOrRight(admin)}}>
+                    <Banner
+                        url={url}
+                        setPreview={setPreviewedImage}
+                        preview={previewedImage}
+                        style={{height: 150, width:"100%", borderRadius: 23, borderWidth: 1, borderColor:Colors.Primary}}
+                        images={[url]} />
+                </View>
             );
         }
     };
@@ -99,6 +103,7 @@ const Chat = props => {
         if(state)
             return(
                 <StateSelector
+                    touchable={!clientOrAdminDecision(admin)}
                     keyy={key}
                     state={state}
                     setState={setState}/>
@@ -129,14 +134,17 @@ const Chat = props => {
                 <View style={{...{borderRadius: 23, maxwidth: "70%", padding: 10}, ...leftOrRight2(item.admin) }}>
                     <Text style={styles.prodoct}>{item.message}</Text>
                 </View>
-                {picture(item.picture)}
+                {picture(item.picture, item.admin)}
                 {stateman(item.admin, item.state, item.key)}
             </View>
         );
     };
 
     const submitMessage = () => {
-		let ref = firebase.database().ref('/users/' + props.uid + "/messages");
+        let uid = props.uid;
+        if(props.adminList.includes(props.uid))
+            uid = props.clientSelected.key;
+		let ref = firebase.database().ref('/users/' + uid + "/messages");
 		ref.push({
 				message: messageInput,
  				date: moment().format('YYYYMMDDhhmmssa'),
@@ -149,13 +157,14 @@ const Chat = props => {
                 let array2 = props.turnIntoMessages();
                 props.setMessages(array2);
 
-				let ref2 = firebase.database().ref('/userList/' + props.uid);
-				ref2.set({"n":moment().format('YYYYMMDDhhmmssa')})
+				let ref2 = firebase.database().ref('/userList/' + uid);
+				ref2.update({"n":moment().format('YYYYMMDDhhmmssa')})
 				.then(function(snapshot) {
 					//console.log('Snapshot', snapshot);
 				});
 		});
     };
+
 
     const display = () =>{
         if(previewedImage){
@@ -167,6 +176,7 @@ const Chat = props => {
 					images={[previewedImage]} />
             );
         }
+
 
         return(
             <SafeAreaView style={styles.letout}>

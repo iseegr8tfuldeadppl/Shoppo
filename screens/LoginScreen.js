@@ -83,29 +83,28 @@ const LoginScreen = props => {
 	};
 
 
-	const signInWithGoogleAsync = async () => {
-		setLoading(true);
-		try {
-			const result = await Google.logInAsync({
-				behavior: 'web',
-				androidClientId: "366313995332-mjbmbk7ff5ds0krfam6k7hhd5ek8o6va.apps.googleusercontent.com",
-				iosClientId: "366313995332-fg9o2im3ntkbvsar20preei2g7p0s5gf.apps.googleusercontent.com",
-				scopes: ['profile', 'email']
-			});
+		const signInWithGoogleAsync = async () => {
+			setLoading(true);
+			try {
+				const result = await Google.logInAsync({
+					behavior: 'web',
+					androidClientId: "366313995332-mjbmbk7ff5ds0krfam6k7hhd5ek8o6va.apps.googleusercontent.com",
+					iosClientId: "366313995332-fg9o2im3ntkbvsar20preei2g7p0s5gf.apps.googleusercontent.com",
+					scopes: ['profile', 'email']
+				});
 
-			if (result.type === 'success') {
-				onSignIn(result);
-				return result.accessToken;
-			} else {
+				if (result.type === 'success') {
+					onSignIn(result);
+					return result.accessToken;
+				} else {
+					setLoading(false);
+					return { cancelled: true };
+				}
+			} catch (e) {
 				setLoading(false);
-				return { cancelled: true };
+				return { error: true };
 			}
-		} catch (e) {
-			setLoading(false);
-			return { error: true };
-		}
-	};
-
+		};
 
 	let content;
 	if(loading){

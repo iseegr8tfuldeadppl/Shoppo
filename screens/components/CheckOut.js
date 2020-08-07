@@ -156,8 +156,6 @@ const CheckOut = props => {
 	    });
 	};
 
-	console.log(props.checkoutList);
-
 	for(let i=0; i<props.checkoutList.length; i++){
 		if(parseFloat(props.checkoutList[i].quantity)>parseFloat(props.checkoutList[i].data.stock)){
 
@@ -182,6 +180,7 @@ const CheckOut = props => {
 		}
 	}
 
+	console.log(props.checkoutList);
 	const submitOrder = imageUrl => {
 		let submittable = {};
 		for(let i=0; i<props.checkoutList.length; i++){
@@ -199,8 +198,9 @@ const CheckOut = props => {
 		for(let i=0; i<props.checkoutList.length; i++){
 
 			message += "Product: " + props.checkoutList[i].data.title + '\n';
-			message += "Quantity: " + props.checkoutList[i].data.quantity + '\n';
+			message += "Quantity: " + props.checkoutList[i].quantity + '\n';
 			message += "Total: " + calculateTotalForThisProduct(props.checkoutList[i]) + " DA" + "\n";
+
 
 			if(props.checkoutList[i].requirements.length!==0)
 				message += '\n';

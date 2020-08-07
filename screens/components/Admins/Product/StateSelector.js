@@ -14,15 +14,27 @@ const StateSelector = props => {
     };
     return(
         <View style={{...styles.holder, ...props.style}}>
-            <TouchableOpacity style={style("pending")} onPress={() => {if(props.state!=="pending")props.setState("pending", props.keyy);}} activeOpacity={0.50}>
+            <TouchableOpacity style={style("pending")} onPress={() => {
+                if(props.touchable){
+                    if(props.state!=="pending")props.setState("pending", props.keyy);
+                }
+            }} activeOpacity={0.50}>
                 <MaterialCommunityIcons name={"rotate-right"} color={"gray"} size={20} />
                 <Text style={styles.processing}>Pending</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={style("failed")} onPress={() => {if(props.state!=="failed")props.setState("failed", props.keyy);}} activeOpacity={0.50}>
+            <TouchableOpacity style={style("failed")} onPress={() => {
+                if(props.touchable){
+                    if(props.state!=="failed")props.setState("failed", props.keyy);
+                }
+            }} activeOpacity={0.50}>
                 <MaterialCommunityIcons name={"alert-circle"} color={"red"} size={20} />
                 <Text style={styles.failed}>Failed</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={style("success")} onPress={() => {if(props.state!=="success")props.setState("success", props.keyy);}} activeOpacity={0.50}>
+            <TouchableOpacity style={style("success")} onPress={() => {
+                if(props.touchable){
+                    if(props.state!=="success")props.setState("success", props.keyy);
+                }
+            }} activeOpacity={0.50}>
                 <MaterialCommunityIcons name={"check-circle"} color={"green"} size={20} />
                 <Text style={styles.success}>Success</Text>
             </TouchableOpacity>
