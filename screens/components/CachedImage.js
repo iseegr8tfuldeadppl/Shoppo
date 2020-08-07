@@ -54,7 +54,7 @@ const CachedImage = props => {
                         `${FileSystem.cacheDirectory + title}.${ extension }`
                     )
                     .then(({ uri }) => {
-                        loadLocal(Platform.OS === 'ios'? uri : title, false, extension);
+                        loadLocal(Platform.OS === 'ios'? uri : `${FileSystem.cacheDirectory + title}.${ extension }`, false, extension);
                     });
                 })();
             }

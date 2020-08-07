@@ -24,10 +24,15 @@ const Profile = props => {
     // this is for when they press "go to my orders" from <checkout>
     if(props.navigation.isFocused()){
         if(props.remoteOrdersOpen){
-            if(page!=="Chat"){
-                setPage("Chat");
-                props.setRemoteOrdersOpen();
+            // admin check
+            if(props.adminList.includes(props.uid)){
+                if(page!=="Clients")
+                    setPage("Clients");
+            } else {
+                if(page!=="Chat")
+                    setPage("Chat");
             }
+            props.setRemoteOrdersOpen();
         }
     }
 
@@ -367,6 +372,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.Primary,
         width: "100%",
         alignItems:"center",
+        height:150
     },
     topBarInner: {
         flex: 1,

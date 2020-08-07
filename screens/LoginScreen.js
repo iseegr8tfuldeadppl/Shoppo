@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, BackHandler } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import * as Google from 'expo-google-app-auth'; // change this to 'expo-google-sign-in' to turn the window login into a popup, also remove behavior: 'web' from the google code maybe?
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Card from './components/Card';
 import moment from 'moment';
+import Colors from './constants/Colors';
 
 
 const LoginScreen = props => {
@@ -31,7 +32,6 @@ const LoginScreen = props => {
 		}
 		return false;
 	};
-
 
 	const onSignIn = googleUser => {
 		//console.log('Google Auth Response', googleUser);
@@ -82,8 +82,7 @@ const LoginScreen = props => {
 		);
 	};
 
-
-		const signInWithGoogleAsync = async () => {
+	const signInWithGoogleAsync = async () => {
 			setLoading(true);
 			try {
 				const result = await Google.logInAsync({
@@ -106,38 +105,47 @@ const LoginScreen = props => {
 			}
 		};
 
-	let content;
-	if(loading){
-		content = <ActivityIndicator style={{width:'80%',}} />
-	} else {
-		content = <Text style={{marginLeft: 'auto', marginRight: 'auto',}}>Sign In With Google</Text>
-	}
+	const content = () => {
+		if(loading)
+			return(
+				<ActivityIndicator color={Colors.Accent} style={{width:'89%',}} />
+			);
+		return(
+			<Text style={{marginLeft: 'auto', marginRight: 'auto', color:Colors.Accent, fontSize:16}}>Sign In With Google</Text>
+		);
+	};
 
 	const page = () => {
-		if(!props.connection){
+		if(!props.connection)
 			return(
-				<View style={styles.screen}>
+				<View style={styles.container}>
 					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>No Internet</Text>
                 	<MaterialCommunityIcons name="wifi-off" color={"red"} size={60} />
 				</View>
 			);
-		} else {
-			return(
-				<View style={styles.container}>
+
+		return(
+			<View style={styles.container}>
+
+				<View
+					style={{flex: 1, width:"100%", justifyContent:"center", alignItems:"center"}}>
+					<Image
+						source={require("../images/justlogo.png")}
+						style={{ width: 71.66, height: 86.33, marginBottom: 60 }}
+					/>
+				</View>
+
 				<Card
 					style={styles.botton}
 					onPress={() => signInWithGoogleAsync()}>
-					<MaterialCommunityIcons name="google" color={"black"} size={28} />
-					{content}
+					<MaterialCommunityIcons name="google" color={Colors.Accent} size={31} />
+					{content()}
 				</Card>
-				</View>
-			);
-		}
+			</View>
+		);
 	};
 
-	return (
-		page()
-	);
+	return (page());
 }
 
 
@@ -151,7 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   botton:{
-	borderColor: 'black',
+	borderColor: Colors.Accent,
 	width: '80%',
 	paddingHorizontal: 10,
 	paddingVertical: 10,
@@ -160,5 +168,6 @@ const styles = StyleSheet.create({
 	flexDirection: 'row',
 	justifyContent: 'center',
 	backgroundColor: 'white',
+	marginBottom: 70
   }
 });
