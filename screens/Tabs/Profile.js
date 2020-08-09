@@ -355,7 +355,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
 	header:{
-		height: 90,
+		height: 70,
+        paddingTop: 5,
 	},
     headertitle: {
         textAlign:"center",

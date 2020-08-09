@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 11,
     },
 	header:{
-		height: 90,
+		height: 60,
 	},
 });
 

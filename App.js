@@ -12,7 +12,7 @@ import NetInfo from '@react-native-community/netinfo';
 export default function App() {
 
 	// for Debugging only
-	console.disableYellowBox = true;
+	//console.disableYellowBox = true;
 
 	const [connection, setConnection] = useState(true);
 	const [page, setPage] = useState(1);

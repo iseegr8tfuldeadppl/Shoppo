@@ -250,7 +250,8 @@ const Cart = props => {
 
 const styles = StyleSheet.create({
 	header:{
-		height: 90,
+		height: 70,
+        paddingTop: 5,
 	},
     headertitle: {
         fontSize: 23,

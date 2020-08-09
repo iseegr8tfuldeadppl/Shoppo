@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
         width: "100%",
     },
 	header:{
-		height: 90,
+		height: 70,
+        paddingTop: 5,
 	},
     headertitle: {
         textAlign:"center",

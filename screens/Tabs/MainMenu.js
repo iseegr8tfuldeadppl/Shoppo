@@ -124,7 +124,7 @@ const MainMenu = props => {
 
           {categorySettingsModal()}
 
-        <Header style={{height: 90,}}>
+        <Header style={styles.header}>
             <TouchableOpacity
               onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
               <MaterialCommunityIcons name="menu" color={"white"} size={30} />
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
         marginStart:10,
     },
 	header:{
-		height: 90,
+		height: 70,
 	},
     headertitleholder: {
         justifyContent:"center",

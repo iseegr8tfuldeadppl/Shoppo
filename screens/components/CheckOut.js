@@ -7,7 +7,7 @@ import CheckoutItem from './CheckoutItem';
 import CheckoutBar from './CheckoutBar';
 import OkayButton from './OkayButton';
 import PaymentMethod from './PaymentMethod';
-import * as ImagePicker from 'expo-image-picker';
+import ImagePicker from 'react-native-image-picker';
 import firebase from 'firebase';
 import paymentMethods from '../constants/paymentMethods';
 import moment from 'moment';
@@ -180,7 +180,6 @@ const CheckOut = props => {
 		}
 	}
 
-	console.log(props.checkoutList);
 	const submitOrder = imageUrl => {
 		let submittable = {};
 		for(let i=0; i<props.checkoutList.length; i++){
@@ -257,20 +256,47 @@ const CheckOut = props => {
 		return 0;
 	};
 
-  	const galery = async () => {
-	    let result = await ImagePicker.launchImageLibraryAsync();
+  	const galery = () => {
+		const options = {
+		  title: 'Select Avatar',
+		  storageOptions: {
+		    skipBackup: true,
+		    path: 'images',
+		  },
+		};
+		ImagePicker.launchImageLibrary(options, (response) => {
+		  //console.log('Response = ', response);
 
-	    if (!result.cancelled) {
-			setImageUri(result.uri);
-	    }
+		  if (response.didCancel) {
+		    console.log('User cancelled image picker');
+		  } else if (response.error) {
+		    console.log('ImagePicker Error: ', response.error);
+		  } else if (response.customButton) {
+		    console.log('User tapped custom button: ', response.customButton);
+		  } else {
+			setImageUri(response.uri);
+		  }
+		});
+
     };
 
-	const camera = async () => {
-		let result = await ImagePicker.launchCameraAsync();
+	const camera =  () => {
+		const options = {
+		};
 
-		if (!result.cancelled) {
-		  setImageUri(result.uri);
-		}
+		ImagePicker.launchCamera(options, (response) => {
+		  //console.log('Response = ', response);
+
+		  if (response.didCancel) {
+		    console.log('User cancelled image picker');
+		  } else if (response.error) {
+		    console.log('ImagePicker Error: ', response.error);
+		  } else if (response.customButton) {
+		    console.log('User tapped custom button: ', response.customButton);
+		  } else {
+			setImageUri(response.uri);
+		  }
+		});
 	};
 
 	const buttonText = () => {

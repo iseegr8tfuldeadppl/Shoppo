@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Image, BackHandler } from 'react-native';
+import {View, StyleSheet, Image, BackHandler, PermissionsAndroid, Platform } from 'react-native';
 import firebase from 'firebase';
 
 
@@ -40,10 +40,27 @@ const LoadingScreen = props =>  {
 		);
 	};
 
-	delayTillEnter();
-	return(
-		page()
-	);
+	const request_permissions = async () => {
+		try {
+		    if (Platform.OS === 'android') {
+		      	const granted = await PermissionsAndroid.request(
+		        	PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+		      	); // I used redux saga here. 'yield' keywoard. You don't have to use that. You can use async - await or Promises.
+
+		      	if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+	  				delayTillEnter();
+		        	// Your Save flow
+				} else {
+					BackHandler.exitApp();
+				}
+		    } else {
+		      // iOS here, so you can go to your Save flow directly
+		    }
+	  	} catch (e) {}
+	};
+
+	request_permissions();
+	return(page());
 }
 
 export default LoadingScreen;

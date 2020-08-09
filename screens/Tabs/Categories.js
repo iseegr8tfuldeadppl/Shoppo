@@ -123,7 +123,8 @@ const Categories = props => {
 
 const styles = StyleSheet.create({
 	header:{
-		height: 90,
+		height: 70,
+        paddingTop: 5,
 	},
     headertitleholder: {
         justifyContent:"center",

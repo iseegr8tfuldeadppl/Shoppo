@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Image, ActivityIndicator, Dimensions, Platform } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import RNFetchBlob from 'rn-fetch-blob'
+
 
 const CachedImage = props => {
 
@@ -15,7 +16,9 @@ const CachedImage = props => {
                     .replace(/\./g, "")
                     .replace(/\+/g, "")
                     .replace(/\%/g, "")
-                    .replace(/\=/g, "");
+                    .replace(/\=/g, "")
+                    .replace(/\?/g, "")
+                    .replace(/\&/g, "");
         if(clean.length>100){
             return clean.substring(0, 99);
         }
@@ -23,40 +26,57 @@ const CachedImage = props => {
     };
 
     const ddo = async () => {
-        if(props.source.substring(0, 5)==="data:"){
-            setImgeUri(props.source);
-            return;
+
+        try {
+            if(props.source.substring(0, 5)==="data:"){
+                setImgeUri(props.source);
+                return;
+            }
+
+            const { config, fs } = RNFetchBlob;
+            let extension = props.source.slice((props.source.lastIndexOf(".") - 1 >>> 0) + 2);
+            if ((extension.toLowerCase() !== 'jpg') && (extension.toLowerCase() !== 'png') && (extension.toLowerCase() !== 'gif')) {
+                extension = "jpg";
+            }
+            let title = prepareLink(props.source);
+
+            var options = {
+              addAndroidDownloads: {
+                //Related to the Android only
+                useDownloadManager: true,
+                notification: false,
+                path: `${fs.dirs.DownloadDir + "/" + title}.${ extension }`,
+              },
+            };
+
+            loadLocal( options, config);
+        } catch(e){
         }
-        let title = prepareLink(props.source);
-        let extension = props.source.slice((props.source.lastIndexOf(".") - 1 >>> 0) + 2);
-        if ((extension.toLowerCase() !== 'jpg') && (extension.toLowerCase() !== 'png') && (extension.toLowerCase() !== 'gif')) {
-            extension = "jpg";
-        }
-        loadLocal(`${FileSystem.cacheDirectory + title}.${ extension }`, true, extension);
     };
 
-    const loadLocal = (uri, download, extension) => {
-        Image.getSize(uri, (width, height) => {
-            // once we have the original image dimensions, set the state to the relative ones
-            setImgeUri(uri);
-            //setWidth(Dimensions.get('window').width);
-            //setHeight((height/width)*Dimensions.get('window').width);
+    const loadLocal = (options, config) => {
+        Image.getSize("file://" + options.addAndroidDownloads.path, (width, height) => {
+            setImgeUri("file://" + options.addAndroidDownloads.path);
         }, (e) => {
-            // As always include an error fallback
-            console.log('getSize error:' + " typeof(e) " + typeof(e) + " e " +  e);
             if(String(e).includes("Unsupported uri")){
-                setImgeUri(uri);
+                setImgeUri("file://" + options.addAndroidDownloads.path);
             } else {
-                let title = prepareLink(props.source);
-                ;(async () => {
-                    await FileSystem.downloadAsync(
-                        props.source,
-                        `${FileSystem.cacheDirectory + title}.${ extension }`
-                    )
-                    .then(({ uri }) => {
-                        loadLocal(Platform.OS === 'ios'? uri : `${FileSystem.cacheDirectory + title}.${ extension }`, false, extension);
-                    });
-                })();
+                // As always include an error fallback
+                config(options)
+                    .fetch('GET', props.source)
+                    .then(res => {
+                        options = {
+                            addAndroidDownloads: {
+                                useDownloadManager: true,
+                                notification: false,
+                                path: res.data,
+                            },
+                        }
+
+                        loadLocal(options, config);
+                    })
+                    .catch(e => {
+                });
             }
         });
     };
