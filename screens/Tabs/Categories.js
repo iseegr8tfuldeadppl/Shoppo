@@ -9,13 +9,10 @@ import SideCategoryItem from '../components/SideCategoryItem';
 import CategoryPreview from '../components/CategoryPreview';
 import ProductPreviewModal from '../components/ProductPreviewModal';
 import Taboo from '../components/Taboo';
+import { categoriesString } from '../constants/strings';
 
 
 const Categories = props => {
-
-    if(props.tabPressedWhileWereStillInThePage){
-        props.setCategoryPreviewed();
-    }
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
 	    if(props.categoryPreviewed)
@@ -116,7 +113,7 @@ const Categories = props => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
 		{page()}
-        <Taboo focus={"Categories"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+        <Taboo language={props.language} focus={categoriesString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
     </SafeAreaView>
   );
 }

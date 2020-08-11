@@ -33,7 +33,6 @@ const CachedImage = props => {
                 return;
             }
 
-            const { config, fs } = RNFetchBlob;
             let extension = props.source.slice((props.source.lastIndexOf(".") - 1 >>> 0) + 2);
             if ((extension.toLowerCase() !== 'jpg') && (extension.toLowerCase() !== 'png') && (extension.toLowerCase() !== 'gif')) {
                 extension = "jpg";
@@ -45,16 +44,16 @@ const CachedImage = props => {
                 //Related to the Android only
                 useDownloadManager: true,
                 notification: false,
-                path: `${fs.dirs.DownloadDir + "/" + title}.${ extension }`,
+                path: `${RNFetchBlob.fs.dirs.SDCardApplicationDir + "/.cachedpixlol/" + title}.${ extension }`,
               },
             };
 
-            loadLocal( options, config);
+            loadLocal(options);
         } catch(e){
         }
     };
 
-    const loadLocal = (options, config) => {
+    const loadLocal = (options) => {
         Image.getSize("file://" + options.addAndroidDownloads.path, (width, height) => {
             setImgeUri("file://" + options.addAndroidDownloads.path);
         }, (e) => {
@@ -62,7 +61,7 @@ const CachedImage = props => {
                 setImgeUri("file://" + options.addAndroidDownloads.path);
             } else {
                 // As always include an error fallback
-                config(options)
+                RNFetchBlob.config(options)
                     .fetch('GET', props.source)
                     .then(res => {
                         options = {
@@ -73,7 +72,7 @@ const CachedImage = props => {
                             },
                         }
 
-                        loadLocal(options, config);
+                        loadLocal(options);
                     })
                     .catch(e => {
                 });

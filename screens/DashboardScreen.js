@@ -17,10 +17,9 @@ const Drawer = createDrawerNavigator();
 
 const DashboardScreen = props =>  {
 
-		BackHandler.addEventListener('hardwareBackPress', function() {
-	        console.log("heree");
-		    return true;
-		});
+	// BackHandler.addEventListener('hardwareBackPress', function() {
+	//     return true;
+	// });
 
 	const [remoteOrdersOpen, setRemoteOrdersOpen] = useState();
 	const [cart, updateCart] = useState([]);
@@ -278,6 +277,7 @@ const DashboardScreen = props =>  {
 
 					<Drawer.Screen name="Main Menu">{propss =>
 	  			  		<MainMenu {...propss}
+							language={props.language}
 							setCategoryPreviewed={setCategoryPreviewed2}
 							categoryPreviewed={categoryPreviewed2}
 							setRemoteOrdersOpen={setRemoteOrdersOpen}
@@ -299,6 +299,7 @@ const DashboardScreen = props =>  {
 
 					<Drawer.Screen name="Categories" >{propss =>
 						<Categories {...propss}
+							language={props.language}
 							updateCart={updateCart}
 							uid={props.uid}
 							setCategoryPreviewed={setCategoryPreviewed}
@@ -319,6 +320,7 @@ const DashboardScreen = props =>  {
 
 					<Drawer.Screen name="Cart" >{propss =>
 						<Cart {...propss}
+							language={props.language}
 							setRemoteOrdersOpen={setRemoteOrdersOpen}
   						  	setFocusedPage={setFocusedPage}
   						  	focusedPage={focusedPage}
@@ -335,6 +337,7 @@ const DashboardScreen = props =>  {
 
 					<Drawer.Screen name="Profile" >{propss =>
 						<Profile {...propss}
+							language={props.language}
 							setRemoteOrdersOpen={setRemoteOrdersOpen}
 							remoteOrdersOpen={remoteOrdersOpen}
   						  	setFocusedPage={setFocusedPage}

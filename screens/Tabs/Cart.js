@@ -14,6 +14,7 @@ import OkayButton from '../components/OkayButton';
 import Header from '../components/Header';
 import Taboo from '../components/Taboo';
 import ProductPreviewModal from '../components/ProductPreviewModal';
+import { cartString } from '../constants/strings';
 
 
 const Cart = props => {
@@ -94,6 +95,12 @@ const Cart = props => {
 		}
 	};
 
+	const cartTitle = () => {
+		if(props.cart.length>0)
+			return "Cart (" + props.cart.length + ")";
+		return "Cart";
+	};
+
 	const Listpage = () => {
 	  	if(props.productPreviewed && props.navigation.isFocused()){
 		  	return(
@@ -123,7 +130,7 @@ const Cart = props => {
 							<MaterialCommunityIcons name="menu" color={"white"} size={30} />
 						</TouchableOpacity>
 
-						<Text style={styles.headertitle}>Cart</Text>
+						<Text style={styles.headertitle}>{cartTitle()}</Text>
 
 						<CartTrashCan
 							cart={props.cart}
@@ -180,7 +187,7 @@ const Cart = props => {
 						<MaterialCommunityIcons name="menu" color={"white"} size={30} />
 					</TouchableOpacity>
 
-					<Text style={styles.headertitle}>Cart</Text>
+					<Text style={styles.headertitle}>{cartTitle()}</Text>
 
 					<CartTrashCan
 						cart={props.cart}
@@ -243,7 +250,7 @@ const Cart = props => {
 	return(
 		<SafeAreaView style={{ flex: 1 }} forceInset={{ bottom: 'never' }}>
 			{checkoutOrCart()}
-			<Taboo focus={"Cart"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+			<Taboo language={props.language} focus={cartString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
 		</SafeAreaView>
 	);
 }

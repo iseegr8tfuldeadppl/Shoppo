@@ -15,6 +15,7 @@ import moment from 'moment';
 import Taboo from '../components/Taboo';
 import Chat from '../components/Chat';
 import CachedImage from '../components/CachedImage';
+import { profileString } from '../constants/strings';
 
 
 const Profile = props => {
@@ -238,7 +239,7 @@ const Profile = props => {
         	  				usersLatest={props.usersLatest}
                             adminList={props.adminList}
                             backToRoot={() => {setPage("Root");} }/>
-                          <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                          <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                       </SafeAreaView>
                 );
                 break;
@@ -248,7 +249,7 @@ const Profile = props => {
                       <Call
                           backToRoot={() => {setPage("Root");} }
                           numbers={getNumbers()} />
-                      <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                      <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                   </SafeAreaView>
                 );
                 break;
@@ -258,7 +259,7 @@ const Profile = props => {
                     <Email
                         backToRoot={() => {setPage("Root");} }
                         emails={getEmail()} />
-                      <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                      <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                   </SafeAreaView>
                 );
                 break;
@@ -314,7 +315,7 @@ const Profile = props => {
                               onEsspresso={() => {setPage("Email");}}
                               text={"Email Us"} />
                       </ScrollView>
-                      <Taboo focus={"Profile"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                      <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                   </SafeAreaView>
                 );
                 break;

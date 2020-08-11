@@ -13,6 +13,7 @@ import MainCategoryItem from '../components/MainCategoryItem';
 import CategoryPreview from '../components/CategoryPreview';
 import Taboo from '../components/Taboo';
 import CategorySettingsModal from '../components/Admins/Category/CategorySettingsModal';
+import { mainMenuString } from '../constants/strings';
 
 
 const MainMenu = props => {
@@ -102,7 +103,7 @@ const MainMenu = props => {
 		  	          setCategoryPreviewed={props.setCategoryPreviewed}
                       item={props.categoryPreviewed}
                       setProductPreviewed={props.setProductPreviewed}/>
-                  <Taboo focus={"Main Menu"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                  <Taboo language={props.language} focus={mainMenuString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                 </>
 		  );
 	  }
@@ -151,7 +152,7 @@ const MainMenu = props => {
                     setProductPreviewed={props.setProductPreviewed}
                     item={categoryData.item}/>
             }/>
-            <Taboo focus={"Main Menu"} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+            <Taboo language={props.language} focus={mainMenuString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
           </>
 		  );
   };

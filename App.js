@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import firebaseConfig from './screens/constants/ApiKeys';
 import firebase from 'firebase';
+import { defaultLanguage } from './screens/constants/strings';
 
 import LoginScreen from './screens/LoginScreen';
 import LoadingScreen from './screens/LoadingScreen';
@@ -14,6 +15,7 @@ export default function App() {
 	// for Debugging only
 	//console.disableYellowBox = true;
 
+	const [language, setLanguage] = useState(defaultLanguage);
 	const [connection, setConnection] = useState(true);
 	const [page, setPage] = useState(1);
 	const [uid, setUID] = useState("");
@@ -39,12 +41,12 @@ export default function App() {
 	const lapage = () => {
 		if(page===1){
 			return(
-				<LoadingScreen connection={connection} setCurrentUser={setCurrentUser} goHere={goToPage}/>
+				<LoadingScreen language={language} setLanguage={setLanguage} connection={connection} setCurrentUser={setCurrentUser} goHere={goToPage}/>
 			);
 		} else if(page===2){
-			return(<LoginScreen connection={connection} goHere={goToPage}/>);
+			return(<LoginScreen language={language} setLanguage={setLanguage}  connection={connection} goHere={goToPage}/>);
 		} else if(page===3){
-			return(<DashboardScreen connection={connection} uid={uid} goHere={goToPage}/>);
+			return(<DashboardScreen language={language} setLanguage={setLanguage}  connection={connection} uid={uid} goHere={goToPage}/>);
 		}
 	};
 

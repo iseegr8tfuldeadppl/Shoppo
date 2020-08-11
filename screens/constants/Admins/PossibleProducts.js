@@ -174,6 +174,19 @@ export default [
 		},
 		{
 			key: "4",
+			image:"https://cdn.worldvectorlogo.com/logos/itunes.svg",
+			title:"Itunes",
+			background:"#222",
+			textColor:"white",
+			originaltype:"item",
+			type:"item",
+			checked:false,
+			custom:false,
+            requirements: [],
+            original_requirements: []
+		},
+		{
+			key: "5",
 			image:"https://cdn0.iconfinder.com/data/icons/ui-line-7/24/lineArtboard_10-512.png",
 			title:"Autre",
 			background:"white",

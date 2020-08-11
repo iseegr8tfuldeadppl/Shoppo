@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../constants/Colors';
+import { mainMenuString, categoriesString, cartString, profileString } from '../constants/strings';
 
 
 const Taboo = props => {
@@ -27,29 +28,29 @@ const Taboo = props => {
     };
 
     return(
-    <View style={styles.bar}>
+        <View style={styles.bar}>
 
-        <TouchableOpacity onPress={() => {pressed("Main Menu");}} activeOpacity={0.6} style={styles.tab}>
-            <MaterialCommunityIcons  name="home" color={logoFocus("Main Menu")} size={25} />
-            <Text style={textFocus("Main Menu")}>Main Menu</Text>
-        </TouchableOpacity>
+            <TouchableOpacity onPress={() => {pressed(mainMenuString[props.language]);}} activeOpacity={0.6} style={styles.tab}>
+                <MaterialCommunityIcons  name="home" color={logoFocus(mainMenuString[props.language])} size={25} />
+                <Text style={textFocus(mainMenuString[props.language])}>{mainMenuString[props.language]}</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {pressed("Categories");}} activeOpacity={0.6} style={styles.tab}>
-            <MaterialCommunityIcons name="menu" color={logoFocus("Categories")} size={25} />
-            <Text style={textFocus("Categories")}>Categories</Text>
-        </TouchableOpacity>
+            <TouchableOpacity onPress={() => {pressed(categoriesString[props.language]);}} activeOpacity={0.6} style={styles.tab}>
+                <MaterialCommunityIcons name="menu" color={logoFocus(categoriesString[props.language])} size={25} />
+                <Text style={textFocus(categoriesString[props.language])}>{categoriesString[props.language]}</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity  onPress={() => {pressed("Cart");}} activeOpacity={0.6} style={styles.tab}>
-            <MaterialCommunityIcons name="cart" color={logoFocus("Cart")} size={25} />
-            <Text style={textFocus("Cart")}>Cart</Text>
-        </TouchableOpacity>
+            <TouchableOpacity  onPress={() => {pressed(cartString[props.language]);}} activeOpacity={0.6} style={styles.tab}>
+                <MaterialCommunityIcons name="cart" color={logoFocus(cartString[props.language])} size={25} />
+                <Text style={textFocus(cartString[props.language])}>{cartString[props.language]}</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity  onPress={() => {pressed("Profile");}} activeOpacity={0.6} style={styles.tab}>
-            <MaterialCommunityIcons name="account" color={logoFocus("Profile")} size={25} />
-            <Text style={textFocus("Profile")}>Profile</Text>
-        </TouchableOpacity>
+            <TouchableOpacity  onPress={() => {pressed(profileString[props.language]);}} activeOpacity={0.6} style={styles.tab}>
+                <MaterialCommunityIcons name="account" color={logoFocus(profileString[props.language])} size={25} />
+                <Text style={textFocus(profileString[props.language])}>{profileString[props.language]}</Text>
+            </TouchableOpacity>
 
-    </View>
+        </View>
     );
 };
 

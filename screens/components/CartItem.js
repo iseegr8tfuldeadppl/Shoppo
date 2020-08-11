@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
 		justifyContent:"flex-end",
 		marginHorizontal:19,
 		marginTop:-10,
+		alignItems:"center",
 	},
 	quantityInputCurrency : {
 		borderColor:Colors.Primary,
