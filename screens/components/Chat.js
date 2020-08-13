@@ -6,6 +6,9 @@ import OkayButton from './OkayButton';
 import Colors from '../constants/Colors';
 import moment from 'moment';
 import Banner from './Banner';
+import { areYouSureString, setStateString, chatString, sendString, typeString } from '../constants/strings';
+
+
 
 // admin
 import StateSelector from './Admins/Product/StateSelector';
@@ -64,8 +67,8 @@ const Chat = props => {
         }
 
 		Alert.alert(
-			'Are you sure?',
-			'set the state to this order to ' + stateDisplay + '.',
+			areYouSureString[props.language],
+			setStateString[props.language] + stateDisplay + '.',
 			[
                 {text: 'No', style: 'cancel'},
 				{text: 'Yes', style: 'destructive', onPress: () => { updateState(stato, key); } }],
@@ -180,7 +183,7 @@ const Chat = props => {
 
         return(
             <SafeAreaView style={styles.letout}>
-                <ArrowedHeader backToRoot={back} title={"Chat"}/>
+                <ArrowedHeader backToRoot={back} title={chatString[props.language]}/>
                 <FlatList
                     inverted={true}
                     style={styles.flexer}
@@ -192,14 +195,14 @@ const Chat = props => {
                     <TextInput
                         multiline={true}
                         style={styles.quantityInputCurrency}
-                        placeholder={"Aa"}
+                        placeholder={typeString[props.language]}
                         onChangeText={setMessage}
                         value={messageInput} />
                     <OkayButton
                         style={{ backgroundColor:Colors.Primary, borderRadius: 15, marginStart: 10 }}
                         onClick={() => {if(messageInput.length>0) submitMessage()}}
                         textStyle={{ fontSize: 17, color:"white", fontWeight:"bold" }}
-                        text={"Send"} />
+                        text={sendString[props.language]} />
                 </View>
 
             </SafeAreaView>

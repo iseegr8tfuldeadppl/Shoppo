@@ -5,6 +5,7 @@ import ArrowedHeader from '../ArrowedHeader';
 import OkayButton from '../OkayButton';
 import Colors from '../../constants/Colors';
 import moment from 'moment';
+import { orderString, ordersString, clientsString } from '../../constants/strings';
 
 const Clients = props => {
 
@@ -65,8 +66,8 @@ const Clients = props => {
 
     const orderCount = o => {
         if(o==="1")
-            return o + " Order";
-        return o + " Orders";
+            return o + " " + orderString[props.language];
+        return o + " " + ordersString[props.language];
     };
 
     const howold = n => {
@@ -75,7 +76,7 @@ const Clients = props => {
 
     return(
         <SafeAreaView style={styles.letout}>
-            <ArrowedHeader backToRoot={props.backToRoot} title={"Clients"}/>
+            <ArrowedHeader backToRoot={props.backToRoot} title={clientsString[props.language]}/>
             <FlatList
                 style={styles.list}
                 data={addNumbersToUsersLatest()}

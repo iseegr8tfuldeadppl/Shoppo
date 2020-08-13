@@ -11,6 +11,7 @@ import ImagePicker from 'react-native-image-picker';
 import firebase from 'firebase';
 import paymentMethods from '../constants/paymentMethods';
 import moment from 'moment';
+import { selectPictureString, dinarString, submitString, nextString, waitString, productString, totalString, selectPaymentAlertString, okString, stockIsLimitedAlertString, setItToString, thereIsOnlyAlertString, leftInStockString } from '../constants/strings';
 
 
 const CheckOut = props => {
@@ -73,10 +74,10 @@ const CheckOut = props => {
 				setTitle("Confirm Order");
 			else
 				Alert.alert(
-					'Wait!',
-					'You should select a payment method first!',
+					waitString[props.language],
+					selectPaymentAlertString[props.language],
 					[
-						{text: 'Ok', style: 'cancel'}
+						{text: okString[props.language], style: 'cancel'}
 					],
 					{ cancelable: true }
 				);
@@ -91,7 +92,7 @@ const CheckOut = props => {
 		} else if(title==="Submit Picture"){
 
 			if(!imageUri)
-				Alert.alert('Wait!', 'You should select a picture first!', [{text: 'Ok', style: 'cancel'}], { cancelable: true });
+				Alert.alert(waitString[props.language], selectPictureAlertString[props.language], [{text: okString[props.language], style: 'cancel'}], { cancelable: true });
 			else {
 				uploadImage(imageUri);
 			}
@@ -160,12 +161,12 @@ const CheckOut = props => {
 		if(parseFloat(props.checkoutList[i].quantity)>parseFloat(props.checkoutList[i].data.stock)){
 
 			Alert.alert(
-				'Stock Is Limited!',
-				'There is only ' + props.checkoutList[i].data.stock + ' ' + props.checkoutList[i].data.title + ' left in stock.',
+				stockIsLimitedAlertString[props.language],
+				thereIsOnlyAlertString[props.language] + ' ' + props.checkoutList[i].data.stock + ' ' + props.checkoutList[i].data.title + ' ' + leftInStockString[props.language],
 				[
-					{text: 'Ok', style: 'cancel'},
+					{text: okString[props.language], style: 'cancel'},
 					{
-						text: 'Set it to ' + props.checkoutList[i].data.stock,
+						text: setItToString[props.language] + ' ' + props.checkoutList[i].data.stock,
 						style: 'destructive',
 						onPress: () => {
 							let checkoutList = props.checkoutList.slice();
@@ -196,9 +197,9 @@ const CheckOut = props => {
 		let message = "";
 		for(let i=0; i<props.checkoutList.length; i++){
 
-			message += "Product: " + props.checkoutList[i].data.title + '\n';
-			message += "Quantity: " + props.checkoutList[i].quantity + '\n';
-			message += "Total: " + calculateTotalForThisProduct(props.checkoutList[i]) + " DA" + "\n";
+			message += productString[props.language] + ": " + props.checkoutList[i].data.title + '\n';
+			message += quantityString[props.language] + ": " + props.checkoutList[i].quantity + '\n';
+			message += totalString[props.language] + ": " + calculateTotalForThisProduct(props.checkoutList[i]) + " " + dinarString[props.language] + "\n";
 
 
 			if(props.checkoutList[i].requirements.length!==0)
@@ -258,7 +259,7 @@ const CheckOut = props => {
 
   	const galery = () => {
 		const options = {
-		  title: 'Select Avatar',
+		  title: selectPictureString[props.language],
 		  storageOptions: {
 		    skipBackup: true,
 		    path: 'images',
@@ -268,11 +269,8 @@ const CheckOut = props => {
 		  //console.log('Response = ', response);
 
 		  if (response.didCancel) {
-		    console.log('User cancelled image picker');
 		  } else if (response.error) {
-		    console.log('ImagePicker Error: ', response.error);
 		  } else if (response.customButton) {
-		    console.log('User tapped custom button: ', response.customButton);
 		  } else {
 			setImageUri(response.uri);
 		  }
@@ -288,11 +286,8 @@ const CheckOut = props => {
 		  //console.log('Response = ', response);
 
 		  if (response.didCancel) {
-		    console.log('User cancelled image picker');
 		  } else if (response.error) {
-		    console.log('ImagePicker Error: ', response.error);
 		  } else if (response.customButton) {
-		    console.log('User tapped custom button: ', response.customButton);
 		  } else {
 			setImageUri(response.uri);
 		  }
@@ -301,9 +296,8 @@ const CheckOut = props => {
 
 	const buttonText = () => {
 		if(selected.type==="image-submit")
-			return "Next";
-		else
-			return "Submit";
+			return nextString[props.language];
+		return submitString[props.language];
 	};
 
     const getOrders = () => {
@@ -335,7 +329,8 @@ const CheckOut = props => {
 						   item={singlePaymentMethod.item}/>
 				   }/>
 			   <CheckoutBar
-				   text={"Next"}
+				   text={nextString[props.language]}
+				   language={props.language}
 				   calculateTotal={calculateTotal}
 				   onClick={next} />
 			   </>

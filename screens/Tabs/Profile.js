@@ -216,6 +216,7 @@ const Profile = props => {
                     <SafeAreaView style={styles.letout}>
                         <Chat
                             clientSelected={clientSelected}
+                            language={props.language}
                             setPage={setPage}
                             setClientSelected={setClientSelected}
                             uid={props.uid}
@@ -232,6 +233,7 @@ const Profile = props => {
                       <SafeAreaView style={styles.letout}>
                         <Clients
                             setPage={setPage}
+                            language={props.language}
                             clientSelected={clientSelected}
                             setClientSelected={setClientSelected}
                             categories={props.categories}
@@ -248,6 +250,7 @@ const Profile = props => {
                   <SafeAreaView style={styles.letout}>
                       <Call
                           backToRoot={() => {setPage("Root");} }
+                          language={props.language}
                           numbers={getNumbers()} />
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                   </SafeAreaView>
@@ -258,6 +261,7 @@ const Profile = props => {
                   <SafeAreaView style={styles.letout}>
                     <Email
                         backToRoot={() => {setPage("Root");} }
+                        language={props.language}
                         emails={getEmail()} />
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                   </SafeAreaView>

@@ -72,6 +72,7 @@ const MainMenu = props => {
         return(
 		  	<ProductPreviewModal
                 navigation={props.navigation}
+                language={props.language}
                 setRemoteOrdersOpen={props.setRemoteOrdersOpen}
 	            	checkoutList={props.checkoutList}
 	            	setCheckoutList={props.setCheckoutList}

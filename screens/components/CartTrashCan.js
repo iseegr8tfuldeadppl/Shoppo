@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Alert, TouchableOpacity } from 'react-native';
 import Colors from '../constants/Colors';
+import { areYouSureString, removeCartItemConfirmString, noString, yesString } from '../constants/strings';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CartTrashCan = props => {
@@ -26,11 +27,11 @@ const CartTrashCan = props => {
 
 	const deleteSelectedOnesConfirmation = () =>{
 		Alert.alert(
-			'Are you sure?',
-			'You\'re about to remove the selected products from your shopping cart.',
+			areYouSureString[props.language],
+			removeCartItemConfirmString[props.language],
 			[
-				{text: 'No', style: 'cancel'},
-				{text: 'Yes', style: 'destructive',
+				{text: noString[props.language], style: 'cancel'},
+				{text: yesString[props.language], style: 'destructive',
 					onPress: deleteSelectedOnes
 				}
 			],

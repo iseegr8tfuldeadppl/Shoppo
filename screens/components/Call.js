@@ -3,6 +3,7 @@ import { FlatList, View, TouchableOpacity, StyleSheet, Text, Linking } from 'rea
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProfilePageItem from './ProfilePageItem';
 import ArrowedHeader from './ArrowedHeader';
+import { noNumbersString, pressNumbersString, callString } from '../constants/strings';
 
 
 const Call = props => {
@@ -14,17 +15,17 @@ const Call = props => {
     if(props.numbers.length===0)
         return(
             <View style={styles.list}>
-                <ArrowedHeader backToRoot={props.backToRoot} title={"Call"}/>
+                <ArrowedHeader backToRoot={props.backToRoot} title={callString[props.language]}/>
 
-                <Text style={styles.plspress}>There are no phone numbers available currently.</Text>
+                <Text style={styles.plspress}>{noNumbersString[props.language]}</Text>
             </View>
         );
 
     return(
         <View style={styles.list}>
-            <ArrowedHeader backToRoot={props.backToRoot} title={"Call"}/>
+            <ArrowedHeader backToRoot={props.backToRoot} title={callString[props.language]}/>
 
-            <Text style={styles.plspress}>Veuillez taper sur le numéro pour l'appeler.</Text>
+            <Text style={styles.plspress}>{pressNumbersString[props.language]}</Text>
 
             <FlatList
                 style={styles.list}

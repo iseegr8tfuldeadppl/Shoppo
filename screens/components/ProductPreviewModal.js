@@ -369,6 +369,7 @@ const ProductPreviewModal = props => {
 			return(
 				<CheckOut
 					navigation={props.navigation}
+					language={props.language}
                     setRemoteOrdersOpen={props.setRemoteOrdersOpen}
 					resetRequirements={resetRequirements}
 					sender={sender()}

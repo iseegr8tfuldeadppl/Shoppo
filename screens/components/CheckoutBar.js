@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import OkayButton from './OkayButton';
+import { totalString } from '../constants/strings';
 
 
 const CheckoutBar = props => {
@@ -8,7 +9,7 @@ const CheckoutBar = props => {
     return(
         <View style={styles.verticalHolder}>
             <View style={styles.horizontalHolder}>
-                <Text style={styles.total}>Total: {props.calculateTotal()} DA</Text>
+                <Text style={styles.total}>{totalString[props.language]}: {props.calculateTotal()} {dinarString[props.language]}</Text>
 
                 <OkayButton
                     textStyle={{

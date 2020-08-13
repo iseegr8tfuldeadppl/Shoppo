@@ -14,7 +14,7 @@ import OkayButton from '../components/OkayButton';
 import Header from '../components/Header';
 import Taboo from '../components/Taboo';
 import ProductPreviewModal from '../components/ProductPreviewModal';
-import { cartString } from '../constants/strings';
+import { cartString, goToCategoriesString, cartEmptyString, categoriesString, mainMenuString, cartString, okString, selectProductAlertString, noProductsAlertString, oopsString, goToMainMenuString, checkoutString } from '../constants/strings';
 
 
 const Cart = props => {
@@ -52,10 +52,10 @@ const Cart = props => {
 
 	const invalidQuantity = title => {
 		Alert.alert(
-			'Oops!',
-			'Please write a valid quantity for ' + title + '!',
+			oopsString[props.language],
+			enterQuantityAlertString[props.language] + ' ' + title + '!',
 			[
-				{text: 'Ok', style: 'cancel'}
+				{text: okString[props.language], style: 'cancel'}
 			],
 			{ cancelable: true }
 		);
@@ -85,10 +85,10 @@ const Cart = props => {
 			props.setCheckoutList(cartCopy);
 		else {
 			Alert.alert(
-				'No products selected in your cart!',
-				'Check at least one product',
+				noProductsAlertString[props.language],
+				selectProductAlertString[props.language],
 				[
-					{text: 'Ok', style: 'cancel'}
+					{text: okString[props.language], style: 'cancel'}
 				],
 				{ cancelable: true }
 			);
@@ -97,8 +97,8 @@ const Cart = props => {
 
 	const cartTitle = () => {
 		if(props.cart.length>0)
-			return "Cart (" + props.cart.length + ")";
-		return "Cart";
+			return cartString[props.language] + " (" + props.cart.length + ")";
+		return cartString[props.language];
 	};
 
 	const Listpage = () => {
@@ -107,6 +107,7 @@ const Cart = props => {
 			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
 				  <ProductPreviewModal
 					  navigation={props.navigation}
+  						language={props.language}
 					  setRemoteOrdersOpen={props.setRemoteOrdersOpen}
 					  checkoutList={props.checkoutList}
 					  setCheckoutList={props.setCheckoutList}
@@ -134,6 +135,7 @@ const Cart = props => {
 
 						<CartTrashCan
 							cart={props.cart}
+							language={props.language}
 							updateCart={props.updateCart}/>
 					</Header>
 
@@ -149,7 +151,7 @@ const Cart = props => {
 							fontSize: 24,
 							marginTop: 6,
 							marginBottom: 30,
-						}}>Your Cart is Empty</Text>
+						}}>{cartEmptyString[props.language]}</Text>
 
 						<OkayButton
 							style={{
@@ -159,9 +161,9 @@ const Cart = props => {
 								fontSize: 16,
 							}}
 							onClick={() => {
-								props.navigation.navigate("Main Menu");
+								props.navigation.navigate(mainMenuString[props.language]);
 							}}
-							text={"Visit Main Menu"} />
+							text={goToMainMenuString[props.language]} />
 
 						<OkayButton
 							style={{
@@ -172,9 +174,9 @@ const Cart = props => {
 								fontSize: 16,
 							}}
 							onClick={() => {
-								props.navigation.navigate("Main Menu");
+								props.navigation.navigate(categoriesString[props.language]);
 							}}
-							text={"Visit Categories"} />
+							text={goToCategoriesString[props.language]} />
 					</View>
 				</>
 				);
@@ -216,7 +218,8 @@ const Cart = props => {
 					/>
 
 					<CheckoutBar
-						text={"Checkout"}
+						text={checkoutString[props.language]}
+	 				   	language={props.language}
 						calculateTotal={calculateTotal}
 						onClick={buyNow} />
 
@@ -230,6 +233,7 @@ const Cart = props => {
 			return(
 				<CheckOut
                     navigation={props.navigation}
+					language={props.language}
 					setRemoteOrdersOpen={props.setRemoteOrdersOpen}
 					sender={"Cart"}
 					uid={props.uid}

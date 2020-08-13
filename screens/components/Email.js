@@ -3,6 +3,7 @@ import { FlatList, View, TouchableOpacity, StyleSheet, Text, Linking } from 'rea
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProfilePageItem from './ProfilePageItem';
 import ArrowedHeader from './ArrowedHeader';
+import { noEmailsString, pressEmailsString, emailString } from '../constants/strings';
 
 
 const Email = props => {
@@ -14,17 +15,17 @@ const Email = props => {
     if(props.emails.length===0)
         return(
             <View style={styles.list}>
-                <ArrowedHeader backToRoot={props.backToRoot} title={"Email"}/>
+                <ArrowedHeader backToRoot={props.backToRoot} title={emailString[props.language]}/>
 
-                <Text style={styles.plspress}>There are no emails available currently.</Text>
+                <Text style={styles.plspress}>{noEmailsString[props.language]}</Text>
             </View>
         );
 
     return(
         <View style={styles.list}>
-            <ArrowedHeader backToRoot={props.backToRoot} title={"Email"}/>
+            <ArrowedHeader backToRoot={props.backToRoot} title={emailString[props.language]}/>
 
-            <Text style={styles.plspress}>Veuillez taper sur un E-mail pour l'ouvrir.</Text>
+            <Text style={styles.plspress}>{pressEmailsString[props.language]}</Text>
 
             <FlatList
                 style={styles.list}
