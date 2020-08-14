@@ -4,6 +4,14 @@ export const mainMenuString = {
     arabic: "Main Menu",
     english: "Main Menu",
 };
+export const noProductString = {
+    arabic: "No Product",
+    english: "No Product",
+};
+export const selectAllString = {
+    arabic: "Select all",
+    english: "Select all",
+};
 export const categoriesString = {
     arabic: "Categories",
     english: "Categories",
@@ -101,6 +109,64 @@ export const yesString = {
     arabic: "Yes",
     english: "Yes"
 };
+export const successString = {
+    arabic: "Success",
+    english: "Success"
+};
+export const productWasHiddenString = {
+    arabic: "Product was hidden",
+    english: "Product was hidden"
+};
+export const hideThisProductLongString = {
+    arabic: "Are you sure you want to hide this product in the store?",
+    english: "Are you sure you want to hide this product in the store?"
+};
+export const showThisProductString = {
+    arabic: "Show this product",
+    english: "Show this product"
+};
+export const showThisProductLongString = {
+    arabic: "Are you sure you want to show this product in the store?",
+    english: "Are you sure you want to show this product in the store?"
+};
+export const productWasShownString = {
+    arabic: "Product is now visible",
+    english: "Product is now visible"
+};
+export const productWasDeletedString = {
+    arabic: "Product was deleted",
+    english: "Product was deleted"
+};
+export const noDontDeleteString = {
+    arabic: "No Don't Delete it",
+    english: "No Don't Delete it"
+};
+export const yesDeleteString = {
+    arabic: "Yes Delete It",
+    english: "Yes Delete It"
+};
+export const deleteThisProductLongString = {
+    arabic: "Are you sure you want to delete this product from the store?",
+    english: "Are you sure you want to delete this product from the store?"
+};
+export const deleteThisProductString = {
+    arabic: "Delete this product",
+    english: "Delete this product"
+};
+export const buyNowString = {
+    arabic: "Buy Now",
+    english: "Buy Now"
+};
+export const addToCartString = {
+    arabic: "Add To Cart",
+    english: "Add To Cart"
+};
+
+export const hideThisProductString = {
+    arabic: "Hide this product",
+    english: "Hide this product"
+};
+
 export const okString = {
     arabic: "Ok",
     english: "Ok"
@@ -113,6 +179,23 @@ export const stockIsLimitedAlertString = {
     arabic: "Stock Is Limited!",
     english: "Stock Is Limited!"
 };
+export const addedToCartString = {
+    arabic: "Added To Cart!",
+    english: "Added To Cart!"
+};
+export const youNowHaveString = {
+    arabic: "You now have",
+    english: "You now have"
+};
+export const inYourCartString = {
+    arabic: "in your cart!",
+    english: "in your cart!"
+};
+export const goToCartString = {
+    arabic: "Go To Cart",
+    english: "Go To Cart"
+};
+
 export const thereIsOnlyAlertString = {
     arabic: "There is only",
     english: "There is only"
@@ -124,6 +207,10 @@ export const setItToString = {
 export const leftInStockString = {
     arabic: "left in stock.",
     english: "left in stock."
+};
+export const stockString = {
+    arabic: "Stock",
+    english: "Stock"
 };
 export const productString = {
     arabic: "Product",
@@ -161,6 +248,11 @@ export const selectProductAlertString = {
     arabic: "Check at least one product",
     english: "Check at least one product"
 };
+export const pleaseWriteQuantityAlertString = {
+    arabic: "Please write a valid quantity!",
+    english: "Please write a valid quantity!"
+};
+
 export const cartString = {
     arabic: "Cart",
     english: "Cart"
@@ -177,6 +269,19 @@ export const dinarString = {
 export const checkoutString = {
     arabic: "Checkout",
     english: "Checkout"
+};
+export const forString = {
+    arabic: "for",
+    english: "for"
+};
+export const searchString = {
+    arabic: "Search",
+    english: "Search"
+};
+
+export const pleaseEnterString = {
+    arabic: "Please enter",
+    english: "Please enter"
 };
 
 export const selectPictureString = {

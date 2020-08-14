@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import Colors from '../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { dinarString } from '../constants/strings';
 
 
 const SideItem = props => {
@@ -18,7 +19,7 @@ const SideItem = props => {
 				numberOfLines={1}
 				ellipsizeMode='tail'
 				style={styles.price}>
-				{props.item.data.cost} DA</Text>
+				{props.item.data.cost} {dinarString[props.language]}</Text>
 			<Text
 				numberOfLines={1}
 				ellipsizeMode='tail'

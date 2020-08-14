@@ -104,22 +104,22 @@ const Cart = props => {
 	const Listpage = () => {
 	  	if(props.productPreviewed && props.navigation.isFocused()){
 		  	return(
-			  <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
-				  <ProductPreviewModal
-					  navigation={props.navigation}
+			  	<SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
+				  	<ProductPreviewModal
+					  	navigation={props.navigation}
   						language={props.language}
-					  setRemoteOrdersOpen={props.setRemoteOrdersOpen}
-					  checkoutList={props.checkoutList}
-					  setCheckoutList={props.setCheckoutList}
-					  adminList={props.adminList}
-					  uid={props.uid}
-					  userInfo={props.userInfo}
-					  navigation={props.navigation}
-					  addToCart={props.addToCart}
-					  cart={props.cart}
-					  updateCart={props.updateCart}
-					  setProductPreviewed={props.setProductPreviewed}
-					  productPreviewed={props.productPreviewed}/>
+					  	setRemoteOrdersOpen={props.setRemoteOrdersOpen}
+					  	checkoutList={props.checkoutList}
+					  	setCheckoutList={props.setCheckoutList}
+					  	adminList={props.adminList}
+					  	uid={props.uid}
+					  	userInfo={props.userInfo}
+					  	navigation={props.navigation}
+					  	addToCart={props.addToCart}
+					  	cart={props.cart}
+					  	updateCart={props.updateCart}
+					  	setProductPreviewed={props.setProductPreviewed}
+					  	productPreviewed={props.productPreviewed}/>
 			  </SafeAreaView>
 		  	);
 		} else if(props.cart.length==0)
@@ -198,6 +198,7 @@ const Cart = props => {
 
 				<View style={{flex:1, }} >
 					<SelectAllBar
+						language={props.language}
 						allSelected={allSelected}
 						setAllSelected={setAllSelected}
 						updateCart={props.updateCart}
