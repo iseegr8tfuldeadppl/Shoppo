@@ -4,6 +4,10 @@ import Colors from '../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Card from './Card';
 import CachedImage from './CachedImage';
+import {
+    moreString,
+    dinarString
+} from '../constants/strings';
 
 
 const MainProductItem = props => {
@@ -47,7 +51,7 @@ const MainProductItem = props => {
                 <Card
                     onPress={() => {props.setCategoryPreviewed();}}
                     style={{...styles.productItem, ...styles.showmoreCard}}>
-                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.showmoreText}>More</Text>
+                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.showmoreText}>{moreString[props.language]}</Text>
                     <MaterialCommunityIcons name={"dots-horizontal"} color={"white"} size={60} />
                 </Card>
             );
@@ -62,7 +66,7 @@ const MainProductItem = props => {
                         style={styles.image}
                         />
 
-                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} DA</Text>
+                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.item.data.cost} {dinarString[props.language]}</Text>
                     <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
                     {sneak()}
                     {visible()}

@@ -81,10 +81,11 @@ const Categories = props => {
                 <Header style={styles.header}>
                     <TouchableOpacity
                         onPress={() => {
-							if(props.categoryPreviewed)
+							if(props.categoryPreviewed){
 								props.setCategoryPreviewed();
-							else
-								props.navigation.dispatch(DrawerActions.openDrawer());
+								return;
+							}
+							props.navigation.dispatch(DrawerActions.openDrawer());
 						} }>
                         <MaterialCommunityIcons name={headerIcon()} color={"white"} size={30} />
                     </TouchableOpacity>

@@ -5,6 +5,27 @@ import Colors from '../../../constants/Colors';
 import OkayButton from '../../OkayButton';
 import firebase from 'firebase';
 import Header from '../../Header';
+import {
+    successString,
+    categoryWasDeletedString,
+    deleteThisCategoryString,
+    deleteThisCategoryLongString,
+    dontDeleteThisCategoryString,
+    doDeleteThisCategoryString,
+    failedString,
+    pleaseWriteCategoryString,
+    okString,
+    updatesAppliedAlertString,
+    cancelString,
+    categoryNameString,
+    nameString,
+    priorityOptionalString,
+    priorityString,
+    visibilityString,
+    visibleString,
+    invisibleString,
+    categorySettingsString
+} from '../../constants/strings';
 
 
 const CategorySettingsModal = props => {
@@ -13,20 +34,19 @@ const CategorySettingsModal = props => {
     const [name, setName] = useState(props.visible.category);
     const [invisible, setInvisible] = useState(props.visible.invisible);
 
-    console.log(props.visible.priority);
-
 	//admin stuff
 	const deleteConfirmation = () => {
 		Alert.alert(
-			'Delete this category',
-			'Are you sure you want to delete this category from the store?',
+			deleteThisCategoryString[props.language],
+			deleteThisCategoryLongString[props.language],
 			[
-				{text: "No Don't Delete it", style: 'cancel'},
-				{text: 'Yes Delete It', style: 'destructive',
+				{text: dontDeleteThisCategoryString[props.language], style: 'cancel'},
+				{text: doDeleteThisCategoryString[props.language], style: 'destructive',
 					onPress: () => {
 						let ref = firebase.database().ref("/categories/" + props.visible.key)
 						.remove().then(function(snapshot) {
-							Alert.alert('Success', 'Category was deleted', [{text: "Ok", style: 'cancel'}], { cancelable: true });
+							Alert.alert(successString[props.language], categoryWasDeletedString[props.language],
+                                [{text: okString[props.language], style: 'cancel'}], { cancelable: true });
                             props.setCategorySettings();
 						});
 					}
@@ -38,10 +58,10 @@ const CategorySettingsModal = props => {
     const update = () => {
         if(name===""){
     		Alert.alert(
-    			'Failed',
-    			'Category requires a name.',
+    			failedString[props.language],
+    			pleaseWriteCategoryString[props.language],
     			[
-                    {text: 'Ok', style: 'cancel'}
+                    {text: okString[props.language], style: 'cancel'}
                 ],
     			{ cancelable: true }
     		);
@@ -66,21 +86,25 @@ const CategorySettingsModal = props => {
                     			//console.log('Snapshot', snapshot);
 
                         		Alert.alert(
-                        			'Successful',
-                        			'Your updates have been applied!',
+                        			successString[props.language],
+                        			updatesAppliedAlertString[props.language],
                         			[
-                                        {text: 'Ok', style: 'cancel'},
-                        				{text: 'Exit', style: 'destructive', onPress: () => { props.setCategorySettings(); } }],
+                                        {text: okString[props.language], style: 'cancel'},
+                        				{text: cancelString[props.language], style: 'destructive', onPress: () => {
+                                            props.setCategorySettings();
+                                        } }],
                         			{ cancelable: true }
                         		);
                     		});
                         } else {
                     		Alert.alert(
-                    			'Successful',
-                    			'Your updates have been applied!',
+                    			successString[props.language],
+                    			updatesAppliedAlertString[props.language],
                     			[
-                                    {text: 'Ok', style: 'cancel'},
-                    				{text: 'Exit', style: 'destructive', onPress: () => { props.setCategorySettings(); } }],
+                                    {text: okString[props.language], style: 'cancel'},
+                    				{text: cancelString[props.language], style: 'destructive', onPress: () => {
+                                        props.setCategorySettings();
+                                    } }],
                     			{ cancelable: true }
                     		);
                         }
@@ -88,11 +112,13 @@ const CategorySettingsModal = props => {
             		});
                 } else {
             		Alert.alert(
-            			'Successful',
-            			'Your updates have been applied!',
+                        successString[props.language],
+                        updatesAppliedAlertString[props.language],
             			[
-                            {text: 'Ok', style: 'cancel'},
-            				{text: 'Exit', style: 'destructive', onPress: () => { props.setCategorySettings(); } }],
+                            {text: okString[props.language], style: 'cancel'},
+            				{text: cancelString[props.language], style: 'destructive', onPress: () => {
+                                props.setCategorySettings();
+                            } }],
             			{ cancelable: true }
             		);
                 }
@@ -105,11 +131,13 @@ const CategorySettingsModal = props => {
         			//console.log('Snapshot', snapshot);
 
             		Alert.alert(
-            			'Successful',
-            			'Your updates have been applied!',
+                        successString[props.language],
+                        updatesAppliedAlertString[props.language],
             			[
-                            {text: 'Ok', style: 'cancel'},
-            				{text: 'Exit', style: 'destructive', onPress: () => { props.setCategorySettings(); } }],
+                            {text: okString[props.language], style: 'cancel'},
+            				{text: cancelString[props.language], style: 'destructive', onPress: () => {
+                                props.setCategorySettings();
+                            } }],
             			{ cancelable: true }
             		);
         		});
@@ -136,80 +164,70 @@ const CategorySettingsModal = props => {
 
             <View
                 style={styles.page}>
-                <Header style={{height: null, paddingTop: null}}>
+                <Header style={styles.nuller}>
                     <TouchableOpacity
-                        style={{paddingVertical: 10}}
+                        style={styles.headerIcon}
                         onPress={() => {props.setCategorySettings();} }>
                         <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
                     </TouchableOpacity>
-                    <View style={styles.headertitleholder}><Text style={styles.headertitle}>Category Settings</Text></View>
+                    <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categorySettingsString[props.language]}</Text></View>
                     <TouchableOpacity onPress={deleteConfirmation} style={{paddingVertical: 10}}>
                         <MaterialCommunityIcons name="trash-can-outline" color={"red"} size={50} />
                     </TouchableOpacity>
                 </Header>
 
-                <View style={{paddingHorizontal: 10, flex:1, justifyContent:"center", backgroundColor:"white", marginBottom: 10, width:"100%",alignItems:"center",}}>
+                <View style={styles.holder}>
                     <View style={styles.horizontal}>
 
-                        <Text style={styles.sub}>Visibility</Text>
+                        <Text style={styles.sub}>{visibilityString[props.language]}</Text>
 
                         <TouchableOpacity style={visibility(false)} onPress={() => {setInvisible(false);}}>
-                            <Text style={styles.selection}>Visible</Text>
+                            <Text>{visibleString[props.language]}</Text>
                             <MaterialCommunityIcons name="eye" color={"white"} size={40} />
                         </TouchableOpacity>
 
                         <TouchableOpacity style={visibility(true)} onPress={() => {setInvisible(true);}}>
-                            <Text style={styles.selection}>Invisible</Text>
+                            <Text>{invisibleString[props.language]}</Text>
                             <MaterialCommunityIcons name="eye-off" color={"white"} size={40} />
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.horizontal}>
-                        <Text style={styles.sub}>Priority</Text>
+                        <Text style={styles.sub}>{priorityString[props.language]}</Text>
                         <TextInput
                             style={styles.input}
                             blurOnSubmit
                             autoCapitalize="none"
-                            placeholder={"Priority (Optional)"}
+                            placeholder={priorityOptionalString[props.language]}
                             autoCorrect={false}
                             keyboardType="number-pad"
                             onChangeText={(enteredText) => {setPriority(enteredText);} }
                             value={priority} />
                     </View>
                     <View style={{...styles.horizontal, ...{marginBottom: 40}}}>
-                        <Text style={styles.sub}>Name</Text>
+                        <Text style={styles.sub}>{nameString[props.language]}</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Category Name"
+                            placeholder={categoryNameString[props.language]}
                             onChangeText={(namo) => {setName(namo);}}
                             value={name} />
                     </View>
 
-                    <View style={{flexDirection:"row", marginBottom: 5,}}>
+                    <View style={styles.okaybuttonsholder}>
                         <OkayButton
-                            style={{
-                                flex: 1,
-                                marginHorizontal: 5,
-                            }}
-                            textStyle={{
-                                fontSize: 16,
-                            }}
+                            style={styles.okaybutton}
+                            textStyle={styles.text}
                             onClick={() => {
                                 update();
                             }}
-                            text={"Save"} />
+                            text={submitString[props.language]} />
                         <OkayButton
-                            style={{
-                                flex: 1,
-                                marginHorizontal: 5,
-                            }}
-                            textStyle={{
-                                fontSize: 16,
-                            }}
+                            style={styles.okaybutton}
+                            textStyle={styles.text}
                             onClick={() => {
                                 props.setCategorySettings();
                             }}
-                            text={"Cancel"} />
+                            text={cancelString[props.language]} />
                     </View>
                 </View>
             </View>
@@ -218,8 +236,29 @@ const CategorySettingsModal = props => {
 };
 
 const styles = StyleSheet.create({
-    selection: {
-
+    nuller: {
+        height: null,
+        paddingTop: null
+    },
+    okaybuttonsholder: {
+        flexDirection:"row",
+        marginBottom: 5,
+    },
+    text: {
+        fontSize: 16,
+    },
+    okaybutton: {
+        flex: 1,
+        marginHorizontal: 5,
+    },
+    holder: {
+        paddingHorizontal: 10,
+        flex:1,
+        justifyContent:"center",
+        backgroundColor:"white",
+        marginBottom: 10,
+        width:"100%",
+        alignItems:"center",
     },
     one: {
         flex: 1,
@@ -234,6 +273,9 @@ const styles = StyleSheet.create({
         color:"white",
         textAlign:"center",
         fontSize: 15,
+    },
+    headerIcon: {
+        paddingVertical: 10
     },
     onselected: {
         flex: 1,

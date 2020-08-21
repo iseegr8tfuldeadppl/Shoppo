@@ -6,7 +6,7 @@ import OkayButton from './OkayButton';
 import Colors from '../constants/Colors';
 import moment from 'moment';
 import Banner from './Banner';
-import { areYouSureString, setStateString, chatString, sendString, typeString } from '../constants/strings';
+import { pendingString, failedString, successString, areYouSureString, setStateString, chatString, sendString, typeString, yesString, noString } from '../constants/strings';
 
 
 
@@ -46,6 +46,7 @@ const Chat = props => {
                 <View
                     style={{...{width: "65%", height: 150, marginTop:10}, ...leftOrRight(admin)}}>
                     <Banner
+                        language={props.language}
                         url={url}
                         setPreview={setPreviewedImage}
                         preview={previewedImage}
@@ -59,19 +60,19 @@ const Chat = props => {
     const setState = (stato, key) => {
         let stateDisplay = "";
         if(stato==="pending"){
-            stateDisplay = "Pending";
+            stateDisplay = pendingString[props.language];
         } else if(stato==="failed"){
-            stateDisplay = "Failed";
+            stateDisplay = failedString[props.language];
         } else if(stato==="success"){
-            stateDisplay = "Success";
+            stateDisplay = successString[props.language];
         }
 
 		Alert.alert(
 			areYouSureString[props.language],
 			setStateString[props.language] + stateDisplay + '.',
 			[
-                {text: 'No', style: 'cancel'},
-				{text: 'Yes', style: 'destructive', onPress: () => { updateState(stato, key); } }],
+                {text: noString[props.language], style: 'cancel'},
+				{text: yesString[props.language], style: 'destructive', onPress: () => { updateState(stato, key); } }],
 			{ cancelable: true }
 		);
     };
@@ -106,6 +107,7 @@ const Chat = props => {
         if(state)
             return(
                 <StateSelector
+                    language={props.language}
                     touchable={!clientOrAdminDecision(admin)}
                     keyy={key}
                     state={state}
@@ -173,6 +175,7 @@ const Chat = props => {
         if(previewedImage){
             return(
 				<Banner
+                    language={props.language}
                     setPreview={setPreviewedImage}
                     preview={previewedImage}
 					style={{width: "65%", height: 150, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}

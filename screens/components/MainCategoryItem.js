@@ -19,10 +19,9 @@ const MainCategoryItem = props => {
     // this function to limit products to a maximum of 5 or else specified
     const products = () => {
         const max = 5;
-        if(props.item.products.length<=max+1) return props.item.products;
-        else {
-            return [...props.item.products.subarray(0, max-1), ...props.item.products[max]];
-        }
+        if(props.item.products.length<=max+1)
+            return props.item.products;
+        return [...props.item.products.subarray(0, max-1), ...props.item.products[max]];
     };
 
     const openAddProductModal = () => {
@@ -66,6 +65,7 @@ const MainCategoryItem = props => {
                 data={products()}
                 renderItem={singleProductData =>
                     <MainProductItem
+                        language={props.language}
                         adminList={props.adminList}
                         uid={props.uid}
                         setCategoryPreviewed={setCategoryPreviewed}

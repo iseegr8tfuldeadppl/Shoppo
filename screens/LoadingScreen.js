@@ -23,9 +23,9 @@ const LoadingScreen = props =>  {
 			if(user && user!==null){
 				props.setCurrentUser(user.uid);
 				props.goHere(3);
-			} else {
-				props.goHere(2);
+				return;
 			}
+			props.goHere(2);
 		}); // to use component u have to add .bind(this) and also make it this.props.blabla
 	};
 
