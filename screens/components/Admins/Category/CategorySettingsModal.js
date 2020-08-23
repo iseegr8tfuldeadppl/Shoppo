@@ -25,7 +25,7 @@ import {
     visibleString,
     invisibleString,
     categorySettingsString
-} from '../../../constants/strings';
+} from '../../constants/strings';
 
 
 const CategorySettingsModal = props => {

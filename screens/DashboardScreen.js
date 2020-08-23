@@ -3,7 +3,7 @@
 
 //import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-import { Alert, View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { Alert, View, StyleSheet, Text, ActivityIndicator, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
@@ -19,11 +19,15 @@ import {
 	logoutString,
 	noInternetString,
 	loadingString
-} from './constants/strings';
+} from '.constants/strings';
 const Drawer = createDrawerNavigator();
 
 
 const DashboardScreen = props =>  {
+
+	// BackHandler.addEventListener('hardwareBackPress', function() {
+	//     return true;
+	// });
 
 	const [remoteOrdersOpen, setRemoteOrdersOpen] = useState();
 	const [cart, updateCart] = useState([]);
@@ -42,12 +46,9 @@ const DashboardScreen = props =>  {
 	const [adminList, setAdminList] = useState([]);
 	const [usersLatest, setUserLatest] = useState();
 
-	console.log("nigger");
-
 	const pokeFirebase = () => {
 
 		firebase.database().ref('/admins').on('value', adminListSnapshot => {
-			console.log("started");
 			let adminListData = adminListSnapshot.val() ? adminListSnapshot.val() : {};
 			let admins = {...adminListData};
 			let adminListTemp = Object.keys(admins);
@@ -84,7 +85,6 @@ const DashboardScreen = props =>  {
 							for(var j=0; j<KeysOfproductsInCategory.length; j++){
 
 								// this only shows people products that are visible or shows the admins the product
-								console.log(productsInCategory[j]);
 								if(productsInCategory[j].data.visible || adminListTemp.includes(props.uid)){
 									// this little check is to hide currently previewed product if it was deleted from firebase
 									if(productPreviewed)
@@ -134,10 +134,6 @@ const DashboardScreen = props =>  {
 					firebase.database().ref('/users/' + props.uid).on('value', userInfoSnapShot => {
 						let dataaa = userInfoSnapShot.val() ? userInfoSnapShot.val() : {};
 						let userInfoSnap = {...dataaa};
-
-						// Notify of any messages if new ones came from admins that i didn't answer
-						notifyMessagesFromAdmins(userInfoSnap)
-
 						setUserInfo(userInfoSnap);
 					});
 
@@ -222,61 +218,10 @@ const DashboardScreen = props =>  {
 		});
 	};
 
-	// If there's internet and has not alrdy ran this function and categories isnt already containing any data, run firebase listener
-  	if(categories.length===0 && !finishedLoadingFromFirebase && props.connection)
-	  	pokeFirebase();
+  if(categories.length===0 && !finishedLoadingFromFirebase && props.connection){
+	  pokeFirebase();
+  }
 
-
-  	const notifyMessagesFromAdmins = (userInfoSnap) => {
-
-		if(userInfoSnap){
-
-			// notify if an order has changed state
-  			if(userInfoSnap.orders){
-                if(props.userInfo.orders){
-	  				let ordersKeys = Object.keys(props.userInfo.orders);
-	  				let orderst = Object.values(props.userInfo.orders);
-	  				let newOrdersKeys = Object.keys(userInfoSnap.orders);
-	  				let newOrderst = Object.values(userInfoSnap.orders);
-	  				for(let i=0; i<newOrderst.length; i++){
-		  				for(let i=0; i<orderst.length; i++){
-							if(newOrdersKeys[i].toString()==ordersKeys[i].toString()){
-								if(newOrderst[i].state!=orderst[i].state){
-									// notify
-									console.log("updated order " + newOrderst[i].message);
-
-										Alert.alert(
-											"ah",
-											"updated order " + newOrderst[i].message,
-											[{text: "Ok", style: 'cancel'}],
-											{ cancelable: true }
-										)
-
-								}
-							}
-						}
-	  				}
-				}
-			}
-
-			if(userInfoSnap.messages){
-				let messagest = Object.values(userInfoSnap.messages);
-				if(messagest[messagest.length-1].admin){
-					// notify if the latest message is from an admin the notify
-					console.log("latest message " + messagest[messagest.length-1].message);
-
-					Alert.alert(
-						"ah",
-						"latest message " + messagest[messagest.length-1].message,
-						[{text: "Ok", style: 'cancel'}],
-						{ cancelable: true }
-					)
-				}
-			}
-
-		}
-
-  	};
 
 	const logOut = props => {
 		firebase.auth().signOut();

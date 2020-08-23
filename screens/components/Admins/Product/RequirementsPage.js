@@ -6,7 +6,7 @@ import {
     noRequirementsAlertString,
     selectRequirementsString,
     resetToDefaultString
-} from '../../../constants/strings';
+} from '../../../constants/Strings';
 
 
 const RequirementsPage = props => {

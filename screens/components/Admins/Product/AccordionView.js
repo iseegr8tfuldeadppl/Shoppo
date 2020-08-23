@@ -68,10 +68,12 @@ export default class AccordionView extends Component {
 
 const styles = StyleSheet.create({
     page: {
+        backgroundColor:section.background,
         padding: 10,
         flexDirection:'row',
         borderTopWidth: 2,
         alignItems: 'center',
+        borderTopColor: section.Stroke
     },
     iconHolder: {
         flex:1,
@@ -85,6 +87,7 @@ const styles = StyleSheet.create({
     title: {
         justifyContent: 'center',
         flex: 5,
+        color:section.textColor,
         fontSize: 16,
         fontWeight: '500',
     },
