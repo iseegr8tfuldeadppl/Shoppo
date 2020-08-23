@@ -14,7 +14,7 @@ import OkayButton from '../components/OkayButton';
 import Header from '../components/Header';
 import Taboo from '../components/Taboo';
 import ProductPreviewModal from '../components/ProductPreviewModal';
-import { cartString, goToCategoriesString, cartEmptyString, categoriesString, mainMenuString, cartString, okString, selectProductAlertString, noProductsAlertString, oopsString, goToMainMenuString, checkoutString } from '../constants/strings';
+import { goToCategoriesString, cartEmptyString, categoriesString, mainMenuString, cartString, okString, selectProductAlertString, noProductsAlertString, oopsString, goToMainMenuString, checkoutString } from '../constants/strings';
 
 
 const Cart = props => {

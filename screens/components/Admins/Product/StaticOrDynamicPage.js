@@ -70,6 +70,7 @@ const StaticOrDynamicPage = props => {
 		if(selection){
 			makeStatic();
 			return;
+		}
 		setChecked();
 	};
 

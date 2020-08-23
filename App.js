@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import firebaseConfig from './screens/constants/ApiKeys';
 import firebase from 'firebase';
 import { defaultLanguage } from './screens/constants/strings';
@@ -11,6 +11,8 @@ import NetInfo from '@react-native-community/netinfo';
 
 
 export default function App() {
+
+	ErrorUtils.setGlobalHandler((error, isFatal) => {console.log(error);});
 
 	// for Debugging only
 	//console.disableYellowBox = true;
@@ -43,14 +45,16 @@ export default function App() {
 			return(
 				<LoadingScreen language={language} setLanguage={setLanguage} connection={connection} setCurrentUser={setCurrentUser} goHere={goToPage}/>
 			);
-		} else if(page===2){
+		}
+
+		if(page===2){
 			return(<LoginScreen language={language} setLanguage={setLanguage}  connection={connection} goHere={goToPage}/>);
-		} else if(page===3){
+		}
+
+		if(page===3){
 			return(<DashboardScreen language={language} setLanguage={setLanguage}  connection={connection} uid={uid} goHere={goToPage}/>);
 		}
 	};
 
-	return  (
-		lapage()
-	);
+	return  (lapage());
 }

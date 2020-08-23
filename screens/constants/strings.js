@@ -37,10 +37,6 @@ export const categoryNameString = {
     english: "Category Name",
 };
 
-export const cartString = {
-    arabic: "Cart",
-    english: "Cart",
-};
 export const goToCategoriesString = {
     arabic: "Visit Categories",
     english: "Visit Categories",
@@ -84,10 +80,6 @@ export const orderString = {
 export const ordersString = {
     arabic: "Orders",
     english: "Orders"
-};
-export const areYouSureString = {
-    arabic: 'Are you sure?',
-    english: 'Are you sure?'
 };
 export const clientsString = {
     arabic: "Clients",
@@ -312,11 +304,6 @@ export const cartEmptyString = {
     arabic: "Your Cart is Empty",
     english: "Your Cart is Empty"
 };
-export const selectProductAlertString = {
-    arabic: "You should select a product first!",
-    english: "You should select a product first!"
-};
-
 export const dinarString = {
     arabic: "DA",
     english: "DA"
@@ -337,11 +324,6 @@ export const searchString = {
 export const pleaseEnterString = {
     arabic: "Please enter",
     english: "Please enter"
-};
-
-export const selectPictureString = {
-    arabic: "Select Avatar",
-    english: "Select Avatar"
 };
 
 export const submitString = {
