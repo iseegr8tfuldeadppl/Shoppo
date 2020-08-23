@@ -27,14 +27,12 @@ const AddNewItemModal = props => {
     	if(!props.data){
             return(
                 <Category
-                    language={props.language}
                     onCancel={props.onCancel}
                     onAdd={onAdd}/>
             );
     	}
 		return(
             <Product
-                language={props.language}
                 categories={props.categories}
 				data={props.data}
 				onAdd={onAdd}

@@ -11,38 +11,52 @@ export default class AccordionView extends Component {
 
   _renderHeader = section => {
     return (
-      <View style={styles.page}>
-		<View style={styles.iconHolder}>
+      <View style={{
+				backgroundColor:section.background, 
+				padding: 10, 
+				flexDirection:'row',
+				borderTopWidth: 2, 
+				alignItems: 'center', 
+				borderTopColor: section.Stroke }} 
+			>
+		<View style={{flex:1, justifyContent: 'center', alignItems: 'center',}}>
 			<MaterialCommunityIcons name={section.icon} color={"white"} size={30} />
 		</View>
-        <Text style={styles.title}>{section.title}</Text>
+        <Text style={{
+				justifyContent: 'center', 
+				flex: 5,
+				color:section.textColor, 
+				fontSize: 16,
+				fontWeight: '500',
+				}}>{section.title}</Text>
       </View>
     );
   };
 
   _renderContent = section => {
     return (
-      <View style={styles.flexer}>
-		<FlatList
-			style={styles.flexer}
-			data={section.SubCategories}
-			renderItem={data =>
-			<TouchableOpacity
+      <View style={{flex:1}}>
+		<FlatList 
+			style={{flex:1}}
+			data={section.SubCategories} 
+			renderItem={data => 
+			<TouchableOpacity 
 				activeOpacity={.6}
-				style={styles.flatlistitem}
+				style={{backgroundColor:data.item.background, flexDirection:'row',}}
 				onPress={this.props.checkThisOut.bind(this, data.item)}
 				>
-				<View style={styles.iconHolder}>
-					<Image
-					style={styles.image}
+				<View style={{flex:1, justifyContent:'center', alignItems:'center',}}>
+					<Image 
+					style={{width:40, height:40, borderRadius:10, marginVertical:5,}}
 					source={{ uri:data.item.image }} />
 				</View>
-				<View style={styles.text}>
+				<View style={{flex:2.5, justifyContent:'center'}}>
 					<Text style={{color:data.item.textColor}}>{data.item.title}</Text>
 				</View>
 			</TouchableOpacity>
 			}
 		/>
+
 
       </View>
     );
@@ -54,7 +68,7 @@ export default class AccordionView extends Component {
 
   render() {
     return (
-      <Accordion
+      <Accordion 
         sections={PossibleProducts}
         activeSections={this.state.activeSections}
         renderHeader={this._renderHeader}
@@ -67,41 +81,4 @@ export default class AccordionView extends Component {
 
 
 const styles = StyleSheet.create({
-    page: {
-        backgroundColor:section.background,
-        padding: 10,
-        flexDirection:'row',
-        borderTopWidth: 2,
-        alignItems: 'center',
-        borderTopColor: section.Stroke
-    },
-    iconHolder: {
-        flex:1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    flatlistitem: {
-        backgroundColor:data.item.background,
-        flexDirection:'row',
-    },
-    title: {
-        justifyContent: 'center',
-        flex: 5,
-        color:section.textColor,
-        fontSize: 16,
-        fontWeight: '500',
-    },
-    flexer: {
-        flex:1
-    },
-    text: {
-        flex:2.5,
-        justifyContent:'center'
-    },
-    image: {
-        width:40,
-        height:40,
-        borderRadius:10,
-        marginVertical:5,
-    },
 });

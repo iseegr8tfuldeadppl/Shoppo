@@ -6,10 +6,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Card from './components/Card';
 import moment from 'moment';
 import Colors from './constants/Colors';
-import {
-	signInWithGoogleString,
-	noInternetString
-} from './constants/strings';
 
 
 const LoginScreen = props => {
@@ -132,7 +128,7 @@ const LoginScreen = props => {
 				<ActivityIndicator color={Colors.Accent} style={{width:'89%',}} />
 			);
 		return(
-			<Text style={{marginLeft: 'auto', marginRight: 'auto', color:Colors.Accent, fontSize:16}}>{signInWithGoogleString[props.language]}</Text>
+			<Text style={{marginLeft: 'auto', marginRight: 'auto', color:Colors.Accent, fontSize:16}}>Sign In With Google</Text>
 		);
 	};
 
@@ -140,7 +136,7 @@ const LoginScreen = props => {
 		if(!props.connection)
 			return(
 				<View style={styles.container}>
-					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>{noInternetString[props.language]}</Text>
+					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>No Internet</Text>
                 	<MaterialCommunityIcons name="wifi-off" color={"red"} size={60} />
 				</View>
 			);

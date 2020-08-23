@@ -2,7 +2,6 @@ import React from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../Header';
-import { nextString, previousString } from '../../../constants/strings';
 
 
 const DoubleArrowedHeader = props => {
@@ -12,12 +11,12 @@ const DoubleArrowedHeader = props => {
             <TouchableOpacity onPress={props.back} style={styles.holda}>
                 <View style={styles.back}>
                     <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
-                    <Text style={styles.headertitle}>{previousString[props.language]}</Text>
+                    <Text style={styles.headertitle}>Previous</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={props.next} style={styles.holda}>
                 <View style={styles.next}>
-                    <Text style={styles.headertitle}>{nextString[props.language]}</Text>
+                    <Text style={styles.headertitle}>Next</Text>
                     <MaterialCommunityIcons name="arrow-right" color={"white"} size={30} />
                 </View>
             </TouchableOpacity>

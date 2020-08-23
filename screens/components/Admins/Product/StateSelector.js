@@ -2,11 +2,6 @@ import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../../../constants/Colors';
-import {
-    failedString,
-    successString,
-    pendingString
-} from '../../../constants/strings';
 
 
 const StateSelector = props => {
@@ -14,7 +9,8 @@ const StateSelector = props => {
     const style = state => {
         if(state===props.state)
             return styles.stateM3abbezHolder;
-        return styles.stateHolder;
+        else
+            return styles.stateHolder;
     };
     return(
         <View style={{...styles.holder, ...props.style}}>
@@ -24,7 +20,7 @@ const StateSelector = props => {
                 }
             }} activeOpacity={0.50}>
                 <MaterialCommunityIcons name={"rotate-right"} color={"gray"} size={20} />
-                <Text style={styles.processing}>{pendingString[props.language]}</Text>
+                <Text style={styles.processing}>Pending</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style("failed")} onPress={() => {
                 if(props.touchable){
@@ -32,7 +28,7 @@ const StateSelector = props => {
                 }
             }} activeOpacity={0.50}>
                 <MaterialCommunityIcons name={"alert-circle"} color={"red"} size={20} />
-                <Text style={styles.failed}>{failedString[props.language]}</Text>
+                <Text style={styles.failed}>Failed</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style("success")} onPress={() => {
                 if(props.touchable){
@@ -40,7 +36,7 @@ const StateSelector = props => {
                 }
             }} activeOpacity={0.50}>
                 <MaterialCommunityIcons name={"check-circle"} color={"green"} size={20} />
-                <Text style={styles.success}>{successString[props.language]}</Text>
+                <Text style={styles.success}>Success</Text>
             </TouchableOpacity>
         </View>
     );

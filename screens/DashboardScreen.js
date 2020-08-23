@@ -12,14 +12,6 @@ import MainMenu from './Tabs/MainMenu';
 import Categories from './Tabs/Categories';
 import Cart from './Tabs/Cart';
 import Profile from './Tabs/Profile';
-import {
-	noString,
-	yesString,
-	logoutAlertString,
-	logoutString,
-	noInternetString,
-	loadingString
-} from '.constants/strings';
 const Drawer = createDrawerNavigator();
 
 
@@ -246,7 +238,7 @@ const DashboardScreen = props =>  {
 		if(loading){
 			return(
 				<View style={styles.loadingh}>
-					<Text style={{color:"white", fontSize: 25, fontWeight:"bold"}}>{loadingString[props.language]}</Text>
+					<Text style={{color:"white", fontSize: 25, fontWeight:"bold"}}>Loading..</Text>
                 	<ActivityIndicator size={50}/>
 				</View>
 			);
@@ -259,7 +251,7 @@ const DashboardScreen = props =>  {
 		if(!props.connection){
 			return(
 				<View style={styles.screen}>
-					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>{noInternetString[props.language]}</Text>
+					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>No Internet</Text>
                 	<MaterialCommunityIcons name="wifi-off" color={"red"} size={60} />
 				</View>
 			);
@@ -273,10 +265,10 @@ const DashboardScreen = props =>  {
 								<DrawerItemList {...propss} />
 								<DrawerItem label="Logout" onPress={() =>
 									Alert.alert(
-										logoutString[props.language],
-										logoutAlertString[props.language],
-										[{text: noString[props.language], style: 'cancel'},
-											{text: yesString[props.language], style: 'destructive', onPress: () => logOut(props) }],
+										'Logout',
+										'Are you sure you want to log out?',
+										[{text: 'No', style: 'cancel'},
+											{text: 'Yes', style: 'destructive', onPress: () => logOut(props) }],
 										{ cancelable: true }
 									)} />
 								</DrawerContentScrollView>

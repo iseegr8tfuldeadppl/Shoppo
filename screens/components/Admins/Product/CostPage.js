@@ -18,7 +18,7 @@ const CostPage = props => {
                 keyboardType="number-pad"
                 onChangeText={(enteredText) => {props.setCost(enteredText);} }
                 value={props.cost} />
-            <Text style={styles.text}>{dinarString[props.language]}</Text>
+            <Text style={styles.text}>DA</Text>
         </View>
     );
 };

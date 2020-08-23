@@ -31,12 +31,11 @@ const MainMenu = props => {
     if(props.adminList.includes(props.uid))
         return(
             <AddNewItemModal
-                language={props.language}
-                setData={setData}
-                categories={props.categories}
-                data={data}
-                doIShowUp={NewItemPage}
-                onCancel={() => {setNewItemPage(false); setData();}} />
+              setData={setData}
+              categories={props.categories}
+              data={data}
+              doIShowUp={NewItemPage}
+              onCancel={() => {setNewItemPage(false); setData();}} />
         );
   };
 
@@ -113,7 +112,6 @@ const MainMenu = props => {
           if(categorySettings)
             return(
                 <CategorySettingsModal
-                    language={props.language}
                     setCategorySettings={setCategorySettings}
                     visible={categorySettings} />
             );
@@ -143,7 +141,6 @@ const MainMenu = props => {
             data={props.categories}
             renderItem={categoryData =>
             <MainCategoryItem
-                language={props.language}
                 setCategorySettings={setCategorySettings}
                 adminList={props.adminList}
                 uid={props.uid}
