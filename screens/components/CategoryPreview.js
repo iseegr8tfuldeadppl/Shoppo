@@ -6,11 +6,10 @@ import SideItem from './SideItem';
 const CategoryPreview = props => {
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
-		if(props.productPreviewed){
+		if(props.productPreviewed)
 			props.setProductPreviewed();
-			return true;
-		}
-        props.setCategoryPreviewed();
+		else
+            props.setCategoryPreviewed();
 	    return true;
 	});
 
@@ -32,7 +31,6 @@ const CategoryPreview = props => {
             data={data()}
             renderItem={productData =>
                 <SideItem
-					language={props.language}
                     setProductPreviewed={props.setProductPreviewed}
                     item={productData.item} />
             }/>

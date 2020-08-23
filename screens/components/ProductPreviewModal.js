@@ -7,40 +7,6 @@ import CheckOut from './CheckOut';
 import possibleRequirements from '../constants/possibleRequirements';
 import OkayButton from './OkayButton';
 import firebase from 'firebase';
-import {
-	oopsString,
-	inYourCartString,
-	pleaseWriteQuantityAlertString,
-	goToCartString,
-	youNowHaveString,
-	addedToCartString,
-	stockIsLimitedAlertString,
-	okString,
-	leftInStockString,
-	thereIsOnlyAlertString,
-	nextString,
-	yesString,
-	noString,
-	productWasHiddenString,
-	successString,
-	hideThisProductString,
-	hideThisProductLongString,
-	showThisProductString,
-	showThisProductLongString,
-	productWasShownString,
-	productWasDeletedString,
-	noDontDeleteString,
-	yesDeleteString,
-	deleteThisProductLongString,
-	deleteThisProductString,
-	buyNowString,
-	stockString,
-	dinarString,
-	addToCartString,
-	forString,
-	pleaseEnterString
-} from '../constants/strings';
-
 //admin stuff
 import EditProduct from './Admins/Product/EditProduct';
 import Banner from './Banner';
@@ -64,14 +30,12 @@ const ProductPreviewModal = props => {
 		if(isNaN(index)){
 			reset();
 			props.setProductPreviewed();
-			return;
+		} else {
+			if(index>0)
+				setIndex(index-1);
+			else
+				setIndex("nigger");
 		}
-
-		if(index>0){
-			setIndex(index-1);
-			return;
-		}
-		setIndex("nigger");
 	};
 
 	const stuff = () => {
@@ -126,10 +90,10 @@ const ProductPreviewModal = props => {
 			if(parseFloat(quantity)>parseFloat(props.productPreviewed.data.stock)){
 				setQuantity(props.productPreviewed.data.stock);
 				Alert.alert(
-					stockIsLimitedAlertString[props.language],
-					thereIsOnlyAlertString[props.language] + ' ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' ' + leftInStockString[props.language],
+					'Stock Is Limited!',
+					'There is only ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' left in stock.',
 					[
-						{text: okString[props.language], style: 'cancel'}
+						{text: "Ok", style: 'cancel'}
 					],
 					{ cancelable: true }
 				);
@@ -147,10 +111,10 @@ const ProductPreviewModal = props => {
 						if((parseFloat(cartCopy[i].quantity) + parseFloat(quantity)).toFixed(2)> parseFloat(props.productPreviewed.data.stock) ){
 							setQuantity((parseFloat(props.productPreviewed.data.stock) - parseFloat(cartCopy[i].quantity) ).toString());
 							Alert.alert(
-								stockIsLimitedAlertString[props.language],
-								thereIsOnlyAlertString[props.language] + ' ' + (parseFloat(props.productPreviewed.data.stock) - parseFloat(cartCopy[i].quantity) ).toString() + ' ' + props.productPreviewed.data.title + ' ' + leftInStockString[props.language],
+								'Stock Is Limited!',
+								'There is only ' + (parseFloat(props.productPreviewed.data.stock) - parseFloat(cartCopy[i].quantity) ).toString() + ' ' + props.productPreviewed.data.title + ' left in stock.',
 								[
-									{text: okString[props.language], style: 'cancel'}
+									{text: "Ok", style: 'cancel'}
 								],
 								{ cancelable: true }
 							);
@@ -166,10 +130,10 @@ const ProductPreviewModal = props => {
 						if((parseFloat(cartCopy[i].quantity) + parseInt(quantity)).toFixed(2) > parseFloat(props.productPreviewed.data.stock) ){
 							setQuantity((parseFloat(props.productPreviewed.data.stock) - parseFloat(cartCopy[i].quantity) ).toString());
 							Alert.alert(
-								stockIsLimitedAlertString[props.language],
-								thereIsOnlyAlertString[props.language] + ' ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' ' + leftInStockString[props.language],
+								'Stock Is Limited!',
+								'There is only ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' left in stock.',
 								[
-									{text: okString[props.language], style: 'cancel'}
+									{text: "Ok", style: 'cancel'}
 								],
 								{ cancelable: true }
 							);
@@ -184,11 +148,11 @@ const ProductPreviewModal = props => {
 				props.updateCart(cartCopy);
 
 				Alert.alert(
-					addedToCartString[props.language],
-					youNowHaveString[props.language] + ' ' + cartCopy[i].quantity + ' '  + props.productPreviewed.data.title + ' ' + inYourCartString[props.language],
+					'Added To Cart!',
+					'You now have ' + cartCopy[i].quantity + ' '  + props.productPreviewed.data.title + ' in your cart!',
 					[
-						{text: goToCartString[props.language], style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate("Cart"); } },
-						{text: okString[props.language], style: 'cancel'}],
+						{text: 'Go To Cart', style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate("Cart"); } },
+						{text: 'Ok', style: 'cancel'}],
 					{ cancelable: true }
 				);
 
@@ -197,11 +161,11 @@ const ProductPreviewModal = props => {
 		}
 
 		Alert.alert(
-			addedToCartString[props.language],
-			youNowHaveString[props.language] + ' ' + quantity + ' ' + props.productPreviewed.data.title + ' ' + inYourCartString[props.language],
+			'Added To Cart!',
+			'You have added ' + quantity + ' ' + props.productPreviewed.data.title + ' to your cart!',
 			[
-				{text: goToCartString[props.language], style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate('Cart'); } },
-				{text: okString[props.language], style: 'cancel'}],
+				{text: 'Go To Cart', style: 'destructive', onPress: () => { props.setProductPreviewed(); props.navigation.navigate('Cart'); } },
+				{text: 'Ok', style: 'cancel'}],
 			{ cancelable: true }
 		);
 		props.productPreviewed.quantity = quantity;
@@ -212,10 +176,10 @@ const ProductPreviewModal = props => {
 
 	const invalidQuantity = () => {
 		Alert.alert(
-			oopsString[props.language],
-			pleaseWriteQuantityAlertString[props.language],
+			'Oops!',
+			'Please write a valid quantity!',
 			[
-				{text: okString[props.language], style: 'cancel'}
+				{text: 'Ok', style: 'cancel'}
 			],
 			{ cancelable: true }
 		);
@@ -232,10 +196,10 @@ const ProductPreviewModal = props => {
 			if(parseFloat(quantity)>parseFloat(props.productPreviewed.data.stock)){
 				setQuantity(props.productPreviewed.data.stock);
 				Alert.alert(
-					stockIsLimitedAlertString[props.language],
-					thereIsOnlyAlertString[props.language] + ' ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' ' + leftInStockString[props.language],
+					'Stock Is Limited!',
+					'There is only ' + props.productPreviewed.data.stock + ' ' + props.productPreviewed.data.title + ' left in stock.',
 					[
-						{text: okString[props.language], style: 'cancel'}
+						{text: "Ok", style: 'cancel'}
 					],
 					{ cancelable: true }
 				);
@@ -252,11 +216,12 @@ const ProductPreviewModal = props => {
 	const sender = () => {
 		if(props.productPreviewed.data.title.length>19)
 			return props.productPreviewed.data.title.substring(0, 18) + "...";
-		return props.productPreviewed.data.title;
+		else
+			return props.productPreviewed.data.title;
 	};
 
 	const textInput = () =>{
-		if(IsOriginallyCurrency())
+		if(IsOriginallyCurrency()){
 			return(
 				<TextInput
 					maxLength={10}
@@ -268,17 +233,19 @@ const ProductPreviewModal = props => {
 					onChangeText={quantityUpdater}
 					value={quantity} />
 			);
-		return(
-			<TextInput
-				maxLength={10}
-				style={styles.quantityInput}
-				blurOnSubmit
-				autoCapitalize="none"
-				autoCorrect={false}
-				keyboardType="number-pad"
-				onChangeText={quantityUpdater}
-				value={quantity} />
-		);
+		} else {
+			return(
+				<TextInput
+					maxLength={10}
+					style={styles.quantityInput}
+					blurOnSubmit
+					autoCapitalize="none"
+					autoCorrect={false}
+					keyboardType="number-pad"
+					onChangeText={quantityUpdater}
+					value={quantity} />
+			);
+		}
 	};
 
 	const check = (buyNoww, addToCartt) => {
@@ -308,96 +275,92 @@ const ProductPreviewModal = props => {
 			if(!isNaN(index)){
 				return(
 					<View style={styles.letout}>
-						<Text style={styles.requirementTitle}>{pleaseEnterString[props.language]} {requirements[index].title} forString[props.language] {props.productPreviewed.data.title}</Text>
+						<Text style={styles.requirementTitle}>Please enter {requirements[index].title} for {props.productPreviewed.data.title}</Text>
 						<TextInput
 							style={styles.requirementInput}
 							blurOnSubmit
-							placeholder={requirements[index].title + " " + forString[props.language] + " " + props.productPreviewed.data.title}
+							placeholder={requirements[index].title + " for " + props.productPreviewed.data.title}
 							onChangeText={(enteredText) => {updateRequirements(index, enteredText);}}
 							value={requirements[index].slot} />
 
 		              	<OkayButton
-		                  	style={styles.okaybutton}
-		                  	textStyle={styles.okaybuttonText}
+		                  	style={{ marginBottom:10, marginTop: 30, width: "80%" }}
+		                  	textStyle={{ fontSize: 16 }}
 		                  	onClick={() => {setIndex(check(false, false)); }}
-		                  	text={nextString[props.language]} />
+		                  	text={"Next"} />
 					</View>
 				);
 			}
 		}
 
 		return(
-			<View style={styles.flexer}>
-				<View
-					style={styles.holder}>
-					<View style={styles.banner}>
-						<Banner
-							preview={preview}
-							setPreview={setPreview}
-							showThumbnail={true}
-							style={styles.banner}
-							images={[props.productPreviewed.data.banner]} />
-					</View>
-
-					<View style={styles.costHolder}>
-						<Text numberOfLines={1} ellipsizeMode='tail' style={styles.cost}>{props.productPreviewed.data.cost} {dinarString[props.language]}</Text>
-					</View>
-					<Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.productPreviewed.data.title}</Text>
-					<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
+		<View style={styles.flexer}>
+			<View
+				style={{width:"100%", flex: 1 }}>
+				<View style={styles.banner}>
+					<Banner
+						preview={preview}
+						setPreview={setPreview}
+						showThumbnail={true}
+						style={styles.banner}
+						images={[props.productPreviewed.data.banner]} />
 				</View>
-				<View style={styles.quantityOuterHolder}>
-				<Text style={styles.stocktext}>{stockString[props.language]}: {props.productPreviewed.data.stock}</Text>
-					<View style={styles.quantityInnerHolder}>
-						<TouchableOpacity
-							onPress={() => {
-								if(isNaN(parseFloat(quantity))){
-									setQuantity("1");
-									return;
-								}
-								if(parseFloat(quantity)>1) {
-									if(IsOriginallyCurrency()){
-										setQuantity((parseFloat(quantity)-1).toFixed(2).toString());
-										return;
-									}
+
+				<View style={styles.costHolder}>
+					<Text numberOfLines={1} ellipsizeMode='tail' style={styles.cost}>{props.productPreviewed.data.cost} DA</Text>
+				</View>
+				<Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.productPreviewed.data.title}</Text>
+				<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
+			</View>
+			<View style={styles.quantityOuterHolder}>
+			<Text style={{fontSize: 18,marginBottom: 7, fontWeight:"bold"}}>Stock: {props.productPreviewed.data.stock}</Text>
+				<View style={styles.quantityInnerHolder}>
+					<TouchableOpacity
+						onPress={() => {
+							if(isNaN(parseFloat(quantity)))
+								setQuantity("1");
+							else if(parseFloat(quantity)>1) {
+								if(IsOriginallyCurrency())
+									setQuantity((parseFloat(quantity)-1).toFixed(2).toString());
+								else
 									setQuantity(Math.round(parseFloat(quantity)-1).toString());
-								}
-							}}
-							style={styles.minus}>
-							<MaterialCommunityIcons name={"minus"} color={"white"} size={20} />
-						</TouchableOpacity>
-						<View style={styles.centerMaster}>
-							{textInput()}
-						</View>
-						<TouchableOpacity
-							onPress={() => {
-								if(isNaN(parseFloat(quantity))){
-									setQuantity("1");
-									return;
-								}
-								if(IsOriginallyCurrency()){
+							}
+						}}
+						style={styles.minus}>
+						<MaterialCommunityIcons name={"minus"} color={"white"} size={20} />
+					</TouchableOpacity>
+					<View style={styles.centerMaster}>
+						{textInput()}
+					</View>
+					<TouchableOpacity
+						onPress={() => {
+							if(isNaN(parseFloat(quantity)))
+								setQuantity("1");
+							else {
+								if(IsOriginallyCurrency())
 									setQuantity((parseFloat(quantity)+1).toFixed(2).toString());
-									return;
-								}
-								setQuantity(Math.round(parseFloat(quantity)+1).toString());
-							}}
-							style={styles.plus}>
-							<MaterialCommunityIcons name={"plus"} color={"white"} size={20} />
-						</TouchableOpacity>
-					</View>
-					<View style={styles.okaybutton2Holder}>
-					  <OkayButton
-						  style={styles.okaybutton2}
-						  textStyle={styles.okaybutton2Text}
-						  onClick={() => {setBuyNowClicked(true);setIndex(check(true, false)); }}
-						  text={buyNowString[props.language]} />
-					  <OkayButton
-						  style={styles.okaybutton2}
-						  textStyle={styles.okaybutton2Text}
-						  onClick={() => {setAddToCartClicked(true);setIndex(check(false, true)); }}
-						  text={addToCartString[props.language]} />
-					</View>
+								else
+									setQuantity(Math.round(parseFloat(quantity)+1).toString());
+							}
+						}}
+						style={styles.plus}>
+						<MaterialCommunityIcons name={"plus"} color={"white"} size={20} />
+					</TouchableOpacity>
+				</View>
+				<View style={{flexDirection:"row", marginBottom: 10, paddingHorizontal: 8,}}>
+				  <OkayButton
+					  style={{ marginTop:10, flex: 1, paddingVertical: 8, marginEnd:4, }}
+					  textStyle={{ fontSize: 16, textAlign:"center" }}
+					  onClick={() => {setBuyNowClicked(true);setIndex(check(true, false)); }}
+					  text={"Buy Now"} />
+				  <OkayButton
+					  style={{ marginTop:10, flex: 1, paddingVertical: 8, marginStart:4, }}
+					  textStyle={{ fontSize: 16, textAlign:"center" }}
+					  onClick={() => {setAddToCartClicked(true);setIndex(check(false, true)); }}
+					  text={"Add To Cart"} />
 				</View>
 			</View>
+		</View>
 		);
 	};
 
@@ -486,18 +449,18 @@ const ProductPreviewModal = props => {
 	//admin stuff
 	const deleteConfirmation = () => {
 		Alert.alert(
-			deleteThisProductString[props.language],
-			deleteThisProductLongString[props.language],
+			'Delete this product',
+			'Are you sure you want to delete this product from the store?',
 			[
-				{text: noDontDeleteString[props.language], style: 'cancel'},
-				{text: yesDeleteString[props.language], style: 'destructive',
+				{text: "No Don't Delete it", style: 'cancel'},
+				{text: 'Yes Delete It', style: 'destructive',
 					onPress: () => {
 						props.setProductPreviewed();
 						let key = props.productPreviewed.key;
 						let category_key = props.productPreviewed.category.key;
 						let ref = firebase.database().ref("/categories/" + category_key + "/products")
 						.child(key).remove().then(function(snapshot) {
-							Alert.alert(successString[props.language], productWasDeletedString[props.language], [{text: okString[props.language], style: 'cancel'}], { cancelable: true });
+							Alert.alert('Success', 'Product was deleted', [{text: "Ok", style: 'cancel'}], { cancelable: true });
 						});
 					}
 				}],
@@ -507,17 +470,17 @@ const ProductPreviewModal = props => {
 	const toggleVisibilityConfirmation = () => {
 		if(props.productPreviewed.data.visible){
 			Alert.alert(
-				hideThisProductString[props.language],
-				hideThisProductLongString[props.language],
+				'Hide this product',
+				'Are you sure you want to hide this product in the store?',
 				[
-					{text: noString[props.language], style: 'cancel'},
-					{text: yesString[props.language], style: 'destructive',
+					{text: "No", style: 'cancel'},
+					{text: 'Yes', style: 'destructive',
 						onPress: () => {
 							let key = props.productPreviewed.key;
 							let category_key = props.productPreviewed.category.key;
 							let ref = firebase.database().ref("/categories/" + category_key + "/products")
 							.child(key).child("data").child("visible").set(false).then(function(snapshot) {
-								Alert.alert(successString[props.language], productWasHiddenString[props.language], [{text: okString[props.language], style: 'cancel'}], { cancelable: true });
+								Alert.alert('Success', 'Product was hidden', [{text: "Ok", style: 'cancel'}], { cancelable: true });
 							});
 						}
 					}],
@@ -525,17 +488,17 @@ const ProductPreviewModal = props => {
 			);
 		} else {
 			Alert.alert(
-				showThisProductString[props.language],
-				showThisProductLongString[props.language],
+				'Show this product',
+				'Are you sure you want to show this product in the store?',
 				[
-					{text: noString[props.language], style: 'cancel'},
-					{text: yesString[props.language], style: 'destructive',
+					{text: "No", style: 'cancel'},
+					{text: 'Yes', style: 'destructive',
 						onPress: () => {
 							let key = props.productPreviewed.key;
 							let category_key = props.productPreviewed.category.key;
 							let ref = firebase.database().ref("/categories/" + category_key + "/products")
 							.child(key).child("data").child("visible").set(true).then(function(snapshot) {
-								Alert.alert(successString[props.language], productWasShownString[props.language], [{text: okString[props.language], style: 'cancel'}], { cancelable: true });
+								Alert.alert('Success', 'Product is now visible', [{text: "Ok", style: 'cancel'}], { cancelable: true });
 							});
 						}
 					}],
@@ -552,7 +515,8 @@ const ProductPreviewModal = props => {
 	const visibility = () => {
 		if(props.productPreviewed.data.visible)
 			return "eye";
-		return "eye-off";
+		else
+			return "eye-off";
 	};
 
 	const adminControls = () => {
@@ -577,19 +541,18 @@ const ProductPreviewModal = props => {
 					</TouchableOpacity>
 				</View>
 			);
+
+	  	} else {
+		  	return;
 	  	}
-	  	return;
 	};
 
-	return(editmodo());
+	return(
+		editmodo()
+	);
 };
 
 const styles = StyleSheet.create({
-	stocktext: {
-		fontSize: 18,
-		marginBottom: 7,
-		fontWeight:"bold"
-	},
 	horizontal: {
 		flexDirection:"row"
 	},
@@ -651,37 +614,10 @@ const styles = StyleSheet.create({
 		backgroundColor:Colors.lowPrimary,
 		color:"white",
 	},
-	okaybuttonText: {
-		fontSize: 16
-	},
 	description: {
 		fontSize:13,
 		paddingHorizontal: 10,
 		flex: 1,
-	},
-	okaybutton: {
-		marginBottom:10,
-		marginTop: 30,
-		width: "80%"
-	},
-	okaybutton2: {
-		marginTop:10,
-		flex: 1,
-		paddingVertical: 8,
-		marginStart:4,
-	},
-	okaybutton2Holder: {
-		flexDirection:"row",
-		marginBottom: 10,
-		paddingHorizontal: 8,
-	},
-	okaybutton2Text: {
-		fontSize: 16,
-		textAlign:"center"
-	},
-	holder: {
-		width:"100%",
-		flex: 1
 	},
 	quantityOuterHolder: {
 		paddingTop: 10,

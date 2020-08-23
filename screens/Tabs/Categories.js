@@ -33,11 +33,10 @@ const Categories = props => {
     const list = () => {
         return(
             <FlatList
-        		style={styles.flatlist}
+        		style={{paddingHorizontal: 8, paddingTop:10, flex:1 }}
         		data={props.categories}
         		renderItem={categoryData =>
                     <SideCategoryItem
-						language={props.language}
                         setCategoryPreviewed={props.setCategoryPreviewed}
                         item={categoryData.item}/>
         		}/>
@@ -53,45 +52,39 @@ const Categories = props => {
     const title = () => {
         if(props.categoryPreviewed)
             return categoryPreviewedTitle();
-        return categoriesString[props.language];
+        return "Categories";
     };
 
     const page = () => {
         if(props.productPreviewed && props.navigation.isFocused())
             return(
-			  	<ProductPreviewModal
-				  	navigation={props.navigation}
-				  	language={props.language}
-				  	setRemoteOrdersOpen={props.setRemoteOrdersOpen}
-				  	checkoutList={props.checkoutList}
-				  	setCheckoutList={props.setCheckoutList}
-				  	adminList={props.adminList}
-				  	uid={props.uid}
-				  	userInfo={props.userInfo}
-				  	navigation={props.navigation}
-				  	addToCart={props.addToCart}
-				  	cart={props.cart}
-				  	updateCart={props.updateCart}
-				  	setProductPreviewed={props.setProductPreviewed}
-				  	productPreviewed={props.productPreviewed}/>
+			  <ProductPreviewModal
+				  navigation={props.navigation}
+				  language={props.language}
+				  setRemoteOrdersOpen={props.setRemoteOrdersOpen}
+				  checkoutList={props.checkoutList}
+				  setCheckoutList={props.setCheckoutList}
+				  adminList={props.adminList}
+				  uid={props.uid}
+				  userInfo={props.userInfo}
+				  navigation={props.navigation}
+				  addToCart={props.addToCart}
+				  cart={props.cart}
+				  updateCart={props.updateCart}
+				  setProductPreviewed={props.setProductPreviewed}
+				  productPreviewed={props.productPreviewed}/>
             );
         else if(props.categoryPreviewed)
             return(
                 <>
                 <Header style={styles.header}>
                     <TouchableOpacity
-                        onPress={() => {
-							if(props.categoryPreviewed)
-								props.setCategoryPreviewed();
-							else
-								props.navigation.dispatch(DrawerActions.openDrawer());
-						} }>
+                        onPress={() => {if(props.categoryPreviewed) props.setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
                         <MaterialCommunityIcons name={headerIcon()} color={"white"} size={30} />
                     </TouchableOpacity>
                     <View style={styles.headertitleholder}><Text style={styles.headertitle}>{title()}</Text></View>
                 </Header>
                 <CategoryPreview
-                    language={props.language}
                     setCategoryPreviewed={props.setCategoryPreviewed}
                     item={props.categoryPreviewed}
                     setProductPreviewed={props.setProductPreviewed}/>
@@ -102,13 +95,7 @@ const Categories = props => {
             <>
             <Header style={styles.header}>
                 <TouchableOpacity
-                    onPress={() => {
-						if(props.categoryPreviewed){
-							props.setCategoryPreviewed();
-							return;
-						}
-						props.navigation.dispatch(DrawerActions.openDrawer());
-						} }>
+                    onPress={() => {if(props.categoryPreviewed) props.setCategoryPreviewed(); else props.navigation.dispatch(DrawerActions.openDrawer());} }>
                     <MaterialCommunityIcons name={headerIcon()} color={"white"} size={30} />
                 </TouchableOpacity>
                 <View style={styles.headertitleholder}><Text style={styles.headertitle}>{title()}</Text></View>
@@ -125,19 +112,15 @@ const Categories = props => {
     };
 
   return (
-    <SafeAreaView style={styles.holder}>
+    <SafeAreaView style={{ flex: 1 }}>
 		{page()}
-        <Taboo
-			language={props.language}
-			focus={categoriesString[props.language]}
-			navigation={props.navigation}
-			doubleTabPress={doubleTabPress}/>
+        <Taboo language={props.language} focus={categoriesString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-	header: {
+	header:{
 		height: 70,
         paddingTop: 5,
 	},
@@ -152,13 +135,5 @@ const styles = StyleSheet.create({
         color:"white",
         marginHorizontal: 11,
     },
-	holder: {
-		flex: 1
-	},
-	flatlist: {
-		paddingHorizontal: 8,
-		paddingTop:10,
-		flex:1
-	},
 });
 export default Categories;
