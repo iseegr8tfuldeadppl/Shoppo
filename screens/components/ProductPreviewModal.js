@@ -332,6 +332,7 @@ const ProductPreviewModal = props => {
 					style={styles.holder}>
 					<View style={styles.banner}>
 						<Banner
+		                    language={props.language}
 							preview={preview}
 							setPreview={setPreview}
 							showThumbnail={true}
@@ -444,20 +445,21 @@ const ProductPreviewModal = props => {
 
 	// admins tuff
 	const editmodo = () => {
-		if(editMode){
+		if(editMode)
 			return(
 				<EditProduct
+					language={props.language}
 					setProductPreviewed={props.setProductPreviewed}
 					productPreviewed={props.productPreviewed}
 					setEditMode={setEditMode}
 					productPreviewed={props.productPreviewed}/>
 			);
-		}
 
-		if(preview){
+		if(preview)
 			return(
 				<View style={styles.letout}>
 					<Banner
+	                    language={props.language}
 						preview={preview}
 						setPreview={setPreview}
 						showThumbnail={true}
@@ -465,7 +467,6 @@ const ProductPreviewModal = props => {
 						images={[props.productPreviewed.data.banner]} />
 				</View>
 			);
-		}
 
 		return(
 			CheckoutOrPreview()

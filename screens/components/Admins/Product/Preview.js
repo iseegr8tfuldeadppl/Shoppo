@@ -2,6 +2,10 @@ import React from 'react';
 import { Image, Text, StyleSheet, View } from 'react-native';
 import Card from '../../Card';
 import Colors from '../../../constants/Colors';
+import {
+    pressToPreviewString,
+    dinarString
+} from '../../../constants/strings';
 
 
 const Preview = props => {
@@ -9,14 +13,13 @@ const Preview = props => {
     const uriii = () => {
         if(props.imageUri)
             return props.imageUri;
-        else
-            return props.imageUrl;
+        return props.imageUrl;
     };
 
     return(
         <View style={styles.letout}>
 
-            <Text style={styles.hint}>Press the card to preview your product!</Text>
+            <Text style={styles.hint}>{pressToPreviewString[props.language]}</Text>
 
             <Card
                 style={styles.productItem}>
@@ -25,7 +28,7 @@ const Preview = props => {
                     style={styles.image}
                     source={{ uri:uriii() }} />
 
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.cost} DA</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.price}>{props.cost} {dinarString[props.language]}</Text>
                 <Text numberOfLines={2} ellipsizeMode='tail' style={styles.title}>{props.title}</Text>
             </Card>
         </View>

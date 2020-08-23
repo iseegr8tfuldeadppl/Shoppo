@@ -2,14 +2,11 @@ import React, {useState} from 'react';
 import { FlatList, View, TouchableOpacity, StyleSheet, Text, CheckBox } from 'react-native';
 import possibleRequirements from '../../../constants/possibleRequirements';
 import Colors from '../../../constants/Colors';
-<<<<<<< HEAD
 import {
     noRequirementsAlertString,
     selectRequirementsString,
     resetToDefaultString
 } from '../../../constants/strings';
-=======
->>>>>>> parent of 6781b57... finished translation
 
 
 const RequirementsPage = props => {
@@ -73,16 +70,16 @@ const RequirementsPage = props => {
         if(props.requirements.length===0)
             return(
                 <View style={styles.list}>
-                    <Text style={styles.plspress}>There are no requirements available currently.</Text>
+                    <Text style={styles.plspress}>{noRequirementsAlertString[props.language]}</Text>
                 </View>
             );
 
     return(
         <View style={styles.list}>
 
-            <Text style={styles.plspress}>Check the items you want your clients to submit when ordering.</Text>
+            <Text style={styles.plspress}>{selectRequirementsString[props.language]}</Text>
             <TouchableOpacity activeOpacity={0.6} style={styles.resetHolder} onPress={() => {setRequirements();}}>
-                <Text style={styles.reset}>Reset to Default.</Text>
+                <Text style={styles.reset}>{resetToDefaultString[props.language]}</Text>
             </TouchableOpacity>
 
             <FlatList

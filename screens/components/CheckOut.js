@@ -11,7 +11,29 @@ import ImagePicker from 'react-native-image-picker';
 import firebase from 'firebase';
 import paymentMethods from '../constants/paymentMethods';
 import moment from 'moment';
-import { selectPictureString, dinarString, submitString, nextString, waitString, productString, totalString, selectPaymentAlertString, okString, stockIsLimitedAlertString, setItToString, thereIsOnlyAlertString, leftInStockString } from '../constants/strings';
+import {
+	selectPictureString,
+	dinarString,
+	takePictureOrSelectPictureAlertString,
+	submitString,
+	backToString,
+	weWillNotifyYouString,
+	averageProcessTimeString,
+	backToMainMenuString,
+	nextString,
+	waitString,
+	doNotCancelAlertString,
+	productString,
+	totalString,
+	selectPaymentAlertString,
+	okString,
+	stockIsLimitedAlertString,
+	setItToString,
+	thereIsOnlyAlertString,
+	leftInStockString,
+	imageSelectedString,
+	selectAnotherPictureString
+} from '../constants/strings';
 
 
 const CheckOut = props => {
@@ -344,6 +366,7 @@ const CheckOut = props => {
 				   renderItem={singleProductData =>
 					   <CheckoutItem
 						   calculateTotalForThisProduct={calculateTotalForThisProduct}
+						   language={props.language}
 						   item={singleProductData.item}/>
 				   }/>
 			   <CheckoutBar
@@ -360,19 +383,19 @@ const CheckOut = props => {
 
 						   	<View style={styles.regularPage}>
 
-								<Text style={{ fontSize:20 }}>Image Selected!</Text>
+								<Text style={{ fontSize:20 }}>{imageSelectedString[props.language]}</Text>
 								<MaterialCommunityIcons name="check" color={"green"} size={60} />
 
 			 					<OkayButton
 									style={{ marginTop:10 }}
 			 						textStyle={{ fontSize: 16 }}
 			 						onClick={() => {setImageUri(); }}
-			 						text={"Select Another Picture"} />
+			 						text={selectAnotherPictureString[props.language]} />
 
 						   	</View>
 
 						  <CheckoutBar
-							  text={"Submit"}
+							  text={submitString[props.language]}
 							  calculateTotal={calculateTotal}
 							  onClick={next} />
 
@@ -384,7 +407,7 @@ const CheckOut = props => {
 
 						   	<View style={styles.regularPage}>
 
-								<Text style={{ fontSize:22, paddingHorizontal:18, textAlign:"center", marginBottom:25 }}>Press one of the two to select your image!</Text>
+								<Text style={{ fontSize:22, paddingHorizontal:18, textAlign:"center", marginBottom:25 }}>{takePictureOrSelectPictureAlertString[props.language]}</Text>
 
 								<View style={{ flexDirection:"row" }}>
 							   		<TouchableOpacity
@@ -405,7 +428,7 @@ const CheckOut = props => {
 						   	</View>
 
 						  <CheckoutBar
-							  text={"Submit"}
+							  text={submitString[props.language]}
 							  calculateTotal={calculateTotal}
 							  onClick={next} />
 					   </View>
@@ -415,7 +438,7 @@ const CheckOut = props => {
 	   } else if(title==="Submitting Picture..."){
 	   		return(
 				<View style={styles.regularPage}>
-					<Text style={{ fontSize:17, marginBottom:20 }}>Do not exit until submission finishes!</Text>
+					<Text style={{ fontSize:17, marginBottom:20 }}>{doNotCancelAlertString[props.language]}</Text>
 					<ActivityIndicator size={50}/>
 				</View>
 			);
@@ -424,10 +447,10 @@ const CheckOut = props => {
  				<View style={{flex:1, justifyContent:"center", alignItems:"center", width:"100%", }}>
 
 
-					<Text style={{ fontSize:20, marginBottom: 10 }}>Order Submitted!</Text>
-					<Text style={{ fontSize:14, marginHorizontal:30, textAlign:"center" }}>We will notify you as soon as we process your order!</Text>
+					<Text style={{ fontSize:20, marginBottom: 10 }}>{orderSubmittedString[props.language]}</Text>
+					<Text style={{ fontSize:14, marginHorizontal:30, textAlign:"center" }}>{weWillNotifyYouString[props.language]}</Text>
 					<MaterialCommunityIcons name="check" color={"green"} size={60} />
-					<Text style={{ fontSize:13, color:"green", marginBottom: 30 }}>Average Process Time: 24 Hours</Text>
+					<Text style={{ fontSize:13, color:"green", marginBottom: 30 }}>{averageProcessTimeString[props.language]}</Text>
 
  					<OkayButton
 						style={{ minWidth: 220 }}
@@ -439,13 +462,13 @@ const CheckOut = props => {
 						style={{ minWidth: "75%", marginTop: 10 }}
  						textStyle={{ fontSize: 16 }}
  						onClick={() => { if(props.productPreviewed && props.sender==="Cart") props.setProductPreviewed(); exit(); }}
- 						text={"Back to " + props.sender} />
+ 						text={backToString[props.language] + " " + props.sender} />
 
  					<OkayButton
 						style={{ minWidth: 220, marginTop: 10 }}
  						textStyle={{ fontSize: 16 }}
  						onClick={() => {if(props.productPreviewed) props.setProductPreviewed(); exit(); }}
- 						text={"Back to Main Menu"} />
+ 						text={backToMainMenuString[props.language]} />
  				</View>
  			);
  		}

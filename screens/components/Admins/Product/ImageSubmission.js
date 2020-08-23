@@ -4,6 +4,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Colors from '../../../constants/Colors';
 import ImagePicker from 'react-native-image-picker';
 import OkayButton from '../../OkayButton';
+import {
+    previewString,
+    selectAnotherPictureString,
+    takePictureOrSelectPictureAlertString,
+    orString
+} from '../../../constants/strings';
 
 
 const ImageSubmission = props => {
@@ -19,9 +25,8 @@ const ImageSubmission = props => {
     const camera = async () => {
         let result = await ImagePicker.launchCameraAsync();
 
-        if (!result.cancelled) {
+        if (!result.cancelled)
           props.setImageUri(result.uri);
-        }
     };
 
     const previewBotton = () => {
@@ -31,7 +36,7 @@ const ImageSubmission = props => {
                     style={{ marginTop:10 }}
                     textStyle={{ fontSize: 16 }}
                     onClick={props.preview}
-                    text={"Preview"} />
+                    text={previewString[props.language]} />
             );
         }
         return;
@@ -48,7 +53,7 @@ const ImageSubmission = props => {
                       style={{ marginTop:10 }}
                       textStyle={{ fontSize: 16 }}
                       onClick={() => {props.setImageUri(); props.setImageUrl(""); if(!props.selected) props.setPreselectedBanner(false); }}
-                      text={"Select Another Picture"} />
+                      text={selectAnotherPictureString[props.language]} />
 
                    {previewBotton()}
 
@@ -60,7 +65,7 @@ const ImageSubmission = props => {
         <View style={styles.regularPage}>
 
             <View style={styles.hideable}>
-                <Text style={styles.select}>Press one of the two to select your image!</Text>
+                <Text style={styles.select}>{takePictureOrSelectPictureAlertString[props.language]}</Text>
 
                 <View style={{ flexDirection:"row" }}>
                     <TouchableOpacity
@@ -78,7 +83,7 @@ const ImageSubmission = props => {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.or}>Or</Text>
+                <Text style={styles.or}>{orString[props.language]}</Text>
             </View>
 
 

@@ -3,6 +3,12 @@ import { TextInput, Button, Text, View, StyleSheet, Alert, CheckBox, TouchableOp
 import Colors from '../../../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../Header';
+import {
+	letBuyerChooseString,
+	iChooseQuantityString
+} from '../../../constants/strings';
+
+
 
 const StaticOrDynamicPage = props => {
 
@@ -25,11 +31,12 @@ const StaticOrDynamicPage = props => {
 				};
 				props.setSelected(temp);
 			}
-		} else {
-			let ah = props.selected;
-			ah.type = ah.originaltype;
-			props.setSelected(ah);
+			return;
 		}
+
+		let ah = props.selected;
+		ah.type = ah.originaltype;
+		props.setSelected(ah);
 	};
 
 	const makeStatic = () => {
@@ -50,25 +57,21 @@ const StaticOrDynamicPage = props => {
 
 				props.setSelected(temp);
 			}
-		} else {
-			let ah = props.selected;
-			ah.type = "item";
-			props.setSelected(ah);
+			return;
 		}
+
+		let ah = props.selected;
+		ah.type = "item";
+		props.setSelected(ah);
 	};
 
 
 	const confimClicked = () => {
-		if(selection)
+		if(selection){
 			makeStatic();
-<<<<<<< HEAD
 			return;
 		}
 		setChecked();
-=======
-		else
-			setChecked();
->>>>>>> parent of 6781b57... finished translation
 	};
 
 	return(
@@ -93,7 +96,7 @@ const StaticOrDynamicPage = props => {
 					}}
 					style={{alignSelf: "center"}}
 					/>
-				<TouchableOpacity onPress={() => {setSelection(!selection); confimClicked();}}><Text style={{ color:Colors.CheckBoxTextGreen, fontSize:18, textAlign:"center"}}>Let the buyer choose quantity.</Text></TouchableOpacity>
+				<TouchableOpacity onPress={() => {setSelection(!selection); confimClicked();}}><Text style={{ color:Colors.CheckBoxTextGreen, fontSize:18, textAlign:"center"}}>{letBuyerChooseString[props.language]}</Text></TouchableOpacity>
 			</View>
 			<View style={{flexDirection:'row', }}>
 				<CheckBox
@@ -108,7 +111,7 @@ const StaticOrDynamicPage = props => {
 					}}
 					style={{alignSelf: "center"}}
 				/>
-				<TouchableOpacity onPress={() => {setSelection(!selection);  confimClicked();}}><Text style={{color:Colors.CheckBoxTextGreen,fontSize:18, textAlign:"center"}}>I want to set a fixed quantity.</Text></TouchableOpacity>
+				<TouchableOpacity onPress={() => {setSelection(!selection);  confimClicked();}}><Text style={{color:Colors.CheckBoxTextGreen,fontSize:18, textAlign:"center"}}>{iChooseQuantityString[props.language]}</Text></TouchableOpacity>
 			</View>
 
 		</View>
