@@ -2,12 +2,6 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import OkayButton from '../../OkayButton';
-import {
-    productWillShowUpString,
-    productSubmittedString,
-    backToMainMenuString,
-    backToProductTypePageString
-} from '../../../constants/strings';
 
 
 const SubmittedPage = props => {
@@ -21,18 +15,20 @@ const SubmittedPage = props => {
                     onClick={() => {
                         if(props.setSelected) {
                             props.setSelected();
+                        } else {
+
                         }
                     }}
-                    text={backToProductTypePageString[props.language]} />
+                    text={"Back to product type page"} />
             );
     };
 
     return(
         <View style={{flex:1, justifyContent:"center", alignItems:"center", width:"100%", }}>
 
-            <Text style={{ fontSize:20 }}>{productSubmittedString[props.language]}</Text>
+            <Text style={{ fontSize:20 }}>Product Submitted!</Text>
             <MaterialCommunityIcons name="check" color={"green"} size={60} />
-            <Text style={{ fontSize:13, color:"green", marginBottom: 30 }}>{productWillShowUpString[props.language]}</Text>
+            <Text style={{ fontSize:13, color:"green", marginBottom: 30 }}>Product will show up instantly to all clients!</Text>
 
             {backTo()}
 
@@ -48,7 +44,7 @@ const SubmittedPage = props => {
                             props.setProductPreviewed();
                     }
                 }}
-                text={backToMainMenuString[props.language]} />
+                text={"Back to Main Menu"} />
         </View>
     );
 };
