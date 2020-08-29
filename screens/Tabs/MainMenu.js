@@ -31,6 +31,7 @@ const MainMenu = props => {
     if(props.adminList.includes(props.uid))
         return(
             <AddNewItemModal
+                language={props.language}
               setData={setData}
               categories={props.categories}
               data={data}
