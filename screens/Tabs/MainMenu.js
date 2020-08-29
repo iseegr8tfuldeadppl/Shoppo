@@ -142,16 +142,16 @@ const MainMenu = props => {
             style={styles.list}
             data={props.categories}
             renderItem={categoryData =>
-              <MainCategoryItem
-                    setCategorySettings={setCategorySettings}
-                    adminList={props.adminList}
-                    uid={props.uid}
-                    style={styles.mainCategoryItem}
-                    setCategoryPreviewed={props.setCategoryPreviewed}
-                    setNewItemPage={setNewItemPage}
-                    setData={setData}
-                    setProductPreviewed={props.setProductPreviewed}
-                    item={categoryData.item}/>
+            <MainCategoryItem
+                setCategorySettings={setCategorySettings}
+                adminList={props.adminList}
+                uid={props.uid}
+                style={styles.mainCategoryItem}
+                setCategoryPreviewed={props.setCategoryPreviewed}
+                setNewItemPage={setNewItemPage}
+                setData={setData}
+                setProductPreviewed={props.setProductPreviewed}
+                item={categoryData.item}/>
             }/>
             <Taboo language={props.language} focus={mainMenuString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
           </>

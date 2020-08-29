@@ -294,17 +294,17 @@ const ProductPreviewModal = props => {
 		}
 
 		return(
-		<View style={styles.flexer}>
-			<View
-				style={{width:"100%", flex: 1 }}>
-				<View style={styles.banner}>
-					<Banner
-						preview={preview}
-						setPreview={setPreview}
-						showThumbnail={true}
-						style={styles.banner}
-						images={[props.productPreviewed.data.banner]} />
-				</View>
+			<View style={styles.flexer}>
+				<View
+					style={styles.holder}>
+					<View style={styles.banner}>
+						<Banner
+							preview={preview}
+							setPreview={setPreview}
+							showThumbnail={true}
+							style={styles.banner}
+							images={[props.productPreviewed.data.banner]} />
+					</View>
 
 				<View style={styles.costHolder}>
 					<Text numberOfLines={1} ellipsizeMode='tail' style={styles.cost}>{props.productPreviewed.data.cost} DA</Text>

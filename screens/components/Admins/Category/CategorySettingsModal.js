@@ -5,6 +5,27 @@ import Colors from '../../../constants/Colors';
 import OkayButton from '../../OkayButton';
 import firebase from 'firebase';
 import Header from '../../Header';
+import {
+    successString,
+    categoryWasDeletedString,
+    deleteThisCategoryString,
+    deleteThisCategoryLongString,
+    dontDeleteThisCategoryString,
+    doDeleteThisCategoryString,
+    failedString,
+    pleaseWriteCategoryString,
+    okString,
+    updatesAppliedAlertString,
+    cancelString,
+    categoryNameString,
+    nameString,
+    priorityOptionalString,
+    priorityString,
+    visibilityString,
+    visibleString,
+    invisibleString,
+    categorySettingsString
+} from '../../../constants/strings';
 
 
 const CategorySettingsModal = props => {

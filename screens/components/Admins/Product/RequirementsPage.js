@@ -2,6 +2,11 @@ import React, {useState} from 'react';
 import { FlatList, View, TouchableOpacity, StyleSheet, Text, CheckBox } from 'react-native';
 import possibleRequirements from '../../../constants/possibleRequirements';
 import Colors from '../../../constants/Colors';
+import {
+    noRequirementsAlertString,
+    selectRequirementsString,
+    resetToDefaultString
+} from '../../../constants/strings';
 
 
 const RequirementsPage = props => {

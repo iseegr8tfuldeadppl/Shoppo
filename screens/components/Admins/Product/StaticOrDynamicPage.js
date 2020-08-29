@@ -59,10 +59,11 @@ const StaticOrDynamicPage = props => {
 
 
 	const confimClicked = () => {
-		if(selection)
+		if(selection){
 			makeStatic();
-		else
-			setChecked();
+			return;
+		}
+		setChecked();
 	};
 
 	return(

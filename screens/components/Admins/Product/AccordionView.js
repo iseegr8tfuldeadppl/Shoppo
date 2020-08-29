@@ -12,20 +12,20 @@ export default class AccordionView extends Component {
   _renderHeader = section => {
     return (
       <View style={{
-				backgroundColor:section.background, 
-				padding: 10, 
+				backgroundColor:section.background,
+				padding: 10,
 				flexDirection:'row',
-				borderTopWidth: 2, 
-				alignItems: 'center', 
-				borderTopColor: section.Stroke }} 
+				borderTopWidth: 2,
+				alignItems: 'center',
+				borderTopColor: section.Stroke }}
 			>
 		<View style={{flex:1, justifyContent: 'center', alignItems: 'center',}}>
 			<MaterialCommunityIcons name={section.icon} color={"white"} size={30} />
 		</View>
         <Text style={{
-				justifyContent: 'center', 
+				justifyContent: 'center',
 				flex: 5,
-				color:section.textColor, 
+				color:section.textColor,
 				fontSize: 16,
 				fontWeight: '500',
 				}}>{section.title}</Text>
@@ -36,17 +36,17 @@ export default class AccordionView extends Component {
   _renderContent = section => {
     return (
       <View style={{flex:1}}>
-		<FlatList 
+		<FlatList
 			style={{flex:1}}
-			data={section.SubCategories} 
-			renderItem={data => 
-			<TouchableOpacity 
+			data={section.SubCategories}
+			renderItem={data =>
+			<TouchableOpacity
 				activeOpacity={.6}
 				style={{backgroundColor:data.item.background, flexDirection:'row',}}
 				onPress={this.props.checkThisOut.bind(this, data.item)}
 				>
 				<View style={{flex:1, justifyContent:'center', alignItems:'center',}}>
-					<Image 
+					<Image
 					style={{width:40, height:40, borderRadius:10, marginVertical:5,}}
 					source={{ uri:data.item.image }} />
 				</View>
@@ -68,7 +68,7 @@ export default class AccordionView extends Component {
 
   render() {
     return (
-      <Accordion 
+      <Accordion
         sections={PossibleProducts}
         activeSections={this.state.activeSections}
         renderHeader={this._renderHeader}
@@ -81,4 +81,38 @@ export default class AccordionView extends Component {
 
 
 const styles = StyleSheet.create({
+    page: {
+        padding: 10,
+        flexDirection:'row',
+        borderTopWidth: 2,
+        alignItems: 'center',
+    },
+    iconHolder: {
+        flex:1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    flatlistitem: {
+        backgroundColor:data.item.background,
+        flexDirection:'row',
+    },
+    title: {
+        justifyContent: 'center',
+        flex: 5,
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    flexer: {
+        flex:1
+    },
+    text: {
+        flex:2.5,
+        justifyContent:'center'
+    },
+    image: {
+        width:40,
+        height:40,
+        borderRadius:10,
+        marginVertical:5,
+    },
 });

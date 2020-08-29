@@ -12,6 +12,14 @@ import MainMenu from './Tabs/MainMenu';
 import Categories from './Tabs/Categories';
 import Cart from './Tabs/Cart';
 import Profile from './Tabs/Profile';
+import {
+	noString,
+	yesString,
+	logoutAlertString,
+	logoutString,
+	noInternetString,
+	loadingString
+} from './constants/strings';
 const Drawer = createDrawerNavigator();
 
 
