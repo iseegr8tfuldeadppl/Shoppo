@@ -15,7 +15,12 @@ import moment from 'moment';
 import Taboo from '../components/Taboo';
 import Chat from '../components/Chat';
 import CachedImage from '../components/CachedImage';
-import { profileString } from '../constants/strings';
+import {
+    profileString,
+    shareAppWithFriends,
+    callUsString,
+    emailUsString
+} from '../constants/strings';
 
 
 const Profile = props => {
@@ -307,17 +312,17 @@ const Profile = props => {
                           <ProfilePageItem
                               name={"share-variant"}
                               onEsspresso={() => {setPage("Share");}}
-                              text={"Share app with friends!"} />
+                              text={shareAppWithFriends[props.language]} />
 
                           <ProfilePageItem
                               name={"phone"}
                               onEsspresso={() => {setPage("Call");}}
-                              text={"Call Us"} />
+                              text={callUsString[props.language]} />
 
                           <ProfilePageItem
                               name={"email"}
                               onEsspresso={() => {setPage("Email");}}
-                              text={"Email Us"} />
+                              text={emailUsString[props.language]} />
                       </ScrollView>
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                   </SafeAreaView>

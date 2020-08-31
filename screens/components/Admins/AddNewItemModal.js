@@ -34,6 +34,7 @@ const AddNewItemModal = props => {
     	}
 		return(
             <Product
+                language={props.language}
                 categories={props.categories}
 				data={props.data}
 				onAdd={onAdd}

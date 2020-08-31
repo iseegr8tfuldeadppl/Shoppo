@@ -13,7 +13,7 @@ import MainCategoryItem from '../components/MainCategoryItem';
 import CategoryPreview from '../components/CategoryPreview';
 import Taboo from '../components/Taboo';
 import CategorySettingsModal from '../components/Admins/Category/CategorySettingsModal';
-import { mainMenuString } from '../constants/strings';
+import { mainMenuString, searchString } from '../constants/strings';
 
 
 const MainMenu = props => {
@@ -32,16 +32,16 @@ const MainMenu = props => {
         return(
             <AddNewItemModal
                 language={props.language}
-              setData={setData}
-              categories={props.categories}
-              data={data}
-              doIShowUp={NewItemPage}
-              onCancel={() => {setNewItemPage(false); setData();}} />
+                setData={setData}
+                categories={props.categories}
+                data={data}
+                doIShowUp={NewItemPage}
+                onCancel={() => {setNewItemPage(false); setData();}} />
         );
   };
 
     const adminCategoryAdd = () => {
-        if(props.adminList.includes(props.uid)){
+        if(props.adminList.includes(props.uid))
             return(
                 <TouchableOpacity
                     style={{paddingStart: 10}}
@@ -49,14 +49,12 @@ const MainMenu = props => {
                     <MaterialCommunityIcons name="plus" color={"white"} size={30} />
                 </TouchableOpacity>
             );
-        }
     };
 
     const categoryPreviewedTitle = () =>{
         if(props.categoryPreviewed)
             return props.categoryPreviewed.category;
-        else
-            return "";
+        return "";
     };
 
     const doubleTabPress = () => {
@@ -75,17 +73,17 @@ const MainMenu = props => {
                 navigation={props.navigation}
                 language={props.language}
                 setRemoteOrdersOpen={props.setRemoteOrdersOpen}
-	            	checkoutList={props.checkoutList}
-	            	setCheckoutList={props.setCheckoutList}
-					adminList={props.adminList}
-	            	uid={props.uid}
-			  		userInfo={props.userInfo}
-	            	navigation={props.navigation}
-	            	addToCart={props.addToCart}
-	            	cart={props.cart}
-	            	updateCart={props.updateCart}
-	            	setProductPreviewed={props.setProductPreviewed}
-	            	productPreviewed={props.productPreviewed}/>
+            	checkoutList={props.checkoutList}
+            	setCheckoutList={props.setCheckoutList}
+				adminList={props.adminList}
+            	uid={props.uid}
+		  		userInfo={props.userInfo}
+            	navigation={props.navigation}
+            	addToCart={props.addToCart}
+            	cart={props.cart}
+            	updateCart={props.updateCart}
+            	setProductPreviewed={props.setProductPreviewed}
+            	productPreviewed={props.productPreviewed}/>
 		);
 	  }
 
@@ -102,22 +100,23 @@ const MainMenu = props => {
                     <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
                 </Header>
                 <CategoryPreview
-		  	          setCategoryPreviewed={props.setCategoryPreviewed}
-                      item={props.categoryPreviewed}
-                      setProductPreviewed={props.setProductPreviewed}/>
+                    language={props.language}
+  	                setCategoryPreviewed={props.setCategoryPreviewed}
+                    item={props.categoryPreviewed}
+                    setProductPreviewed={props.setProductPreviewed}/>
                   <Taboo language={props.language} focus={mainMenuString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                 </>
 		  );
 	  }
 
       const categorySettingsModal = () => {
-          if(categorySettings){
+          if(categorySettings)
             return(
                 <CategorySettingsModal
+                    language={props.language}
                     setCategorySettings={setCategorySettings}
                     visible={categorySettings} />
             );
-          }
       };
 
 	  // main page
@@ -134,7 +133,7 @@ const MainMenu = props => {
           </TouchableOpacity>
           <Card style={styles.searchHolder}>
               <MaterialCommunityIcons name="magnify" color={"black"} size={20} />
-              <Text style={styles.searchText}>Search</Text>
+              <Text style={styles.searchText}>{searchString[props.language]}</Text>
           </Card>
           {adminCategoryAdd()}
         </Header>
@@ -144,6 +143,7 @@ const MainMenu = props => {
             data={props.categories}
             renderItem={categoryData =>
             <MainCategoryItem
+                language={props.language}
                 setCategorySettings={setCategorySettings}
                 adminList={props.adminList}
                 uid={props.uid}
@@ -160,13 +160,16 @@ const MainMenu = props => {
   };
 
     return(
-        <SafeAreaView style={{ flex: 1}} forceInset={{ bottom: 'never' }}>
+        <SafeAreaView style={styles.holder} forceInset={{ bottom: 'never' }}>
             {page()}
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    holder: {
+        flex: 1
+    },
 	mainCategoryItem: {
 		paddingBottom: 10,
 	},

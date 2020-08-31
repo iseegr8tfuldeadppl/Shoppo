@@ -1,6 +1,23 @@
 import React, { useState } from 'react';
 import { Alert, Text, View, Button, ScrollView, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
 import Colors from '../../../constants/Colors';
+import {
+	submittedString,
+	waitString,
+	pleaseWriteTitleLongString,
+	okString,
+	pleaseWriteDescriptionLongString,
+	pleaseWritePriceLongString,
+	pleaseEnterPictureLongString,
+	pleaseWriteTitleString,
+	pleaseWriteDescriptionString,
+	pleaseWriteTitle2String,
+	costOfOneString,
+	costOfProductString,
+	pleaseEnterStockString,
+	pleaseWriteLinkString,
+	doNotCancelAlertString
+} from '../../../constants/strings';
 import DoubleArrowedHeader from './DoubleArrowedHeader';
 import CostPage from './CostPage';
 import ImageSubmission from './ImageSubmission';
@@ -21,7 +38,7 @@ const pages = [
 const EditProduct = props => {
 
 	const [stock, setStock] = useState(props.productPreviewed.data.stock);
-	const [page, setPage] = useState("Title");
+	const [page, setPage] = useState(pages[0]);
 	const [sneak, setSneak] = useState(props.productPreviewed.data.sneak);
 	const [cost, setCost] = useState(props.productPreviewed.data.cost);
 	const [type, setType] = useState(props.productPreviewed.data.type);
@@ -75,11 +92,9 @@ const EditProduct = props => {
 	const submitProduct = downloadURL => {
 
 		let submittable_requirements = "";
-		for(let i=0; i<requirements.length; i++){
-			if(requirements[i].selected){
+		for(let i=0; i<requirements.length; i++)
+			if(requirements[i].selected)
 				submittable_requirements += requirements[i].tag + ',';
-			}
-		}
 
 		// to remove the last fasila
 		if(submittable_requirements.length>0)
@@ -103,7 +118,7 @@ const EditProduct = props => {
 		})
 		.then(function(snapshot) {
 			console.log('Snapshot', snapshot);
-			setPage("Submitted");
+			setPage(submittedString[props.language]);
 		});
 	};
 
@@ -113,7 +128,7 @@ const EditProduct = props => {
 				if(title!==""){
 					setPage("Sneak");
 				} else
-					Alert.alert('Wait!', 'You should enter a title first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseWriteTitleLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Sneak":
 				setPage("Description");
@@ -122,13 +137,13 @@ const EditProduct = props => {
 				if(description!==""){
 					setPage("Cost");
 				} else
-					Alert.alert('Wait!', 'You should enter a short description first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseWriteDescriptionLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Cost":
 				if(cost!==""){
 					setPage("Stock");
 				} else
-					Alert.alert('Wait!', 'You should select a price first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseWritePriceLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Stock":
 				setPage("Requirements");
@@ -140,7 +155,7 @@ const EditProduct = props => {
 				if(imageUri || imageUrl!==""){
 					setPage("Preview");
 				} else
-					Alert.alert('Wait!', 'You should either select, photograph or paste a picture of your product! (Recommended: upload picture on Imgur and get the direct link to the picture & paste it)',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseEnterPictureLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Preview":
 				setPage("Submitting Post...");
@@ -215,7 +230,7 @@ const EditProduct = props => {
 			case "Title":
 				return(
 					<TitlePage
-						hint={"Enter a title"}
+						hint={pleaseWriteTitle2String[props.language]}
 						title={title}
 						setTitle={setTitle}/>
 				);
@@ -223,7 +238,7 @@ const EditProduct = props => {
 			case "Description":
 				return(
 					<DescriptionPage
-						hint={"Enter a description!"}
+						hint={pleaseWriteDescriptionString[props.language]}
 						setDescription={setDescription}
 						description={description} />
 				);
@@ -231,7 +246,7 @@ const EditProduct = props => {
 			case "Sneak":
 				return(
 					<SneakPage
-						hint={"Short title (6 characters max)"}
+						hint={pleaseWriteTitleString[props.language]}
 						setSneak={setSneak}
 						sneak={sneak} />
 				);
@@ -240,14 +255,15 @@ const EditProduct = props => {
 				if(IsCurrency()){
 					return(
 						<CostPage
-							hint={"Cost of 1 " + props.productPreviewed.data.title}
+							language={props.language}
+							hint={costOfOneString[props.language] + " " + props.productPreviewed.data.title}
 							setCost={setCost}
 							cost={cost} />
 					);
 				} else {
 					return(
 						<CostPage
-							hint={"Cost of your product"}
+							hint={costOfProductString[props.language]}
 							setCost={setCost}
 							cost={cost} />
 					);
@@ -257,7 +273,7 @@ const EditProduct = props => {
 				return(
 					<StockPage
 						type={type}
-						hint={"How much stock do you have"}
+						hint={pleaseEnterStockString[props.language]}
 						setStock={setStock}
 						stock={stock} />
 				);
@@ -265,6 +281,7 @@ const EditProduct = props => {
 			case "Requirements":
 				return(
 					<RequirementsPage
+						language={props.language}
 						submittable_requirements={props.productPreviewed.data.submittable_requirements}
 						setRequirements={setRequirements}
 						requirements={requirements}/>
@@ -275,10 +292,11 @@ const EditProduct = props => {
 
 				return(
 					<ImageSubmission
+						language={props.language}
 						preselectedBanner={preselectedBanner}
 						setPreselectedBanner={setPreselectedBanner}
 						preview={() => {setPage("Preview");}}
-						hint={"Paste a link"}
+						hint={pleaseWriteLinkString[props.language]}
 						setImageUrl={setImageUrl}
 						imageUrl={imageUrl}
 						setImageUri={setImageUri}
@@ -288,6 +306,7 @@ const EditProduct = props => {
 			case "Preview":
 				return(
 					<Preview
+						language={props.language}
 						imageUrl={imageUrl}
 						imageUri={imageUri}
 						requirements={requirements}
@@ -299,7 +318,7 @@ const EditProduct = props => {
 			case "Submitting Post...":
 				return(
 					<View style={styles.regularPage}>
-						<Text style={{ fontSize:17, marginBottom:20 }}>Do not exit until submission finishes!</Text>
+						<Text style={{ fontSize:17, marginBottom:20 }}>{doNotCancelAlertString[props.language]}</Text>
 						<ActivityIndicator size={50}/>
 					</View>
 				);
@@ -319,6 +338,7 @@ const EditProduct = props => {
 		<SafeAreaView style={styles.letout}>
 
 			<DoubleArrowedHeader
+				language={props.language}
 				style={{paddingTop:15}}
 				next={next}
 				back={back}/>

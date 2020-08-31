@@ -3,6 +3,9 @@ import { TouchableOpacity, Modal, View, StyleSheet, Text, BackHandler } from 're
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CachedImage from './CachedImage';
+import {
+    pressToViewPictureString
+} from '../constants/strings';
 
 
 const Banner = props => {
@@ -34,7 +37,7 @@ const Banner = props => {
 
         return(
             <View style={{...{alignItems:"center", backgroundColor:"gray", justifyContent:"center"}, ...props.style}}>
-                <Text style={{fontSize: 20, fontWeight:"bold", color:"white"}}>Press to view photo</Text>
+                <Text style={{fontSize: 20, fontWeight:"bold", color:"white"}}>{pressToViewPictureString[props.language]}</Text>
             </View>
         );
     };

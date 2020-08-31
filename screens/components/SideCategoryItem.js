@@ -3,6 +3,8 @@ import {View, FlatList, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import MainProductItem from './MainProductItem';
 import Colors from '../constants/Colors';
 import Card from './Card';
+import { noProductString } from '../constants/strings';
+
 
 const SideCategoryItem = props => {
 
@@ -14,7 +16,7 @@ const SideCategoryItem = props => {
         }
 
         if(productCountos===0)
-            return "No Product";
+            return noProductString[props.language];
         else
             return "+ " + productCountos;
     };

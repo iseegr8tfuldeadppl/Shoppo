@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, Image, Text } from 'react-native';
 import Colors from '../constants/Colors';
+import {
+    quantityString,
+    dinarString
+} from '../constants/strings';
 
 
 const CheckoutItem = props => {
@@ -39,8 +43,8 @@ const CheckoutItem = props => {
                     padding:10,
                     borderRadius:5,
                 }}>
-                <Text style={{color:"white", }}>Quantity: {props.item.quantity}</Text>
-                <Text style={{color:"white", }}>Cost: {props.calculateTotalForThisProduct(props.item)} DA</Text>
+                <Text style={{color:"white", }}>{quantityString[props.language]}: {props.item.quantity}</Text>
+                <Text style={{color:"white", }}>{costString[props.language]}: {props.calculateTotalForThisProduct(props.item)} {dinarString[props.language]}</Text>
             </View>
         </View>
     );

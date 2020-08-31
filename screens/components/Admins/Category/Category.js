@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import { Alert, TextInput, Text, View, Button, StyleSheet } from 'react-native';
 import Colors from '../../../constants/Colors';
 import OkayButton from '../../OkayButton';
+import {
+	missingInformationString,
+	pleaseWriteProductString,
+	okString,
+	newCategoryString,
+	priorityOptionalString,
+	categoryNameString,
+	submitString,
+	cancelString
+} from '../../../constants/strings';
+
 
 
 const Category = props => {
@@ -27,9 +38,9 @@ const Category = props => {
 	const addCategory = () => {
 		if(name.length===0){
 			Alert.alert(
-				'Missing Information',
-				'Please write a product name',
-				[{text: 'Ok', style: 'cancel'}],
+				missingInformationString[props.language],
+				pleaseWriteProductString[props.language],
+				[{text: okString[props.language], style: 'cancel'}],
 				{ cancelable: true }
 			);
 			return;
@@ -43,53 +54,55 @@ const Category = props => {
 
 	return(
 		<View style={styles.screen}>
-			<Text style={styles.title}>New Category</Text>
+			<Text style={styles.title}>{newCategoryString[props.language]}</Text>
 			<TextInput
 				style={styles.input}
-				placeholder="Category Name"
+				placeholder={categoryNameString[props.language]}
 				onChangeText={NameUpdater}
 				value={name} />
 			<TextInput
 				maxLength={15}
 				style={styles.input}
 				blurOnSubmit
-				placeholder={"Priority (Optional)"}
+				placeholder={priorityOptionalString[props.language]}
 				autoCapitalize="none"
 				autoCorrect={false}
 				keyboardType="number-pad"
 				onChangeText={updatePriority}
 				value={priority} />
 			<OkayButton
-				style={{
-					marginTop: 20,
-					width:"80%",
-					marginBottom: 10,
-					marginHorizontal: 20,
-				}}
-				textStyle={{
-					fontSize: 16,
-				}}
+				style={styles.submit}
+				textStyle={styles.text}
 				onClick={addCategory}
-				text={"Submit"} />
+				text={submitString[props.language]} />
 			<OkayButton
-					style={{
-						width:"80%",
-						marginHorizontal: 20,
-						marginBottom: 10,
-					}}
-					textStyle={{
-						fontSize: 16,
-					}}
+					style={styles.cancel}
+					textStyle={styles.text}
 					onClick={() => {
-						 setName(''); props.onCancel();
+						 setName('');
+						 props.onCancel();
 					}}
-					text={"Cancel"} />
+					text={cancelString[props.language]} />
 		</View>
 	);
 
 };
 
 const styles = StyleSheet.create({
+	text: {
+		fontSize: 16,
+	},
+	submit: {
+		marginTop: 20,
+		width:"80%",
+		marginBottom: 10,
+		marginHorizontal: 20,
+	},
+	cancel: {
+		width:"80%",
+		marginHorizontal: 20,
+		marginBottom: 10,
+	},
     title: {
         fontWeight:"bold",
         fontSize: 23,

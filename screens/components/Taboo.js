@@ -8,9 +8,8 @@ import { mainMenuString, categoriesString, cartString, profileString } from '../
 const Taboo = props => {
 
     const logoFocus = tab =>{
-        if(props.focus===tab){
+        if(props.focus===tab)
             return Colors.Accent;
-        }
         return "gray";
     };
 
@@ -21,10 +20,11 @@ const Taboo = props => {
     };
 
     const pressed = tab => {
-        if(tab===props.focus)
+        if(tab===props.focus){
             props.doubleTabPress();
-        else
-            props.navigation.navigate(tab);
+            return;
+        }
+        props.navigation.navigate(tab);
     };
 
     return(

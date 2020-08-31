@@ -11,52 +11,44 @@ export default class AccordionView extends Component {
 
   _renderHeader = section => {
     return (
-      <View style={{
-				backgroundColor:section.background,
-				padding: 10,
-				flexDirection:'row',
-				borderTopWidth: 2,
-				alignItems: 'center',
-				borderTopColor: section.Stroke }}
-			>
-		<View style={{flex:1, justifyContent: 'center', alignItems: 'center',}}>
+      <View style={styles.page}>
+		<View style={styles.iconHolder}>
 			<MaterialCommunityIcons name={section.icon} color={"white"} size={30} />
 		</View>
-        <Text style={{
-				justifyContent: 'center',
-				flex: 5,
-				color:section.textColor,
-				fontSize: 16,
-				fontWeight: '500',
-				}}>{section.title}</Text>
+        <Text style={styles.title}>{section.title}</Text>
       </View>
     );
   };
 
+  backgroundo = () => {
+      return({
+          backgroundColor:data.item.background
+      });
+  }
+
   _renderContent = section => {
     return (
-      <View style={{flex:1}}>
+      <View style={{...styles.flexer, ...backgroundo()}}>
 		<FlatList
-			style={{flex:1}}
+			style={styles.flexer}
 			data={section.SubCategories}
 			renderItem={data =>
 			<TouchableOpacity
 				activeOpacity={.6}
-				style={{backgroundColor:data.item.background, flexDirection:'row',}}
+				style={styles.flatlistitem}
 				onPress={this.props.checkThisOut.bind(this, data.item)}
 				>
-				<View style={{flex:1, justifyContent:'center', alignItems:'center',}}>
+				<View style={styles.iconHolder}>
 					<Image
-					style={{width:40, height:40, borderRadius:10, marginVertical:5,}}
+					style={styles.image}
 					source={{ uri:data.item.image }} />
 				</View>
-				<View style={{flex:2.5, justifyContent:'center'}}>
+				<View style={styles.text}>
 					<Text style={{color:data.item.textColor}}>{data.item.title}</Text>
 				</View>
 			</TouchableOpacity>
 			}
 		/>
-
 
       </View>
     );
@@ -93,7 +85,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     flatlistitem: {
-        backgroundColor:data.item.background,
         flexDirection:'row',
     },
     title: {

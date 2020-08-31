@@ -15,6 +15,25 @@ import Preview from './Preview';
 import firebase from 'firebase';
 import SubmittedPage from './SubmittedPage';
 import SneakPage from './SneakPage';
+import {
+	pleaseWriteStockString,
+	waitString,
+	okString,
+	selectProductAlertString,
+	pleaseWriteTitleLongString,
+	pleaseWriteDescriptionLongString,
+	pleaseWritePriceLongString,
+	pleaseEnterPictureLongString,
+	pleaseWriteTitleString,
+	pleaseWriteTitle2String,
+	pleaseWriteDescriptionString,
+	costOfOneString,
+	costOfProductString,
+	priorityOptionalString,
+	pleaseWriteLinkString,
+	doNotCancelAlertString,
+	pleaseSelectProductString
+} from '../../../constants/strings';
 
 
 const pages = [
@@ -26,7 +45,7 @@ const Product = props => {
 	const [stock, setStock] = useState("");
 	const [sneak, setSneak] = useState("");
 	const [priority, setPriority] = useState("");
-	const [page, setPage] = useState("Root");
+	const [page, setPage] = useState(pages[0]);
 	const [selected, setSelected] = useState();
 	const [cost, setCost] = useState("");
 	const [title, setTitle] = useState("");
@@ -74,8 +93,6 @@ const Product = props => {
 	};
 
 	const uploadImage = async(uri) => {
-
-		// CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE CONTINUE HERE
 
 		let name = 0;
 		let found = true;
@@ -138,7 +155,7 @@ const Product = props => {
 			},
 		})
 		.then(function(snapshot) {
-			console.log('Snapshot', snapshot);
+			console.log(snapshot);
 			setPage("Submitted");
 		});
 	};
@@ -146,13 +163,13 @@ const Product = props => {
 	const next = () => {
 		switch(page){
 			case "Root":
-				Alert.alert('Wait!', 'You should select a product first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+				Alert.alert(waitString[props.language], selectProductAlertString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Title":
 				if(title!==""){
 					setPage("Sneak");
 				} else
-					Alert.alert('Wait!', 'You should enter a title first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseWriteTitleLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Sneak":
 				setPage("Description");
@@ -164,7 +181,7 @@ const Product = props => {
 					else
 						setPage("Cost");
 				} else
-					Alert.alert('Wait!', 'You should enter a short description first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseWriteDescriptionLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "StaticOrDynamic":
 				setPage("Cost");
@@ -173,7 +190,7 @@ const Product = props => {
 				if(cost!==""){
 					setPage("Stock");
 				} else
-					Alert.alert('Wait!', 'You should select a price first!',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseWritePriceLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Stock":
 				setPage("Priority");
@@ -188,7 +205,7 @@ const Product = props => {
 				if(imageUri || imageUrl!==""){
 					setPage("Preview");
 				} else
-					Alert.alert('Wait!', 'You should either select, photograph or paste a picture of your product! (Recommended: upload picture on Imgur and get the direct link to the picture & paste it)',[{text: 'Ok', style: 'cancel'}],{ cancelable: true });
+					Alert.alert(waitString[props.language], pleaseEnterPictureLongString[props.language],[{text: okString[props.language], style: 'cancel'}],{ cancelable: true });
 				break;
 			case "Preview":
 				setPage("Submitting Post...");
@@ -288,7 +305,7 @@ const Product = props => {
 				case "Title":
 					return(
 						<TitlePage
-							hint={"Enter a title"}
+							hint={pleaseWriteTitleString[props.language]}
 							title={title}
 							setTitle={setTitle}/>
 					);
@@ -296,7 +313,7 @@ const Product = props => {
 				case "Sneak":
 					return(
 						<SneakPage
-							hint={"Short title (6 characters max)"}
+							hint={pleaseWriteTitle2String[props.language]}
 							setSneak={setSneak}
 							sneak={sneak} />
 					);
@@ -304,7 +321,7 @@ const Product = props => {
 				case "Description":
 					return(
 						<DescriptionPage
-							hint={"Enter a description!"}
+							hint={pleaseWriteDescriptionString[props.language]}
 							setDescription={setDescription}
 							description={description} />
 					);
@@ -312,6 +329,7 @@ const Product = props => {
 				case "StaticOrDynamic":
 					return(
 						<StaticOrDynamicPage
+							language={props.language}
 							setSelected={setSelected}
 							selected={selected} />
 					);
@@ -320,14 +338,16 @@ const Product = props => {
 					if(IsCurrency()){
 						return(
 							<CostPage
-								hint={"Cost of 1 " + selected.title}
+								language={props.language}
+								hint={costOfOneString[props.language] + " " + selected.title}
 								setCost={setCost}
 								cost={cost} />
 						);
 					} else {
 						return(
 							<CostPage
-								hint={"Cost of your product"}
+								language={props.language}
+								hint={costOfProductString[props.language]}
 								setCost={setCost}
 								cost={cost} />
 						);
@@ -337,7 +357,7 @@ const Product = props => {
 					return(
 						<StockPage
 							type={selected.type}
-							hint={"Stock (leave empty for infinite)"}
+							hint={pleaseWriteStockString[props.language]}
 							setStock={setStock}
 							stock={stock} />
 					);
@@ -346,7 +366,7 @@ const Product = props => {
 					return(
 						<PriorityPage
 							type={selected.type}
-							hint={"Priority (Optional)"}
+							hint={priorityOptionalString[props.language]}
 							setPriority={setPriority}
 							priority={priority} />
 					);
@@ -355,6 +375,7 @@ const Product = props => {
 					return(
 						<RequirementsPage
 							selected={selected}
+							language={props.language}
 							setRequirements={setRequirements}
 							requirements={requirements}/>
 					);
@@ -371,9 +392,10 @@ const Product = props => {
 
 					return(
 						<ImageSubmission
+							language={props.language}
 							preselectedBanner={preselectedBanner}
 							preview={() => {setPage("Preview");}}
-							hint={"Paste a link"}
+							hint={pleaseWriteLinkString[props.language]}
 							setImageUrl={setImageUrl}
 							imageUrl={imageUrl}
 							setImageUri={setImageUri}
@@ -383,6 +405,7 @@ const Product = props => {
 				case "Preview":
 					return(
 						<Preview
+							language={props.language}
 							imageUrl={imageUrl}
 							imageUri={imageUri}
 							requirements={requirements}
@@ -394,7 +417,7 @@ const Product = props => {
 				case "Submitting Post...":
 					return(
 						<View style={styles.regularPage}>
-							<Text style={{ fontSize:17, marginBottom:20 }}>Do not exit until submission finishes!</Text>
+							<Text style={{ fontSize:17, marginBottom:20 }}>{doNotCancelAlertString[props.language]}</Text>
 							<ActivityIndicator size={50}/>
 						</View>
 					);
@@ -412,7 +435,7 @@ const Product = props => {
 		} else {
 			return(
 				<ScrollView>
-					<Text style={styles.subTitle}>First, Select A Product Below!</Text>
+					<Text style={styles.subTitle}>{pleaseSelectProductString[props.language]}</Text>
 					<AccordionView checkThisOut={(itsinfo) => {setSelected(itsinfo);}} />
 				</ScrollView>
 			);
@@ -424,6 +447,7 @@ const Product = props => {
 
 			<DoubleArrowedHeader
 				next={next}
+				language={props.language}
 				back={back}/>
 			<Text style={styles.cuteTitle}>{page}</Text>
 
