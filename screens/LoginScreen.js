@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, BackHandler } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -86,21 +86,13 @@ const LoginScreen = props => {
 	};
 
 
-	useEffect(() => {
-	   // androidClientId: 366313995332-mjbmbk7ff5ds0krfam6k7hhd5ek8o6va.apps.googleusercontent.com
-	   GoogleSignin.configure({
-		 	webClientId: "366313995332-d8u2f0t1ktp09578j2081l1d5e09tc3i.apps.googleusercontent.com", // client ID of type WEB for your server (needed to verify user ID and offline access)
-		 	offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-		 	iosClientId: "366313995332-fg9o2im3ntkbvsar20preei2g7p0s5gf.apps.googleusercontent.com", // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-	   });
-	 }, []);
-
 
 	const signInWithGoogleAsync = async () => {
 		setLoading(true);
 		try {
 		    await GoogleSignin.hasPlayServices();
 		    const result = await GoogleSignin.signIn();
+			console.log("result", result);
 
 			if (result) {
 				onSignIn(result);
@@ -165,6 +157,15 @@ const LoginScreen = props => {
 			</View>
 		);
 	};
+
+	useEffect(() => {
+	   // androidClientId: 366313995332-mjbmbk7ff5ds0krfam6k7hhd5ek8o6va.apps.googleusercontent.com
+	   GoogleSignin.configure({
+		 	webClientId: "366313995332-d8u2f0t1ktp09578j2081l1d5e09tc3i.apps.googleusercontent.com", // client ID of type WEB for your server (needed to verify user ID and offline access)
+		 	offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+		 	iosClientId: "366313995332-fg9o2im3ntkbvsar20preei2g7p0s5gf.apps.googleusercontent.com", // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+	   });
+	 }, []);
 
 	return (page());
 }

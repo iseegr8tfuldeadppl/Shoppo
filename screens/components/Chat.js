@@ -8,8 +8,6 @@ import moment from 'moment';
 import Banner from './Banner';
 import { pendingString, failedString, successString, areYouSureString, setStateString, chatString, sendString, typeString, yesString, noString } from '../constants/strings';
 
-
-
 // admin
 import StateSelector from './Admins/Product/StateSelector';
 
@@ -29,14 +27,14 @@ const Chat = props => {
             props.setClientSelected();
             props.setMessages();
             props.setPage("Clients");
-        } else
-            props.backToRoot();
+            return;
+        }
+        props.backToRoot();
     };
 
     const clientOrAdminDecision = admin => {
-        if(props.adminList.includes(props.uid)){
+        if(props.adminList.includes(props.uid))
             return admin;
-        }
         return !admin;
     };
 
@@ -88,7 +86,7 @@ const Chat = props => {
         }
 
 		let ref = firebase.database().ref('/users/' + props.clientSelected.key + '/orders/' + key);
-		ref.update({"state": stato})
+		ref.update({"state": stato, "seen": false})
 		.then(function(snapshot) {
 			//console.log('Snapshotssss', snapshot);
 
@@ -212,6 +210,42 @@ const Chat = props => {
         );
     };
 
+    const markOrdersAsSeen = () => {
+
+        // Step 1: only clients mark all orders automatically as seen
+        if(!props.adminList.includes(props.uid)) {
+
+            // Pre-Step 2: safety check
+            if(props.userInfo){
+                // Pre-Step 2: if client does have orders in chat
+                if(props.userInfo.orders){
+                    let orders_to_be_made_seen = {};
+
+                    // Step 2: loop over all orders and mark them as seen
+                    let order_ids = Object.keys(props.userInfo.orders);
+                    let order_values = Object.values(props.userInfo.orders);
+                    for(let i=0; i<order_ids.length; i++){
+                        if(!order_values.seen){
+                            order_values[i].seen = true;
+                            orders_to_be_made_seen[order_ids[i]] = order_values[i];
+                        }
+                    }
+
+                    // Step 3: if there are unseen orders then update them in firebase
+                    if(Object.keys(orders_to_be_made_seen).length>0){
+                		let ref = firebase.database().ref('/users/' + props.uid + "/orders");
+                		ref.update(orders_to_be_made_seen)
+                			.then(function(snapshot) {
+                                // for some reason getting undefined here altho it does reach firebase, maybe has to do with update()
+                        });
+                    }
+
+                }
+            }
+        }
+    };
+
+    markOrdersAsSeen();
     return(display());
 
 };

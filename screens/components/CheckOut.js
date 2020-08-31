@@ -32,7 +32,9 @@ import {
 	thereIsOnlyAlertString,
 	leftInStockString,
 	imageSelectedString,
-	selectAnotherPictureString
+	selectAnotherPictureString,
+	quantityString,
+	orderSubmittedString
 } from '../constants/strings';
 
 
@@ -154,7 +156,7 @@ const CheckOut = props => {
 		  	name = "0" + name;
 	  	} else if(!props.userInfo.orders){
 		  	name = "0" + name;
-	  	} else {
+	  	} else if(props.userInfo.orders){
 		  	let largest = 0;
 		  	let ordersKeys = Object.keys(props.userInfo.orders);
 		  	for(var i=0; i<ordersKeys.length; i++){
@@ -370,6 +372,7 @@ const CheckOut = props => {
 						   item={singleProductData.item}/>
 				   }/>
 			   <CheckoutBar
+			   language={props.language}
 				   text={buttonText()}
 				   calculateTotal={calculateTotal}
 				   onClick={next} />
@@ -395,6 +398,7 @@ const CheckOut = props => {
 						   	</View>
 
 						  <CheckoutBar
+	   				   language={props.language}
 							  text={submitString[props.language]}
 							  calculateTotal={calculateTotal}
 							  onClick={next} />
@@ -428,6 +432,7 @@ const CheckOut = props => {
 						   	</View>
 
 						  <CheckoutBar
+	   				   language={props.language}
 							  text={submitString[props.language]}
 							  calculateTotal={calculateTotal}
 							  onClick={next} />

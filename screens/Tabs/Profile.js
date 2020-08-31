@@ -220,6 +220,7 @@ const Profile = props => {
                 return(
                     <SafeAreaView style={styles.letout}>
                         <Chat
+                            userInfo={props.userInfo}
                             clientSelected={clientSelected}
                             language={props.language}
                             setPage={setPage}

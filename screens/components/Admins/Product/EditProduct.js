@@ -88,7 +88,6 @@ const EditProduct = props => {
 	    });
 	}
 
-	console.log('/users/categories/' + props.productPreviewed.category.key + '/products/' + props.productPreviewed.key);
 	const submitProduct = downloadURL => {
 
 		let submittable_requirements = "";
@@ -263,6 +262,7 @@ const EditProduct = props => {
 				} else {
 					return(
 						<CostPage
+							language={props.language}
 							hint={costOfProductString[props.language]}
 							setCost={setCost}
 							cost={cost} />

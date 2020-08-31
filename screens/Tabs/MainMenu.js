@@ -109,15 +109,33 @@ const MainMenu = props => {
 		  );
 	  }
 
-      const categorySettingsModal = () => {
-          if(categorySettings)
+
+    const messagesFromSupport = () => {
+        if(props.amount_of_notifications>0)
             return(
-                <CategorySettingsModal
-                    language={props.language}
-                    setCategorySettings={setCategorySettings}
-                    visible={categorySettings} />
+                <TouchableOpacity
+                    activeOpacity={0.3}
+                    onPress={() => {
+                        props.setRemoteOrdersOpen("ah");
+                		props.navigation.navigate("Profile");
+                    }}
+                    style={{paddingHorizontal:10, marginTop:-10, alignItems:"center", justifyContent:"center"}}>
+                    <MaterialCommunityIcons name="message" color={"white"} size={30} />
+                    <Text style={{color:"white", marginTop:-35, marginRight:-13, backgroundColor:"#FF4444", paddingHorizontal:6, paddingVertical:2, borderRadius:100}}>{props.amount_of_notifications}</Text>
+                </TouchableOpacity>
             );
-      };
+        return;
+    };
+
+  const categorySettingsModal = () => {
+      if(categorySettings)
+        return(
+            <CategorySettingsModal
+                language={props.language}
+                setCategorySettings={setCategorySettings}
+                visible={categorySettings} />
+        );
+  };
 
 	  // main page
 	  return(
@@ -135,6 +153,7 @@ const MainMenu = props => {
               <MaterialCommunityIcons name="magnify" color={"black"} size={20} />
               <Text style={styles.searchText}>{searchString[props.language]}</Text>
           </Card>
+          {messagesFromSupport()}
           {adminCategoryAdd()}
         </Header>
 

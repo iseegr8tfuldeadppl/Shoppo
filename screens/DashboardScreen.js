@@ -2,9 +2,10 @@
 // https://aboutreact.com/react-native-bottom-navigation //
 
 //import 'react-native-gesture-handler';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Alert, View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import firebase from 'firebase';
+import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import { NavigationContainer } from '@react-navigation/native';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -37,21 +38,56 @@ const DashboardScreen = props =>  {
 	const [contact, setContact] = useState();
 	const [loading, setLoading] = useState(true);
 	const [focusedPage, setFocusedPage] = useState("Main");
+	const [amount_of_notifications, set_amount_of_notifications] = useState(0);
+
 
 	// admin stuff
 	const [adminList, setAdminList] = useState([]);
 	const [usersLatest, setUserLatest] = useState();
 
-	console.log("nigger");
+
+  	const notifyMessagesFromAdmins = (userInfoSnap) => {
+
+		if(userInfoSnap){
+
+			// notify if an order has changed state
+			let new_amount_of_notifications = 0;
+			if(userInfoSnap.orders){
+  				let newOrdersKeys = Object.keys(userInfoSnap.orders);
+  				let newOrderst = Object.values(userInfoSnap.orders);
+  				for(let i=0; i<newOrderst.length; i++){
+					if(!newOrderst[i].seen && newOrderst[i].state!=="pending"){
+						// notify
+						new_amount_of_notifications += 1;
+					}
+				}
+			}
+
+			if(userInfoSnap.messages){
+				let messagest = Object.values(userInfoSnap.messages);
+	                for(let i=0; i<messagest.length; i++){
+					if(messagest[i].admin){
+						// notify if the latest message is from an admin the notify
+						new_amount_of_notifications += 1;
+					}
+				}
+			}
+
+			if(new_amount_of_notifications!==amount_of_notifications)
+				set_amount_of_notifications(new_amount_of_notifications);
+		}
+
+  	};
 
 	const pokeFirebase = () => {
 
+		// Step 1: first things first load admin list from realtime firebase
 		firebase.database().ref('/admins').on('value', adminListSnapshot => {
-			console.log("started");
 			let adminListData = adminListSnapshot.val() ? adminListSnapshot.val() : {};
 			let admins = {...adminListData};
 			let adminListTemp = Object.keys(admins);
 
+			// Step 2.1: load all products from firebase
 			firebase.database().ref('/categories').on('value', querySnapShot => {
 				let productPreviewedIsPresent = false;
 				let categoryPreviewedIsPresent = false;
@@ -60,44 +96,50 @@ const DashboardScreen = props =>  {
 				let cateogoriesSnapshot = {...dataa};
 				let categoriesList = [];
 				let KeysOfCategories = Object.keys(cateogoriesSnapshot);
+
+				// Step 2.2: loop over all product categories and add missing ones to an array
 				for(var i=0; i<KeysOfCategories.length; i++){
-					let visibilityOfCategory = Object.values(cateogoriesSnapshot)[i].invisible;
+					let invisibilityOfCategory = Object.values(cateogoriesSnapshot)[i].invisible;
 					let nameOfCategory = Object.values(cateogoriesSnapshot)[i].name;
 					let priorityOfCategory = Object.values(cateogoriesSnapshot)[i].priority;
 
-					// if currently displayed category shows up online then keep it visible, or else close the preview
+					// Step 2.3: this is for the feature of viewing a category, if currently displayed category isn't deleted then keep it previewed
 					if(categoryPreviewed){
 						if(KeysOfCategories[i]===categoryPreviewed.key)
 							categoryPreviewedIsPresent = true;
 					}
+					// Step 2.3: same thing just previewed from Categories tab
 					if(categoryPreviewed2){
 						if(KeysOfCategories[i]===categoryPreviewed2.key)
 							categoryPreviewedIsPresent2 = true;
 					}
 
-					if(!visibilityOfCategory || adminListTemp.includes(props.uid)){
+					// Step 2.4: if category is made invisible by admin ignore it (unless the current user is an admin)
+					if(!invisibilityOfCategory || adminListTemp.includes(props.uid)){
 						let productList = [];
 						let productsInCategory = Object.values(cateogoriesSnapshot)[i].products;
+
+						// Step 2.5: if category contains products
 						if(productsInCategory){
 							let KeysOfproductsInCategory = Object.keys(productsInCategory);
 							productsInCategory = Object.values(productsInCategory);
 							for(var j=0; j<KeysOfproductsInCategory.length; j++){
 
-								// this only shows people products that are visible or shows the admins the product
-								console.log(productsInCategory[j]);
+								// Step 2.6: if product is made visible by admin then show it, only shows people products that are visible or shows the admins the product
 								if(productsInCategory[j].data.visible || adminListTemp.includes(props.uid)){
-									// this little check is to hide currently previewed product if it was deleted from firebase
+									// Step 2.7: this little check is to hide currently previewed product if it was deleted from firebase
 									if(productPreviewed)
 										if(!productPreviewedIsPresent)
 											if(KeysOfproductsInCategory[j]===productPreviewed.key)
 												productPreviewedIsPresent = true;
 
+									// Step 2.8: if it passed all checks then add it to products array
 									productList.push({ showmore: false, key: KeysOfproductsInCategory[j], data: productsInCategory[j].data });
 								}
 							}
 						}
 
-						// order products acoording to priority
+						// Step 2.9: order products acoording to priority
 						for(let i=0;i<productList.length; i++){
 							for(let j=0;j<productList.length; j++){
 								if(productList.length===j+1)
@@ -110,100 +152,110 @@ const DashboardScreen = props =>  {
 							}
 						}
 
-						if(productList.length>0){
-							productList.push({ showmore: true, key: "0", data: {visible: true} });
-						}
+						// Step 2.10: if there are any products in this category then add a show more button that opens the entire product list in another tab
+						if(productList.length>0)
+							productList.push({
+								showmore: true,
+								key: "0",
+								data: {
+									visible: true
+								}
+							});
 
+						// Step 2.11: if this category contains products then add it to the category
 						if((productList.length>0 && !productList[0].showmore) || adminListTemp.includes(props.uid))
-							categoriesList.push({ key: KeysOfCategories[i], category: nameOfCategory, priority: parseInt(priorityOfCategory), products: productList, invisible: visibilityOfCategory });
+							categoriesList.push({
+								key: KeysOfCategories[i],
+								category: nameOfCategory,
+								priority: parseInt(priorityOfCategory),
+								products: productList,
+								invisible: invisibilityOfCategory
+							});
 					}
 				}
 
-
+				// Step 3: listen to contacts array to get phone numbers/emails ect
 				firebase.database().ref('/contact').once('value', contactSnapshot => {
 					let contactData = contactSnapshot.val() ? contactSnapshot.val() : {};
 					setContact({...contactData});
 				});
 
-				// Admin Stuff
-				firebase.database().ref('/admins').on('value', adminListSnapshot => {
-					let adminListData = adminListSnapshot.val() ? adminListSnapshot.val() : {};
-					let admins = {...adminListData};
-					let adminListTemp = Object.keys(admins);
+				// Step 4.1: get this client's data from firebase if any
+				firebase.database().ref('/users/' + props.uid).on('value', userInfoSnapShot => {
+					let dataaa = userInfoSnapShot.val() ? userInfoSnapShot.val() : {};
+					let userInfoSnap = {...dataaa};
 
-					firebase.database().ref('/users/' + props.uid).on('value', userInfoSnapShot => {
-						let dataaa = userInfoSnapShot.val() ? userInfoSnapShot.val() : {};
-						let userInfoSnap = {...dataaa};
+					// Step 4.2: Notify of any messages/order updates from support
+					notifyMessagesFromAdmins(userInfoSnap)
+					setUserInfo(userInfoSnap);
+				});
 
-						// Notify of any messages if new ones came from admins that i didn't answer
-						notifyMessagesFromAdmins(userInfoSnap)
+				// admin stuff
+				setAdminList(adminListTemp);
 
-						setUserInfo(userInfoSnap);
-					});
+				if(!finishedLoadingFromFirebase)
+					setFinishedLoadingFromFirebase(true);
 
-					// admin stuff
-					setAdminList(adminListTemp);
+				// if currently displayed categorydisappears from firebase then remove it from being displayed
+				if(!categoryPreviewedIsPresent)
+					setCategoryPreviewed();
+				if(!categoryPreviewedIsPresent2)
+					setCategoryPreviewed2();
 
-
-					if(!finishedLoadingFromFirebase)
-						setFinishedLoadingFromFirebase(true);
-
-					// if currently displayed categorydisappears from firebase then remove it from being displayed
-					if(!categoryPreviewedIsPresent){
-						setCategoryPreviewed();
+				// if some products in cart were removed by admins then remove them from cart
+				if(!productPreviewedIsPresent){
+					let cartCopy = cart.slice();
+					for(let i=0; i<cartCopy.length; i++){
+						if(cartCopy[i].key===productPreviewed.key){
+							cartCopy.splice(i, 1);
+							break;
+						}
 					}
-					if(!categoryPreviewedIsPresent2){
-						setCategoryPreviewed2();
+					updateCart(cartCopy);
+
+					// close checkout if it was open
+					if(checkoutList){
+						let checkoutListCopy = checkoutList.slice();
+						for(let i=0; i<checkoutListCopy.length; i++){
+							if(checkoutListCopy[i].key===productPreviewed.key)
+								checkoutListCopy.splice(i, 1);
+						}
+						if(checkoutListCopy.length===0)
+							setCheckoutList();
+						else
+							setCheckoutList(checkoutListCopy);
 					}
 
-					if(!productPreviewedIsPresent){
-						let cartCopy = cart.slice();
-						for(let i=0; i<cartCopy.length; i++){
-							if(cartCopy[i].key===productPreviewed.key){
-								cartCopy.splice(i, 1);
+					setProductPreviewed();
+					setCheckoutList();
+				}
+
+				// if there were categories found then displayem
+				if(categoriesList.length>0){
+
+					// order categories acoording to priority
+					for(let i=0;i<categoriesList.length; i++){
+						for(let j=0;j<categoriesList.length; j++){
+							if(categoriesList.length===j+1)
 								break;
+							if(categoriesList[j].priority<categoriesList[j+1].priority){
+								let temp = categoriesList[j+1];
+								categoriesList[j+1] = categoriesList[j];
+								categoriesList[j] = temp;
 							}
 						}
-						updateCart(cartCopy);
-
-						if(checkoutList){
-							let checkoutListCopy = checkoutList.slice();
-							for(let i=0; i<checkoutListCopy.length; i++){
-								if(checkoutListCopy[i].key===productPreviewed.key)
-									checkoutListCopy.splice(i, 1);
-							}
-							if(checkoutListCopy.length===0)
-								setCheckoutList();
-							else
-								setCheckoutList(checkoutListCopy);
-						}
-
-						setProductPreviewed();
-						setCheckoutList();
 					}
 
-					if(categoriesList.length>0){
+					setCategories(categoriesList);
 
-						// order categories acoording to priority
-						for(let i=0;i<categoriesList.length; i++){
-							for(let j=0;j<categoriesList.length; j++){
-								if(categoriesList.length===j+1)
-									break;
-								if(categoriesList[j].priority<categoriesList[j+1].priority){
-									let temp = categoriesList[j+1];
-									categoriesList[j+1] = categoriesList[j];
-									categoriesList[j] = temp;
-								}
-							}
-						}
+					// remove loading screen overlay
+					if(loading)
+						setLoading(false);
+				}
 
-						setCategories(categoriesList);
-						if(loading)
-							setLoading(false);
-					}
-
-					// admin stuff
-					if(adminListTemp.includes(props.uid)){
+				// admin stuff
+				// get list of users and their count of orders which allows not having to load every conversation but instead only the minimal possible
+				if(adminListTemp.includes(props.uid)){
 						firebase.database().ref('/userList').on('value', userLatestSnapshot => {
 							let userLatestData = userLatestSnapshot.val() ? userLatestSnapshot.val() : {};
 						    let usersLatesto = [];
@@ -216,7 +268,6 @@ const DashboardScreen = props =>  {
 							setUserLatest(usersLatesto);
 						});
 					}
-				});
 
 			});
 		});
@@ -226,67 +277,21 @@ const DashboardScreen = props =>  {
   	if(categories.length===0 && !finishedLoadingFromFirebase && props.connection)
 	  	pokeFirebase();
 
+	const logOut = async () => {
 
-  	const notifyMessagesFromAdmins = (userInfoSnap) => {
+		try {
+		    await GoogleSignin.revokeAccess();
+		    await GoogleSignin.signOut();
 
-		if(userInfoSnap){
-
-			// notify if an order has changed state
-  			if(userInfoSnap.orders){
-                if(props.userInfo.orders){
-	  				let ordersKeys = Object.keys(props.userInfo.orders);
-	  				let orderst = Object.values(props.userInfo.orders);
-	  				let newOrdersKeys = Object.keys(userInfoSnap.orders);
-	  				let newOrderst = Object.values(userInfoSnap.orders);
-	  				for(let i=0; i<newOrderst.length; i++){
-		  				for(let i=0; i<orderst.length; i++){
-							if(newOrdersKeys[i].toString()==ordersKeys[i].toString()){
-								if(newOrderst[i].state!=orderst[i].state){
-									// notify
-									console.log("updated order " + newOrderst[i].message);
-
-										Alert.alert(
-											"ah",
-											"updated order " + newOrderst[i].message,
-											[{text: "Ok", style: 'cancel'}],
-											{ cancelable: true }
-										)
-
-								}
-							}
-						}
-	  				}
-				}
-			}
-
-			if(userInfoSnap.messages){
-				let messagest = Object.values(userInfoSnap.messages);
-				if(messagest[messagest.length-1].admin){
-					// notify if the latest message is from an admin the notify
-					console.log("latest message " + messagest[messagest.length-1].message);
-
-					Alert.alert(
-						"ah",
-						"latest message " + messagest[messagest.length-1].message,
-						[{text: "Ok", style: 'cancel'}],
-						{ cancelable: true }
-					)
-				}
-			}
-
-		}
-
-  	};
-
-	const logOut = props => {
-		firebase.auth().signOut();
-
-		// Check if logged
-		firebase.auth().onAuthStateChanged(function(user){
-			if(!user){
-				props.goHere(2);
-			}
-		});
+			firebase.auth().signOut();
+			// Check if logged
+			firebase.auth().onAuthStateChanged(function(user){
+				if(!user)
+					props.goHere(2);
+			});
+	  	} catch (error) {
+		    console.error(error);
+	  	}
 	}
 
 	const addToCart = product => {
@@ -331,7 +336,7 @@ const DashboardScreen = props =>  {
 										logoutString[props.language],
 										logoutAlertString[props.language],
 										[{text: noString[props.language], style: 'cancel'},
-											{text: yesString[props.language], style: 'destructive', onPress: () => logOut(props) }],
+											{text: yesString[props.language], style: 'destructive', onPress: () => logOut() }],
 										{ cancelable: true }
 									)} />
 								</DrawerContentScrollView>
@@ -340,6 +345,7 @@ const DashboardScreen = props =>  {
 
 					<Drawer.Screen name="Main Menu">{propss =>
 	  			  		<MainMenu {...propss}
+							amount_of_notifications={amount_of_notifications}
 							language={props.language}
 							setCategoryPreviewed={setCategoryPreviewed2}
 							categoryPreviewed={categoryPreviewed2}
@@ -421,6 +427,16 @@ const DashboardScreen = props =>  {
 			);
 		}
 	};
+
+
+	useEffect(() => {
+	   // androidClientId: 366313995332-mjbmbk7ff5ds0krfam6k7hhd5ek8o6va.apps.googleusercontent.com
+	   GoogleSignin.configure({
+		 	webClientId: "366313995332-d8u2f0t1ktp09578j2081l1d5e09tc3i.apps.googleusercontent.com", // client ID of type WEB for your server (needed to verify user ID and offline access)
+		 	offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+		 	iosClientId: "366313995332-fg9o2im3ntkbvsar20preei2g7p0s5gf.apps.googleusercontent.com", // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+	   });
+	 }, []);
 
 	return(page());
 }

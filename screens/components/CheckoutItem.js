@@ -3,7 +3,8 @@ import { View, Image, Text } from 'react-native';
 import Colors from '../constants/Colors';
 import {
     quantityString,
-    dinarString
+    dinarString,
+    costString
 } from '../constants/strings';
 
 

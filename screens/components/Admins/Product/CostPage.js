@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import { View, StyleSheet, TextInput, Text } from 'react-native';
 import Colors from '../../../constants/Colors';
+import {
+    dinarString
+} from '../../../constants/strings';
 
 
 const CostPage = props => {

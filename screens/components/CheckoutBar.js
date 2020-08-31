@@ -1,7 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import OkayButton from './OkayButton';
-import { totalString } from '../constants/strings';
+import {
+    totalString,
+    dinarString
+} from '../constants/strings';
 
 
 const CheckoutBar = props => {
