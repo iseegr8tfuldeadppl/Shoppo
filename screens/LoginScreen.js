@@ -92,7 +92,6 @@ const LoginScreen = props => {
 		try {
 		    await GoogleSignin.hasPlayServices();
 		    const result = await GoogleSignin.signIn();
-			console.log("result", result);
 
 			if (result) {
 				onSignIn(result);

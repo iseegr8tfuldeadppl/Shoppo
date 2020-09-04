@@ -13,6 +13,7 @@ import {
 	pleaseWriteQuantityAlertString,
 	goToCartString,
 	youNowHaveString,
+	adminsCantSubmitString,
 	addedToCartString,
 	stockIsLimitedAlertString,
 	okString,
@@ -24,6 +25,7 @@ import {
 	productWasHiddenString,
 	successString,
 	hideThisProductString,
+	youAreAnAdminString,
 	hideThisProductLongString,
 	showThisProductString,
 	showThisProductLongString,
@@ -308,7 +310,7 @@ const ProductPreviewModal = props => {
 			if(!isNaN(index)){
 				return(
 					<View style={styles.letout}>
-						<Text style={styles.requirementTitle}>{pleaseEnterString[props.language]} {requirements[index].title} forString[props.language] {props.productPreviewed.data.title}</Text>
+						<Text style={styles.requirementTitle}>{pleaseEnterString[props.language]} {requirements[index].title} {forString[props.language]} {props.productPreviewed.data.title}</Text>
 						<TextInput
 							style={styles.requirementInput}
 							blurOnSubmit
@@ -403,7 +405,20 @@ const ProductPreviewModal = props => {
 	};
 
 	const CheckoutOrPreview = () => {
-		if(props.checkoutList){
+
+		// don't allow admins to submit purchases
+		if(props.adminList.includes(props.uid) && props.checkoutList){
+
+			// alert him
+			Alert.alert(
+				youAreAnAdminString[props.language],
+				adminsCantSubmitString[props.language],
+				[ {text: noDontDeleteString[props.language], style: 'cancel'}], { cancelable: true }
+			);
+
+			// cancel the request
+			props.setCheckoutList();
+		} else if(props.checkoutList){
 			return(
 				<CheckOut
 					navigation={props.navigation}

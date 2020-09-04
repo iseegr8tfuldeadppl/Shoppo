@@ -12,6 +12,16 @@ export const selectAllString = {
     arabic: "Select all",
     english: "Select all",
 };
+export const youAreAnAdminString = {
+    arabic: "You are an admin",
+    english: "You are an admin",
+};
+export const adminsCantSubmitString = {
+    arabic: "Admins cannot submit purchases",
+    english: "Admins cannot submit purchases",
+};
+
+
 export const categoriesString = {
     arabic: "Categories",
     english: "Categories",

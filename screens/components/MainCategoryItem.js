@@ -33,7 +33,7 @@ const MainCategoryItem = props => {
             return(
                 <>
                 <TouchableOpacity onPress={() => {props.setCategorySettings(props.item);}}>
-                    <MaterialCommunityIcons style={{marginStart: 5}} name={"settings"} color={Colors.Primary} size={25} />
+                    <MaterialCommunityIcons style={{marginStart: 5}} name={"cog"} color={Colors.Primary} size={25} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {openAddProductModal(); }}>
                     <MaterialCommunityIcons style={{marginStart: 5}}name={"plus-circle"} color={Colors.Primary} size={25} />

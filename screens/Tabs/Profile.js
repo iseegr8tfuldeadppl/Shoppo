@@ -1,7 +1,7 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 import React, {useState} from 'react';
-import { TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ScrollView, BackHandler } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ScrollView, BackHandler } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerActions } from '@react-navigation/native';
 import Header from '../components/Header';
@@ -26,6 +26,7 @@ import {
 const Profile = props => {
 
     const [page, setPage] = useState("Root");
+    const [loading, setLoading] = useState(false);
 
     // this is for when they press "go to my orders" from <checkout>
     if(props.navigation.isFocused()){
@@ -43,12 +44,24 @@ const Profile = props => {
     }
 
     BackHandler.addEventListener('hardwareBackPress', function() {
-	    if(page==="Call")
+        if(loading){
+           setPage("Root");
+           setLoading(false);
+       } else if(page==="Call")
             setPage("Root");
         else if(page==="Email")
             setPage("Root")
         else if(page==="Clients")
             setPage("Root");
+        else if(page==="Chat") {
+            if(props.adminList.includes(props.uid)){
+                setPage("Clients");
+                setClientSelected();
+            } else {
+                setPage("Root");
+            }
+        }
+
 	    return true;
 	});
 
@@ -56,10 +69,12 @@ const Profile = props => {
     const [clientSelected, setClientSelected] = useState();
 
     const turnIntoMessages = () => {
+
         let messagos = []
 
         if(props.adminList.includes(props.uid)){
     		firebase.database().ref('/users/' + clientSelected.key).on('value', userInfoSnapShot => {
+                messagos = []
                 let dataaa = userInfoSnapShot.val() ? userInfoSnapShot.val() : {};
                 let userInfoSnap = {...dataaa};
                 if(userInfoSnap.orders){
@@ -88,6 +103,28 @@ const Profile = props => {
                         });
                     }
                 }
+
+                // Order messages chronologically
+                for(let i=0; i<messagos.length; i++){
+                    for(let j=0; j<messagos.length; j++){
+                        if(messagos.length===j+1)
+                            break;
+                        if(getDate(messagos[j].date) < getDate(messagos[j+1].date) ){
+                            let temp = messagos[j];
+                            messagos[j] = messagos[j+1];
+                            messagos[j+1] = temp;
+                        }
+                    }
+                }
+
+                if(messagos.length>0){
+                    if(String(messago)!==String(messagos)){
+                        setMessages(messagos);
+                        if(loading)
+                            setLoading(false);
+                    }
+                }
+
     		});
         } else {
             if(props.userInfo){
@@ -118,23 +155,24 @@ const Profile = props => {
                         });
                     }
                 }
-            }
-        }
 
-        // Order messages chronologically
-        for(let i=0; i<messagos.length; i++){
-            for(let j=0; j<messagos.length; j++){
-                if(messagos.length===j+1)
-                    break;
-                if(getDate(messagos[j].date) < getDate(messagos[j+1].date) ){
-                    let temp = messagos[j];
-                    messagos[j] = messagos[j+1];
-                    messagos[j+1] = temp;
+                // Order messages chronologically
+                for(let i=0; i<messagos.length; i++){
+                    for(let j=0; j<messagos.length; j++){
+                        if(messagos.length===j+1)
+                            break;
+                        if(getDate(messagos[j].date) < getDate(messagos[j+1].date) ){
+                            let temp = messagos[j];
+                            messagos[j] = messagos[j+1];
+                            messagos[j+1] = temp;
+                        }
+                    }
                 }
+
             }
+            return messagos;
         }
 
-        return messagos;
     };
 
     const getDate = date => {
@@ -154,17 +192,22 @@ const Profile = props => {
 
     if(!props.adminList.includes(props.uid)){
         let ah = turnIntoMessages();
-        if(String(messago)!==String(ah)){
-            setMessages(ah);
+        if(ah){
+            if(String(messago)!==String(ah)){
+                setMessages(ah);
+            }
         }
 
     }
 
     // admin if statement
-    if(clientSelected){
-        let ah = turnIntoMessages();
-        if(String(messago)!==String(ah)){
-            setMessages(ah);
+    if(clientSelected && !messago){
+
+        // show loading screen while we load client convo
+        if(!loading && !messago)
+            setLoading(true);
+        else{
+            turnIntoMessages();
         }
     }
 
@@ -218,7 +261,7 @@ const Profile = props => {
         switch(page){
             case "Chat":
                 return(
-                    <SafeAreaView style={styles.letout}>
+                    <View style={styles.letout}>
                         <Chat
                             userInfo={props.userInfo}
                             clientSelected={clientSelected}
@@ -231,12 +274,12 @@ const Profile = props => {
                             setMessages={setMessages}
                             turnIntoMessages={turnIntoMessages}
                             messago={messago} />
-                    </SafeAreaView>
+                    </View>
                 );
                 break;
             case "Clients":
                 return(
-                      <SafeAreaView style={styles.letout}>
+                      <View style={styles.letout}>
                         <Clients
                             setPage={setPage}
                             language={props.language}
@@ -248,34 +291,34 @@ const Profile = props => {
                             adminList={props.adminList}
                             backToRoot={() => {setPage("Root");} }/>
                           <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
-                      </SafeAreaView>
+                      </View>
                 );
                 break;
             case "Call":
                 return(
-                  <SafeAreaView style={styles.letout}>
+                  <View style={styles.letout}>
                       <Call
                           backToRoot={() => {setPage("Root");} }
                           language={props.language}
                           numbers={getNumbers()} />
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
-                  </SafeAreaView>
+                  </View>
                 );
                 break;
             case "Email":
                 return(
-                  <SafeAreaView style={styles.letout}>
+                  <View style={styles.letout}>
                     <Email
                         backToRoot={() => {setPage("Root");} }
                         language={props.language}
                         emails={getEmail()} />
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
-                  </SafeAreaView>
+                  </View>
                 );
                 break;
             default:
                 return(
-                  <SafeAreaView style={styles.letout}>
+                  <View style={styles.letout}>
                       <Header style={styles.header}>
                           <TouchableOpacity
                               onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
@@ -326,7 +369,7 @@ const Profile = props => {
                               text={emailUsString[props.language]} />
                       </ScrollView>
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
-                  </SafeAreaView>
+                  </View>
                 );
                 break;
         }
@@ -342,8 +385,20 @@ const Profile = props => {
         return;
     };
 
+    const loadingPage = () => {
+        if(loading)
+            return(
+                <View style={{flex:1, width:"100%", height:"100%", opacity: 0.8, backgroundColor:"#333333", alignItems:"center", justifyContent:"center", position:"absolute"}}>
+                    <Text style={{color:"white",fontWeight:"bold",fontSize:30}}>Loading...</Text>
+                </View>
+            );
+    }
+
   return (
-    pageDisplay()
+    <SafeAreaView style={{flex:1, height:"100%", width:"100%"}}>
+        {pageDisplay()}
+        {loadingPage()}
+    </SafeAreaView>
   );
 }
 

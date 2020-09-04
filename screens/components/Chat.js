@@ -95,8 +95,9 @@ const Chat = props => {
             .then(function(snapshot) {
                 //console.log('Snapshotssss2', snapshot);
 
-                let array2 = props.turnIntoMessages();
-                props.setMessages(array2);
+                // temporarely
+                // let array2 = props.turnIntoMessages();
+                // props.setMessages(array2);
             });
 		});
     };
@@ -125,6 +126,7 @@ const Chat = props => {
             return {paddingEnd: 10, alignItems:"flex-end"};
         return {paddingStart: 10, alignItems:"flex-start"};
     };
+
     const leftOrRight2 = admin => {
         if(clientOrAdminDecision(admin))
             return {backgroundColor:"gray"};
@@ -132,6 +134,7 @@ const Chat = props => {
     };
 
     const message = item => {
+        item = item.item;
         return(
             <View style={{...{borderRadius: 15, width: "100%"}, ...leftOrRight(item.admin), ...isItTop(item.key)}}>
                 <View style={{...{borderRadius: 23, maxwidth: "70%", padding: 10}, ...leftOrRight2(item.admin) }}>
@@ -157,8 +160,9 @@ const Chat = props => {
 				//console.log('submitMessage response = ' + snapshot);
                 setMessage("");
 
-                let array2 = props.turnIntoMessages();
-                props.setMessages(array2);
+                // temporarely
+                // let array2 = props.turnIntoMessages();
+                // props.setMessages(array2);
 
 				let ref2 = firebase.database().ref('/userList/' + uid);
 				ref2.update({"n":moment().format('YYYYMMDDhhmmssa')})
@@ -167,7 +171,6 @@ const Chat = props => {
 				});
 		});
     };
-
 
     const display = () =>{
         if(previewedImage){
@@ -181,7 +184,6 @@ const Chat = props => {
             );
         }
 
-
         return(
             <SafeAreaView style={styles.letout}>
                 <ArrowedHeader backToRoot={back} title={chatString[props.language]}/>
@@ -189,7 +191,7 @@ const Chat = props => {
                     inverted={true}
                     style={styles.flexer}
                     data={props.messago}
-                    renderItem={productData => message(productData.item)}
+                    renderItem={message}
                 />
 
                 <View style={{flexDirection:"row", width:"100%", paddingHorizontal: 10, borderTopWidth: 1, borderTopColor:Colors.Primary, paddingVertical: 10}}>
@@ -249,7 +251,6 @@ const Chat = props => {
     return(display());
 
 };
-
 
 const styles = StyleSheet.create({
     page: {

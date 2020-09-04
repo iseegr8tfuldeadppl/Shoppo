@@ -19,6 +19,8 @@ import {
 	cartEmptyString,
 	categoriesString,
 	mainMenuString,
+	youAreAnAdminString,
+	adminsCantSubmitString,
 	cartString,
 	okString,
 	selectProductAlertString,
@@ -242,7 +244,19 @@ const Cart = props => {
 	};
 
 	const checkoutOrCart = () => {
-		if(props.checkoutList)
+		// don't allow admins to submit purchases
+		if(props.adminList.includes(props.uid) && props.checkoutList){
+
+			// alert him
+			Alert.alert(
+				youAreAnAdminString[props.language],
+				adminsCantSubmitString[props.language],
+				[ {text: noDontDeleteString[props.language], style: 'cancel'}], { cancelable: true }
+			);
+
+			// cancel the request
+			props.setCheckoutList();
+		} else if(props.checkoutList)
 			return(
 				<CheckOut
                     navigation={props.navigation}
