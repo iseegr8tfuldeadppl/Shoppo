@@ -48,7 +48,6 @@ import EditProduct from './Admins/Product/EditProduct';
 import Banner from './Banner';
 
 
-
 const ProductPreviewModal = props => {
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
@@ -413,7 +412,7 @@ const ProductPreviewModal = props => {
 			Alert.alert(
 				youAreAnAdminString[props.language],
 				adminsCantSubmitString[props.language],
-				[ {text: noDontDeleteString[props.language], style: 'cancel'}], { cancelable: true }
+				[ {text: okString[props.language], style: 'cancel'}], { cancelable: true }
 			);
 
 			// cancel the request
@@ -437,9 +436,9 @@ const ProductPreviewModal = props => {
 			);
 		}
 		return(
-			<TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}} >
-				<View style={styles.wholedamnting}>
+			<TouchableWithoutFeedback style={styles.wholedamnting} onPress={()=>{Keyboard.dismiss();}} >
 
+				<>
 					<Header
 						style={styles.customHeader}>
 						<TouchableOpacity
@@ -452,8 +451,8 @@ const ProductPreviewModal = props => {
 					<View style={{width:"100%", flex:1}}>
 						{page()}
 					</View>
+				</>
 
-				</View>
 			</TouchableWithoutFeedback>
 		);
 	};
@@ -520,6 +519,7 @@ const ProductPreviewModal = props => {
 			{ cancelable: true }
 		);
 	};
+
 	const toggleVisibilityConfirmation = () => {
 		if(props.productPreviewed.data.visible){
 			Alert.alert(
@@ -741,7 +741,7 @@ const styles = StyleSheet.create({
 	},
 	customHeader: {
 		justifyContent:"space-between",
-		height: 80,
+		height: 60,
 		paddingBottom: 2,
 		alignItems:"center",
 	},

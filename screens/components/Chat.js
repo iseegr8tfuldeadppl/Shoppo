@@ -12,7 +12,6 @@ import { pendingString, failedString, successString, areYouSureString, setStateS
 import StateSelector from './Admins/Product/StateSelector';
 
 const Chat = props => {
-
     const [previewedImage, setPreviewedImage] = useState();
     const [messageInput, setMessage] = useState("");
 
@@ -80,6 +79,7 @@ const Chat = props => {
         // count new amount of pending orders
         let pendingOrdersCount = 0;
         for(let i=0; i<props.messago.length; i++){
+            console.log("state " + props.messago[i].state, props.messago[i])
             if(props.messago[i].state)
                 if(props.messago[i].state==="pending")
                     pendingOrdersCount ++;

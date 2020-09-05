@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { FlatList, View, TouchableOpacity, StyleSheet, Text, CheckBox } from 'react-native';
+import { FlatList, View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { CheckBox } from '@react-native-community/checkbox';
 import possibleRequirements from '../../../constants/possibleRequirements';
 import Colors from '../../../constants/Colors';
 import {

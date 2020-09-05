@@ -9,6 +9,7 @@ import {
     successString,
     categoryWasDeletedString,
     deleteThisCategoryString,
+    submitString,
     deleteThisCategoryLongString,
     dontDeleteThisCategoryString,
     doDeleteThisCategoryString,

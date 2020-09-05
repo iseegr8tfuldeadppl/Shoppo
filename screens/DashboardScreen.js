@@ -185,6 +185,7 @@ const DashboardScreen = props =>  {
 					let dataaa = userInfoSnapShot.val() ? userInfoSnapShot.val() : {};
 					let userInfoSnap = {...dataaa};
 
+					console.log("userInfoSnap ", userInfoSnap);
 					// Step 4.2: Notify of any messages/order updates from support
 					notifyMessagesFromAdmins(userInfoSnap)
 					setUserInfo(userInfoSnap);

@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import { TextInput, Button, Text, View, StyleSheet, Alert, CheckBox, TouchableOpacity } from 'react-native';
+import { TextInput, Button, Text, View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+
+import { CheckBox } from '@react-native-community/checkbox';
 import Colors from '../../../constants/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../Header';

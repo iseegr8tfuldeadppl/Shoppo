@@ -436,7 +436,7 @@ const Product = props => {
 			return(
 				<ScrollView>
 					<Text style={styles.subTitle}>{pleaseSelectProductString[props.language]}</Text>
-					<AccordionView checkThisOut={(itsinfo) => {setSelected(itsinfo);}} />
+					<AccordionView checkThisOut={(itsinfo) => {setSelected(itsinfo.item);}} />
 				</ScrollView>
 			);
 		}

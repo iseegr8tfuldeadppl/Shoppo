@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Accordion from 'react-native-collapsible/Accordion';
 import { Text, View, StyleSheet, FlatList, TouchableOpacity, Image} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PossibleProducts from '../../../constants/Admins/PossibleProducts';
+import Colors from '../../../constants/Colors';
 
-export default class AccordionView extends Component {
-  state = {
-    activeSections: [],
-  };
+const AccordionView = props => {
+  const [activeSections, setactiveSections] = useState([]);
 
-  _renderHeader = section => {
+  const _renderHeader = section => {
     return (
       <View style={styles.page}>
 		<View style={styles.iconHolder}>
@@ -20,56 +19,48 @@ export default class AccordionView extends Component {
     );
   };
 
-  backgroundo = () => {
-      return({
-          backgroundColor:data.item.background
-      });
-  }
-
-  _renderContent = section => {
+  const _renderContent = section => { //data.item.background
     return (
-      <View style={{...styles.flexer, ...backgroundo()}}>
-		<FlatList
-			style={styles.flexer}
-			data={section.SubCategories}
-			renderItem={data =>
-			<TouchableOpacity
-				activeOpacity={.6}
-				style={styles.flatlistitem}
-				onPress={this.props.checkThisOut.bind(this, data.item)}
-				>
-				<View style={styles.iconHolder}>
-					<Image
-					style={styles.image}
-					source={{ uri:data.item.image }} />
-				</View>
-				<View style={styles.text}>
-					<Text style={{color:data.item.textColor}}>{data.item.title}</Text>
-				</View>
-			</TouchableOpacity>
-			}
-		/>
+          <View style={styles.flexer}>
 
-      </View>
+    		<FlatList
+    			style={styles.flexer}
+    			data={section.SubCategories}
+    			renderItem={data =>
+    			<TouchableOpacity
+    				activeOpacity={.6}
+    				style={{...styles.flatlistitem, ...{backgroundColor:data.item.background}}}
+    				onPress={props.checkThisOut.bind(this,data)}>
+    				<View style={styles.iconHolder}>
+    					<Image
+    					style={styles.image}
+    					source={{uri:data.item.image}}/>
+    				</View>
+    				<View style={styles.text}>
+                        <Text
+                            style={{color:data.item.textColor}}>{data.item.title}</Text>
+    				</View>
+    			</TouchableOpacity>
+    			}
+    		/>
+        </View>
     );
   };
 
-  _updateSections = activeSections => {
-    this.setState({ activeSections });
+  const _updateSections = activeSectionss => {
+    setactiveSections(activeSectionss);
   };
 
-  render() {
     return (
       <Accordion
         sections={PossibleProducts}
-        activeSections={this.state.activeSections}
-        renderHeader={this._renderHeader}
-        renderContent={this._renderContent}
-        onChange={this._updateSections}
+        activeSections={activeSections}
+        renderHeader={_renderHeader}
+        renderContent={_renderContent}
+        onChange={_updateSections}
       />
     );
-  }
-}
+};
 
 
 const styles = StyleSheet.create({
@@ -78,6 +69,8 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         borderTopWidth: 2,
         alignItems: 'center',
+        borderColor:Colors.Accent,
+        backgroundColor:Colors.Primary
     },
     iconHolder: {
         flex:1,
@@ -91,6 +84,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flex: 5,
         fontSize: 16,
+        color:"white",
         fontWeight: '500',
     },
     flexer: {
@@ -107,3 +101,5 @@ const styles = StyleSheet.create({
         marginVertical:5,
     },
 });
+
+export default AccordionView;

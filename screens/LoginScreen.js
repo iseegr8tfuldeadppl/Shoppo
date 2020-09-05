@@ -58,7 +58,7 @@ const LoginScreen = props => {
 					firebase
 					.database()
 					.ref('/users/' + result.user.uid)
-					.set({
+					.update({
 						gmail: result.user.email,
 						profile_picture: result.additionalUserInfo.profile.picture,
 						first_name: result.additionalUserInfo.profile.given_name? result.additionalUserInfo.profile.given_name : "",

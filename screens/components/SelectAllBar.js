@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, CheckBox, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { CheckBox } from '@react-native-community/checkbox';
 import Colors from '../constants/Colors';
 import { selectAllString } from '../constants/strings';
 

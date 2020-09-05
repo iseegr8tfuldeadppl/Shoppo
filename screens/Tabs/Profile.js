@@ -375,6 +375,7 @@ const Profile = props => {
         }
     };
 
+
     const first_last_name = () => {
         return props.userInfo.last_name + " " + props.userInfo.first_name;
     }
