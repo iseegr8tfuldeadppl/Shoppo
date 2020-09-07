@@ -52,6 +52,7 @@ const ProductPreviewModal = props => {
 
 	BackHandler.addEventListener('hardwareBackPress', function() {
 		back();
+
 	    return true;
 	});
 
@@ -64,17 +65,24 @@ const ProductPreviewModal = props => {
 	const back = () => {
 		if(isNaN(index)){
 			reset();
+
+			// hide product
 			props.setProductPreviewed();
+
+	        // if this preview was opened from search then take us back there
+			if(props.productPreviewed.iscategory!==undefined && props.setSearch)
+				props.setSearch(true);
 			return;
 		}
 
+		// we still in input stages of information so just step back in those
 		if(index>0){
 			setIndex(index-1);
 			return;
 		}
 		setIndex("nigger");
-	};
 
+	};
 	const stuff = () => {
 		let required = props.productPreviewed.data.submittable_requirements.split(",");
 		if(required.length>1)

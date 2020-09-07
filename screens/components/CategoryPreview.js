@@ -10,9 +10,16 @@ const CategoryPreview = props => {
 			props.setProductPreviewed();
 			return true;
 		}
+
+        // if this preview was opened from search then take us back there
+		if(props.item.iscategory!==undefined && props.setSearch)
+			props.setSearch(true);
+
+		// hide category
         props.setCategoryPreviewed();
 	    return true;
 	});
+
 
     const data = () => {
 

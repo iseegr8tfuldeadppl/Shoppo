@@ -70,6 +70,7 @@ const MainMenu = props => {
       if(props.productPreviewed && props.navigation.isFocused()){
         return(
 		  	<ProductPreviewModal
+                setSearch={props.setSearch}
                 navigation={props.navigation}
                 language={props.language}
                 setRemoteOrdersOpen={props.setRemoteOrdersOpen}
@@ -93,13 +94,22 @@ const MainMenu = props => {
                 {addNewItemModal()}
                 <Header style={styles.header}>
                     <TouchableOpacity
-                        onPress={() => {props.setCategoryPreviewed();} }>
+                        onPress={() => {
+
+                            // hide category
+                            props.setCategoryPreviewed();
+
+                            // if this preview was opened from search then take us back there
+                    		if(props.categoryPreviewed.iscategory!==undefined && props.setSearch)
+                    			props.setSearch(true);
+                            }}>
                         <MaterialCommunityIcons name="arrow-left" color={"white"} size={30} />
                     </TouchableOpacity>
                     {adminCategoryAdd()}
                     <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
                 </Header>
                 <CategoryPreview
+                    setSearch={props.setSearch}
                     language={props.language}
   	                setCategoryPreviewed={props.setCategoryPreviewed}
                     item={props.categoryPreviewed}
@@ -149,7 +159,7 @@ const MainMenu = props => {
               onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
               <MaterialCommunityIcons name="menu" color={"white"} size={30} />
           </TouchableOpacity>
-          <Card style={styles.searchHolder}>
+          <Card onPress={() => props.setSearch(true)} style={styles.searchHolder}>
               <MaterialCommunityIcons name="magnify" color={"black"} size={20} />
               <Text style={styles.searchText}>{searchString[props.language]}</Text>
           </Card>

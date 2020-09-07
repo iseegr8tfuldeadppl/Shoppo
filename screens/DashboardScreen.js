@@ -3,7 +3,7 @@
 
 //import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
-import { Alert, View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { FlatList, TextInput, Image, Alert, View, TouchableOpacity, StyleSheet, Text, ActivityIndicator, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,6 +12,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MainMenu from './Tabs/MainMenu';
 import Categories from './Tabs/Categories';
 import Cart from './Tabs/Cart';
+import Colors from './constants/Colors';
+import OkayButton from './components/OkayButton';
 import Profile from './Tabs/Profile';
 import {
 	noString,
@@ -26,6 +28,9 @@ const Drawer = createDrawerNavigator();
 
 const DashboardScreen = props =>  {
 
+	const [searchText, setSearchText] = useState("");
+	const [search, setSearch] = useState(false);
+	const [searchResults, setSearchResults] = useState([]);
 	const [remoteOrdersOpen, setRemoteOrdersOpen] = useState();
 	const [cart, updateCart] = useState([]);
 	const [finishedLoadingFromFirebase, setFinishedLoadingFromFirebase] = useState(false);
@@ -40,11 +45,9 @@ const DashboardScreen = props =>  {
 	const [focusedPage, setFocusedPage] = useState("Main");
 	const [amount_of_notifications, set_amount_of_notifications] = useState(0);
 
-
 	// admin stuff
 	const [adminList, setAdminList] = useState([]);
 	const [usersLatest, setUserLatest] = useState();
-
 
   	const notifyMessagesFromAdmins = (userInfoSnap) => {
 
@@ -78,6 +81,13 @@ const DashboardScreen = props =>  {
 		}
 
   	};
+
+    BackHandler.addEventListener('hardwareBackPress', function() {
+		if(search)
+			setSearch(false);
+
+	    return true;
+	});
 
 	const pokeFirebase = () => {
 
@@ -185,7 +195,6 @@ const DashboardScreen = props =>  {
 					let dataaa = userInfoSnapShot.val() ? userInfoSnapShot.val() : {};
 					let userInfoSnap = {...dataaa};
 
-					console.log("userInfoSnap ", userInfoSnap);
 					// Step 4.2: Notify of any messages/order updates from support
 					notifyMessagesFromAdmins(userInfoSnap)
 					setUserInfo(userInfoSnap);
@@ -314,18 +323,139 @@ const DashboardScreen = props =>  {
 		}
 	};
 
+	const searchTab = data => {
+
+		// Step 1: check if search result is a category or a product
+		return(
+			<TouchableOpacity
+				onPress={() => {
+
+					if(data.item.category){
+						setCategoryPreviewed2(data.item);
+					} else {
+						setProductPreviewed(data.item);
+					}
+					setSearch(false);
+				}}
+				style={{
+					flexDirection:"row",
+					width:"100%",
+					alignItems:"center",
+					justifyContent:"center",
+					paddingHorizontal: 10,
+					paddingVertical: 6,
+				}}>
+				<Image style={{width:50, height:50, borderRadius:100}} source={{uri:"https://www.wppit.com/wp-content/uploads/2018/05/%D8%A3%D9%87%D9%85-%D9%85%D9%85%D9%8A%D8%B2%D8%A7%D8%AA-%D8%A8%D9%86%D9%83-%D8%A8%D8%A7%D9%8A%D8%B3%D9%8A%D8%B1%D8%A7-paysera-%D9%88%D9%83%D9%8A%D9%81%D9%8A%D8%A9-%D9%81%D8%AA%D8%AD-%D8%AD%D8%B3%D8%A7%D8%A8-%D8%A8%D9%87-min.jpg"}} />
+				<Text style={{
+					paddingHorizontal: 5,
+					color:"black",
+					flex:1,
+					fontSize: 16,
+				}}>{data.item.category? data.item.category: data.item.data.title}</Text>
+
+					<OkayButton
+					style={{paddingHorizontal: 0}}
+						textStyle={{ fontSize: 16 }}
+						text={data.item.iscategory? "Category" : "Product"} />
+			</TouchableOpacity>
+		);
+
+	};
+
+	const updateSearchResults = enteredText => {
+
+		// Step 1: check if enteredText is not empty
+		if(!enteredText){
+			setSearchResults([]);
+			return;
+		}
+
+		// Step 2: turn enteredText to lowercase
+		enteredText = enteredText.toLowerCase();
+
+		// Step 3: searching for results
+		// Step 3.1: initialization
+		let categoryResults = [];
+		let productResults = [];
+
+		// Step 3.2: looping over categories
+		for(let i=0; i<categories.length; i++){
+
+			// Step 3.2.1: checking if category name contains searched word
+			if(categories[i].category.toLowerCase().includes(enteredText)){
+				categoryResults.push({...{iscategory: true}, ...categories[i]});
+			}
+
+			// Step 3.3: looping over products
+			for(let j=0; j<categories[i].products.length; j++){
+
+				// Step 3.3.1: don't check showmore tags
+				if(!categories[i].products[j].showmore){
+
+					// Step 3.3.2: checking if product name contains searched word
+					if(categories[i].products[j].data.title.toLowerCase().includes(enteredText)){
+						productResults.push({...{iscategory: false}, ...categories[i].products[j]});
+					}
+				}
+			}
+
+		}
+
+		// Step 4: update list if found results are over zero
+		setSearchResults(productResults.concat(categoryResults));
+
+	};
+
+	const searchResultsCounterBar = () => {
+
+		// Step 1: prepare text
+		let indicator = "Type to search...";
+		if(searchText)
+			indicator = searchResults.length +  " search results...";
+
+		// Step 2: display it
+		return(
+			<View style={{marginVertical: 6, backgroundColor:Colors.Accent, width:"100%", paddingHorizontal: 10, paddingVertical: 3}}>
+				<Text style={{color:"white"}}>{indicator}</Text>
+			</View>
+		);
+	};
+
 	const page = () => {
 
-
-		if(!props.connection){
+		if(!props.connection)
 			return(
 				<View style={styles.screen}>
 					<Text style={{color:"red", fontSize: 25, fontWeight:"bold"}}>{noInternetString[props.language]}</Text>
                 	<MaterialCommunityIcons name="wifi-off" color={"red"} size={60} />
 				</View>
 			);
-		} else {
+
+		if(search)
 			return(
+				<View style={{...styles.screen2, ...{backgroundColor:Colors.Dank}}}>
+					<View style={{flexDirection:"row", justifyContent:"center", alignItems:"center", paddingHorizontal: 5, paddingTop: 5,}}>
+						<TouchableOpacity onPress={() => setSearch(false)}>
+							<MaterialCommunityIcons name="arrow-left" color={Colors.Primary} size={30} />
+						</TouchableOpacity>
+						<TextInput
+							style={styles.searchInput}
+							autoCapitalize="none"
+							placeholder={"Aa"}
+							onChangeText={(enteredText) => {setSearchText(enteredText); updateSearchResults(enteredText);} }
+							value={searchText} />
+					</View>
+
+					{searchResultsCounterBar()}
+
+			        <FlatList
+			            style={styles.screen2}
+			            data={searchResults}
+			            renderItem={searchTab}/>
+				</View>
+			);
+
+		return(
 				<View style={{flex: 1, width:"100%"}}>
 					<NavigationContainer>
 					<Drawer.Navigator initialRouteName="Main Page" drawerContent={propss => {
@@ -346,6 +476,7 @@ const DashboardScreen = props =>  {
 
 					<Drawer.Screen name="Main Menu">{propss =>
 	  			  		<MainMenu {...propss}
+							setSearch={setSearch}
 							amount_of_notifications={amount_of_notifications}
 							language={props.language}
 							setCategoryPreviewed={setCategoryPreviewed2}
@@ -426,9 +557,7 @@ const DashboardScreen = props =>  {
 					{loadingPage()}
 				</View>
 			);
-		}
 	};
-
 
 	useEffect(() => {
 	   // androidClientId: 366313995332-mjbmbk7ff5ds0krfam6k7hhd5ek8o6va.apps.googleusercontent.com
@@ -447,8 +576,23 @@ export default DashboardScreen;
 const styles = StyleSheet.create({
 	screen:{
 		flex: 1,
+		width:"100%",
 		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	screen2:{
+		flex: 1,
+		width:"100%",
+	},
+	searchInput : {
+		backgroundColor:Colors.Primary,
+		borderRadius: 10,
+		fontWeight: "bold",
+		paddingHorizontal: 20,
+		flex: 1,
+		paddingVertical: 13,
+		margin: 6,
+		fontSize:16,
 	},
 	loadingh:{
 		flex: 1,
