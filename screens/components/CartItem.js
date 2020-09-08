@@ -137,11 +137,7 @@ const CartItem = props => {
 						<Image
 							style={styles.image}
 							source={{ uri:props.item.data.banner }} />
-						<Text
-							numberOfLines={1}
-							ellipsizeMode='tail'
-							style={styles.title}>
-							{props.item.data.title}</Text>
+						<Text numberOfLines={1} ellipsizeMode='tail' style={styles.title}>{props.item.data.title}</Text>
 					</View>
 				</TouchableOpacity>
 

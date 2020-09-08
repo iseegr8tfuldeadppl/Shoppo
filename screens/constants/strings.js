@@ -1,351 +1,453 @@
 export const defaultLanguage = "arabic";
 
 export const mainMenuString = {
-    arabic: "Main Menu",
+    arabic: "الصفحة الأساسية",
+    french: "Page Principale",
     english: "Main Menu",
 };
 export const noProductString = {
-    arabic: "No Product",
+    arabic: "لا توجد منتجات",
+    french: "0 Produits",
     english: "No Product",
 };
+export const linkString = {
+    arabic: "link",
+    french: "link",
+    english: "link"
+};
+export const forOnlyString = {
+    arabic: "فقط بثمن",
+    french: "pour seulement",
+    english: "For only"
+};
+export const youCanGetString = {
+    arabic: "بإمكانك شراء",
+    french: "vous pouvez acheter",
+    english: "you can get"
+};
+export const storeNameString = {
+    arabic: "متجر مست",
+    french: "Must Shop",
+    english: "Must Shop"
+};
+export const atTheString = {
+    arabic: "عند",
+    french: "chez",
+    english: "at the"
+};
+export const appString = {
+    arabic: "تطبيق",
+    french: "l'application",
+    english: "app"
+};
+export const downloadTheAppString = {
+    arabic: "حمل التطبيق",
+    french: "Téléchargez l'application",
+    english: "Download the app"
+};
 export const selectAllString = {
-    arabic: "Select all",
+    arabic: "اختر الكل",
+    french: "tout sélectionner",
     english: "Select all",
 };
 export const youAreAnAdminString = {
-    arabic: "You are an admin",
+    arabic: "أنت أدمن",
+    french: "Vous étes un admin",
     english: "You are an admin",
 };
 export const adminsCantSubmitString = {
-    arabic: "Admins cannot submit purchases",
+    arabic: "لا يمكن للأدمنة الشراء",
+    french: "Les admins ne peuvent pas acheter",
     english: "Admins cannot submit purchases",
 };
-
-
 export const categoriesString = {
-    arabic: "Categories",
+    arabic: "الفئات",
+    french: "Categories",
     english: "Categories",
 };
 export const missingInformationString = {
-    arabic: "Missing Information",
+    arabic: "معلومات ناقصة",
+    french: "Informations manquantes",
     english: "Missing Information",
 };
 export const pleaseWriteProductString = {
-    arabic: "Please write a product name",
+    arabic: "الرجاء كتابة اسم المنتج",
+    french: "Veuillez écrire un nom de produit",
     english: "Please write a product name",
 };
 export const newCategoryString = {
-    arabic: "New Category",
+    arabic: "فئة جديدة",
+    french: "Nouvelle catégorie",
     english: "New Category",
 };
 export const priorityOptionalString = {
-    arabic: "Priority (Optional)",
+    arabic: "الأولوية" + " " + "(" + "بإمكانك تركه فارغا" + ")",
+    french: "Priorité (Optionnelle)",
     english: "Priority (Optional)",
 };
 export const categoryNameString = {
-    arabic: "Category Name",
+    arabic: "اسم الفئة",
+    french: "Nom de catégorie",
     english: "Category Name",
 };
-
 export const goToCategoriesString = {
-    arabic: "Visit Categories",
+    arabic: "زيارة الفئات",
+    french: "Visiter les catégories",
     english: "Visit Categories",
 };
-
 export const profileString = {
-    arabic: "Profile",
+    arabic: "الحساب",
+    french: "Profil",
     english: "Profile",
 };
-
 export const noNumbersString = {
-    arabic: "There are no phone numbers available currently.",
-    english: "There are no phone numbers available currently.",
+    arabic: "لا توجد أرقام هواتف متاحة حاليا",
+    french: "Aucun numéro de téléphone n'est actuellement disponible",
+    english: "There are no phone numbers available currently",
 };
 export const pressNumbersString = {
-    arabic: "Veuillez taper sur le numéro pour l'appeler.",
-    english: "Veuillez taper sur le numéro pour l'appeler.",
+    arabic: "الرجاء الضغط على الرقم للاتصال به",
+    french: "Veuillez taper sur le numéro pour l'appeler",
+    english: "Please tap on the number to call it",
 };
 export const callString = {
-    arabic: "Call",
+    arabic: "اتصال",
+    french: "Appeler",
     english: "Call",
 };
-
 export const noEmailsString = {
-    arabic: "There are no emails available currently.",
+    arabic: "لا توجد عناوين بريد إلكتروني متاحة حاليا.",
+    french: "Aucune adresse e-mail n'est actuellement disponible",
     english: "There are no emails available currently.",
 };
+export const youCanShopString = {
+    arabic: "يمكنكم شراء كل أنواع المنتجات الإلكترونية و الإشتراكات و الشراء من الانترنت",
+    french: "Vous pouvez acheter des produits électroniques, des abonnements et des achats en ligne",
+    english: "You can shop for electronic products, subscriptions and purchasing online",
+};
 export const pressEmailsString = {
-    arabic: "Veuillez taper sur un E-mail pour l'ouvrir.",
-    english: "Veuillez taper sur un E-mail pour l'ouvrir.",
+    arabic: "يرجى النقر على بريد إلكتروني لفتحه",
+    french: "Veuillez taper sur un E-mail pour l'ouvrir",
+    english: "Please tap on an E-mail to open it",
 };
 export const emailString = {
-    arabic: "Email",
+    arabic: "البريد الإلكتروني",
+    french: "Email",
     english: "Email",
 };
 export const orderString = {
-    arabic: "Order",
+    arabic: "طلبية",
+    french: "Commande",
     english: "Order"
 };
-
 export const ordersString = {
-    arabic: "Orders",
+    arabic: "طلبيات",
+    french: "Commandes",
     english: "Orders"
 };
 export const clientsString = {
-    arabic: "Clients",
+    arabic: "الزبائن",
+    french: "Clients",
     english: "Clients"
 };
 export const setStateString = {
-    arabic: 'set the state to this order to ',
-    english: 'set the state to this order to '
+    arabic: "تعيين المرحلة لهته الطلبية" + " ",
+    french: "définir l'état de cet ordre à" + " ",
+    english: "set the state to this order to" + " "
 };
-
 export const chatString = {
-    arabic: "Chat",
+    arabic: "محادثات",
+    french: "Conversations",
     english: "Chat"
 };
 export const sendString = {
-    arabic: "Send",
+    arabic: "ارسال",
+    french: "Envoyer",
     english: "Send"
 };
 export const typeString = {
     arabic: "Aa",
+    french: "Aa",
     english: "Aa"
 };
-
 export const removeCartItemConfirmString = {
-    arabic: 'You\'re about to remove the selected products from your shopping cart.',
-    english: 'You\'re about to remove the selected products from your shopping cart.'
+    arabic: "أنت على وشك إزالة المنتجات المحددة من عربة التسوق الخاصة بك",
+    french: "Vous êtes sur le point de supprimer les produits sélectionnés de votre panier",
+    english: "You're about to remove the selected products from your shopping cart",
 };
-
 export const areYouSureString = {
-    arabic: 'Are you sure?',
-    english: 'Are you sure?'
+    arabic: "هل أنت متأكد؟",
+    french: "Êtes-vous sûr?",
+    english: "Are you sure?"
 };
-
 export const noString = {
-    arabic: "No",
+    arabic: "لا",
+    french: "Non",
     english: "No"
 };
 export const yesString = {
-    arabic: "Yes",
+    arabic: "نعم",
+    french: "Oui",
     english: "Yes"
 };
 export const successString = {
-    arabic: "Success",
+    arabic: "نجاح",
+    french: "Succès",
     english: "Success"
 };
 export const productWasHiddenString = {
-    arabic: "Product was hidden",
+    arabic: "تم إخفاء المنتج",
+    french: "Le produit a été caché",
     english: "Product was hidden"
 };
 export const letBuyerChooseString = {
-    arabic: "Let the buyer choose quantity.",
+    arabic: "دع المشتري يختار الكمية.",
+    french: "Laisser l'acheteur choisir la quantité",
     english: "Let the buyer choose quantity."
 };
 export const iChooseQuantityString = {
-    arabic: "I want to set a fixed quantity.",
+    arabic: "أريد تحديد كمية ثابتة",
+    french: "Je souhaite définir une quantité fixe.",
     english: "I want to set a fixed quantity."
 };
-
-
 export const hideThisProductLongString = {
-    arabic: "Are you sure you want to hide this product in the store?",
+    arabic: "هل أنت متأكد أنك تريد إخفاء هذا المنتج في المتجر؟",
+    french: "Voulez-vous vraiment cacher ce produit de le magasin?",
     english: "Are you sure you want to hide this product in the store?"
 };
 export const showThisProductString = {
-    arabic: "Show this product",
+    arabic: "إظهار هذا المنتج",
+    french: "Montrer ce produit",
     english: "Show this product"
 };
 export const showThisProductLongString = {
-    arabic: "Are you sure you want to show this product in the store?",
+    arabic: "هل أنت متأكد أنك تريد إظهار هذا المنتج في المتجر؟",
+    french: "Voulez-vous vraiment montrer ce produit dans le magasin?",
     english: "Are you sure you want to show this product in the store?"
 };
 export const productWasShownString = {
-    arabic: "Product is now visible",
+    arabic: "المنتج مرئي الآن",
+    french: "Le produit est maintenant visible",
     english: "Product is now visible"
 };
 export const productWasDeletedString = {
-    arabic: "Product was deleted",
+    arabic: "تم حذف المنتج",
+    french: "Le produit a été supprimé",
     english: "Product was deleted"
 };
 export const noDontDeleteString = {
-    arabic: "No Don't Delete it",
-    english: "No Don't Delete it"
+    arabic: "لا تحذفه",
+    french: "Ne le supprimez pas",
+    english: "Don't Delete it"
 };
 export const yesDeleteString = {
-    arabic: "Yes Delete It",
+    arabic: "نعم احذفها",
+    french: "Oui Supprimer",
     english: "Yes Delete It"
 };
 export const deleteThisProductLongString = {
-    arabic: "Are you sure you want to delete this product from the store?",
+    arabic: "هل أنت متأكد أنك تريد حذف هذا المنتج من المتجر؟",
+    french: "Voulez-vous vraiment supprimer ce produit de le magasin?",
     english: "Are you sure you want to delete this product from the store?"
 };
 export const deleteThisProductString = {
-    arabic: "Delete this product",
+    arabic: "احذف هذا المنتج",
+    french: "Supprimer ce produit",
     english: "Delete this product"
 };
 export const buyNowString = {
-    arabic: "Buy Now",
+    arabic: "اشتري",
+    french: "Acheter",
     english: "Buy Now"
 };
 export const addToCartString = {
-    arabic: "Add To Cart",
+    arabic: "أضف إلى السلة",
+    french: "Ajouter au panier",
     english: "Add To Cart"
 };
-
 export const hideThisProductString = {
-    arabic: "Hide this product",
+    arabic: "أخف هذا المنتج",
+    french: "Cacher ce produit",
     english: "Hide this product"
 };
-
 export const okString = {
-    arabic: "Ok",
+    arabic: "حسنا",
+    french: "Ok",
     english: "Ok"
 };
 export const selectPictureString = {
-    arabic: "You should select a picture first!",
+    arabic: "يجب عليك تحديد صورة أولا",
+    french: "Vous devez d'abord sélectionner une image",
     english: "You should select a picture first!"
 };
 export const stockIsLimitedAlertString = {
-    arabic: "Stock Is Limited!",
-    english: "Stock Is Limited!"
+    arabic: "الكمية محدودة",
+    french: "Le stock est limité",
+    english: "Stock Is Limited"
 };
 export const addedToCartString = {
-    arabic: "Added To Cart!",
+    arabic: "تمت الإضافة إلى عربة التسوق",
+    french: "Ajouté au panier",
     english: "Added To Cart!"
 };
 export const youNowHaveString = {
-    arabic: "You now have",
+    arabic: "لديك الآن",
+    french: "Vous avez maintenant",
     english: "You now have"
 };
 export const inYourCartString = {
-    arabic: "in your cart!",
-    english: "in your cart!"
+    arabic: "في عربة التسوق الخاصة بك",
+    french: "dans votre panier",
+    english: "in your cart"
 };
 export const goToCartString = {
-    arabic: "Go To Cart",
+    arabic: "اذهب إلى عربة التسوق",
+    french: "Aller au panier",
     english: "Go To Cart"
 };
-
 export const thereIsOnlyAlertString = {
-    arabic: "There is only",
+    arabic: "هناك فقط",
+    french: "Il n'y a que",
     english: "There is only"
 };
 export const setItToString = {
-    arabic: "Set it to",
+    arabic: "حدّده لدى",
+    french: "Réglez-le sur",
     english: "Set it to"
 };
 export const leftInStockString = {
-    arabic: "left in stock.",
+    arabic: "باقٍ في الكميّة",
+    french: "en stock",
     english: "left in stock."
 };
 export const stockString = {
-    arabic: "Stock",
+    arabic: "الكميّة",
+    french: "Stock",
     english: "Stock"
 };
 export const productString = {
-    arabic: "Product",
+    arabic: "المنتج",
+    french: "Produit",
     english: "Product"
 };
 export const quantityString = {
-    arabic: "Quantity",
+    arabic: "الكميّة",
+    french: "Quantité",
     english: "Quantity"
 };
 export const totalString = {
-    arabic: "Total",
+    arabic: "المجموع",
+    french: "Totale",
     english: "Total"
 };
 export const nextString = {
-    arabic: "Next",
+    arabic: "التالي",
+    french: "Prochain",
     english: "Next"
 };
 export const previousString = {
-    arabic: "Previous",
+    arabic: "السابق",
+    french: "Précédent",
     english: "Previous"
 };
 export const submittedString = {
-    arabic: "Submitted",
+    arabic: "تم التسليم",
+    french: "Soumis",
     english: "Submitted"
 };
-
 export const goToMainMenuString = {
-    arabic: "Visit Main Menu",
+    arabic: "زيارة الصفحة الأساسية",
+    french: "Visiter la Page Principale",
     english: "Visit Main Menu"
 };
 export const oopsString = {
-    arabic: "Oops!",
-    english: "Oops!"
+    arabic: "خطأ",
+    french: "Oops",
+    english: "Oops"
 };
 export const enterQuantityAlertString = {
-    arabic: "Please write a valid quantity for",
+    arabic: "الرجاء كتابة كمية صالحة ل",
+    french: "Veuillez écrire une quantité valide pour",
     english: "Please write a valid quantity for"
 };
 export const noProductsAlertString = {
-    arabic: "No products selected in your cart!",
+    arabic: "لا توجد منتجات محددة في سلة التسوق الخاصة بك",
+    french: "Aucun produit sélectionné dans votre panier",
     english: "No products selected in your cart!"
 };
 export const selectProductAlertString = {
-    arabic: "Check at least one product",
+    arabic: "حدد منتجًا واحدًا على الأقل",
+    french: "Sélectionnez au moins un produit",
     english: "Check at least one product"
 };
 export const pleaseWriteQuantityAlertString = {
-    arabic: "Please write a valid quantity!",
-    english: "Please write a valid quantity!"
+    arabic: "الرجاء كتابة كمية صالحة",
+    french: "Veuillez écrire une quantité valide",
+    english: "Please write a valid quantity"
 };
 export const noRequirementsAlertString = {
-    arabic: "There are no requirements available currently.",
+    arabic: "لا توجد متطلبات متاحة حاليا",
+    french: "Il n'y a pas d'exigences disponibles actuellement",
     english: "There are no requirements available currently."
 };
 export const selectRequirementsString = {
-    arabic: "Check the items you want your clients to submit when ordering.",
+    arabic: "حدد العناصر التي تريد أن يدخلها زبائنك عند الطلب.",
+    french: "Sélectionnez de ce que vous souhaitez que vos clients incluent lors de la commande",
     english: "Check the items you want your clients to submit when ordering."
 };
 export const resetToDefaultString = {
-    arabic: "Reset to Default.",
+    arabic: "إعادة تعيين",
+    french: "Rétablir par défaut",
     english: "Reset to Default."
 };
-
 export const cartString = {
-    arabic: "Cart",
+    arabic: "عربة التسوق",
+    french: "Panier",
     english: "Cart"
 };
 export const cartEmptyString = {
-    arabic: "Your Cart is Empty",
+    arabic: "عربة التسوق فارغة",
+    french: "Votre panier est vide",
     english: "Your Cart is Empty"
 };
 export const dinarString = {
-    arabic: "DA",
-    english: "DA"
+    arabic: "دينار",
+    french: "Da",
+    english: "Da"
 };
 export const checkoutString = {
-    arabic: "Checkout",
+    arabic: "الطلبية",
+    french: "Commande",
     english: "Checkout"
 };
 export const forString = {
-    arabic: "for",
+    arabic: "ل",
+    french: "pour",
     english: "for"
 };
 export const searchString = {
-    arabic: "Search",
+    arabic: "البحث",
+    french: "Chercher",
     english: "Search"
 };
-
 export const pleaseEnterString = {
-    arabic: "Please enter",
+    arabic: "يرجى إدخال",
+    french: "Veuillez entrer",
     english: "Please enter"
 };
-
 export const submitString = {
-    arabic: "Submit",
+    arabic: "إرسال",
+    french: "Soumettre",
     english: "Submit"
 };
 export const categoryWasDeletedString = {
-    arabic: "Category was deleted",
+    arabic: "تم حذف الفئة",
+    french: "La catégorie a été supprimée",
     english: "Category was deleted"
 };
 export const deleteThisCategoryString = {
-    arabic: "Delete this category",
+    arabic: "احذف هذه الفئة",
+    french: "Supprimer cette catégorie",
     english: "Delete this category"
 };
 export const dontDeleteThisCategoryString = {
@@ -368,7 +470,6 @@ export const pendingString = {
     arabic: "Pending",
     english: "Pending"
 };
-
 export const cancelString = {
     arabic: "Cancel",
     english: "Cancel"
@@ -397,32 +498,22 @@ export const averageProcessTimeString = {
     arabic: "Average Process Time: 24 Hours",
     english: "Average Process Time: 24 Hours"
 };
-
-
 export const pleaseSelectProductString = {
     arabic: "First, Select A Product Below!",
     english: "First, Select A Product Below!"
 };
-
-
 export const orString = {
     arabic: "Or",
     english: "Or"
 };
-
-
 export const takePictureOrSelectPictureAlertString = {
     arabic: "Press one of the two to select your image!",
     english: "Press one of the two to select your image!"
 };
-
-
 export const selectAnotherPictureString = {
     arabic: "Select Another Picture",
     english: "Select Another Picture"
 };
-
-
 export const pleaseWriteCategoryString = {
     arabic: "Category requires a name.",
     english: "Category requires a name."
@@ -435,7 +526,6 @@ export const nameString = {
     arabic: "Name",
     english: "Name"
 };
-
 export const waitString = {
     arabic: "Wait!",
     english: "Wait!"
@@ -512,8 +602,6 @@ export const signInWithGoogleString = {
     arabic: "Sign In With Google",
     english: "Sign In With Google"
 };
-
-
 export const costOfProductString = {
     arabic: "Cost of your product",
     english: "Cost of your product"
@@ -530,14 +618,10 @@ export const pleaseWriteStockString = {
     arabic: "Stock (leave empty for infinite)",
     english: "Stock (leave empty for infinite)"
 };
-
-
-
 export const pleaseEnterPictureLongString = {
     arabic: "You should either select, photograph or paste a picture of your product! (Recommended: upload picture on Imgur and get the direct link to the picture & paste it)",
     english: "You should either select, photograph or paste a picture of your product! (Recommended: upload picture on Imgur and get the direct link to the picture & paste it)"
 };
-
 export const visibilityString = {
     arabic: "Visibility",
     english: "Visibility"
@@ -574,8 +658,6 @@ export const backToString = {
     arabic: "Back to",
     english: "Back to"
 };
-
-
 export const pressToViewPictureString = {
     arabic: "Press to view photo",
     english: "Press to view photo"
@@ -584,8 +666,6 @@ export const imageSelectedString = {
     arabic: "Image Selected!",
     english: "Image Selected!"
 };
-
-
 export const selectPaymentAlertString = {
     arabic: "You should select a payment method first!",
     english: "You should select a payment method first!"

@@ -35,6 +35,7 @@ const CategoryPreview = props => {
 
     return(
         <FlatList
+			numColumns={2}
             style={styles.list}
             data={data()}
             renderItem={productData =>

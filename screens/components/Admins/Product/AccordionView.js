@@ -37,8 +37,7 @@ const AccordionView = props => {
     					source={{uri:data.item.image}}/>
     				</View>
     				<View style={styles.text}>
-                        <Text
-                            style={{color:data.item.textColor}}>{data.item.title}</Text>
+                        <Text style={{color:data.item.textColor}}>{data.item.title}</Text>
     				</View>
     			</TouchableOpacity>
     			}

@@ -1,7 +1,7 @@
 // React Native Bottom Navigation - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-bottom-navigation //
 import React, {useState} from 'react';
-import { ActivityIndicator, TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ScrollView, BackHandler } from 'react-native';
+import { Share, ActivityIndicator, TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ScrollView, BackHandler } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerActions } from '@react-navigation/native';
 import Header from '../components/Header';
@@ -18,8 +18,13 @@ import CachedImage from '../components/CachedImage';
 import {
     profileString,
     shareAppWithFriends,
+    linkString,
+    loadingString,
     callUsString,
-    emailUsString
+    emailUsString,
+    youCanShopString,
+    atTheString,
+    storeNameString
 } from '../constants/strings';
 
 
@@ -257,6 +262,30 @@ const Profile = props => {
         return "Orders";
     };
 
+    const onShare = async () => {
+        try {
+          const result = await Share.share({
+              message: atTheString[props.language]
+                  + " " + storeNameString[props.language]
+                  + " " + youCanShopString[props.language]
+                  + "\n\n" + linkString[props.language]
+          });
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
+              // shared
+              console.log("shared");
+            }
+          } else if (result.action === Share.dismissedAction) {
+            // dismissed
+            console.log("dismissed");
+          }
+        } catch (error) {
+          console.log("sharing error", error.message);
+        }
+    };
+
     const pageDisplay = () => {
         switch(page){
             case "Chat":
@@ -324,23 +353,15 @@ const Profile = props => {
                               onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
                               <MaterialCommunityIcons name="menu" color={"white"} size={30} />
                           </TouchableOpacity>
-                          <View style={styles.headertitleholder}><Text style={styles.headertitle}>Profile</Text></View>
+                          <View style={styles.headertitleholder}><Text style={styles.headertitle}>{profileString[props.language]}</Text></View>
                       </Header>
 
                       <ScrollView>
                           <View style={styles.topBar}>
                               <View style={styles.topBarInner}>
                                   <View style={styles.topbarLeftTextsHolder}>
-                                      <Text
-                                              style={styles.name}
-                                              numberOfLines={1}
-                                              ellipsizeMode='tail'>
-                                          {first_last_name()}</Text>
-                                      <Text
-                                              style={styles.orderCount}
-                                              numberOfLines={1}
-                                              ellipsizeMode='tail'>
-                                          {ordersCounted()}</Text>
+                                      <Text style={styles.name} numberOfLines={1} ellipsizeMode='tail'>{first_last_name()}</Text>
+                                      <Text style={styles.orderCount} numberOfLines={1} ellipsizeMode='tail'>{ordersCounted()}</Text>
                                   </View>
                                   <CachedImage
                                       source={profile_pic()}
@@ -355,7 +376,7 @@ const Profile = props => {
 
                           <ProfilePageItem
                               name={"share-variant"}
-                              onEsspresso={() => {setPage("Share");}}
+                              onEsspresso={onShare}
                               text={shareAppWithFriends[props.language]} />
 
                           <ProfilePageItem
@@ -390,7 +411,7 @@ const Profile = props => {
         if(loading)
             return(
                 <View style={{flex:1, width:"100%", height:"100%", opacity: 0.8, backgroundColor:"#333333", alignItems:"center", justifyContent:"center", position:"absolute"}}>
-                    <Text style={{color:"white",fontWeight:"bold",fontSize:30}}>Loading...</Text>
+                    <Text style={{color:"white",fontWeight:"bold",fontSize:30}}>{loadingString[props.language]}</Text>
                 </View>
             );
     }

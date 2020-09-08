@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.26,
         shadowRadius: 0,
         elevation: 7,
-
+		flex: 0.5,
         marginHorizontal: 8,
         marginVertical:7,
         backgroundColor: Colors.Primary,

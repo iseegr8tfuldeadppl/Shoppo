@@ -11,7 +11,15 @@ import {
 	oopsString,
 	inYourCartString,
 	pleaseWriteQuantityAlertString,
+	downloadTheAppString,
+	atTheString,
+	appString,
+	storeNameString,
+	youCanGetString,
 	goToCartString,
+	linkString,
+	forOnlyString,
+	dinarString,
 	youNowHaveString,
 	adminsCantSubmitString,
 	addedToCartString,
@@ -37,7 +45,6 @@ import {
 	deleteThisProductString,
 	buyNowString,
 	stockString,
-	dinarString,
 	addToCartString,
 	forString,
 	pleaseEnterString
@@ -312,6 +319,13 @@ const ProductPreviewModal = props => {
 		setRequirements(requirementsTemp);
 	};
 
+	const stock = () => {
+		if(props.productPreviewed.data.stock)
+			return(
+				<Text style={styles.stocktext}>{stockString[props.language]}: {props.productPreviewed.data.stock}</Text>
+			);
+	};
+
 	const page = () => {
 		if(addToCartClicked || buyNowClicked){
 			if(!isNaN(index)){
@@ -326,8 +340,8 @@ const ProductPreviewModal = props => {
 							value={requirements[index].slot} />
 
 		              	<OkayButton
-		                  	style={styles.okaybutton}
-		                  	textStyle={styles.okaybuttonText}
+		                  	style={styles.nextButton}
+		                  	textStyle={styles.nextButtonText}
 		                  	onClick={() => {setIndex(check(false, false)); }}
 		                  	text={nextString[props.language]} />
 					</View>
@@ -337,8 +351,8 @@ const ProductPreviewModal = props => {
 
 		return(
 			<View style={styles.flexer}>
-				<View
-					style={styles.holder}>
+				<View style={styles.holder}>
+
 					<View style={styles.banner}>
 						<Banner
 		                    language={props.language}
@@ -356,7 +370,9 @@ const ProductPreviewModal = props => {
 					<Text style={styles.description}>{props.productPreviewed.data.description}</Text>
 				</View>
 				<View style={styles.quantityOuterHolder}>
-				<Text style={styles.stocktext}>{stockString[props.language]}: {props.productPreviewed.data.stock}</Text>
+
+					{stock()}
+
 					<View style={styles.quantityInnerHolder}>
 						<TouchableOpacity
 							onPress={() => {
@@ -394,18 +410,26 @@ const ProductPreviewModal = props => {
 							<MaterialCommunityIcons name={"plus"} color={"white"} size={20} />
 						</TouchableOpacity>
 					</View>
-					<View style={styles.okaybutton2Holder}>
+
+					<View style={styles.bottomButtonsHolder}>
 					  <OkayButton
-						  style={styles.okaybutton2}
-						  textStyle={styles.okaybutton2Text}
-						  onClick={() => {setBuyNowClicked(true);setIndex(check(true, false)); }}
-						  text={buyNowString[props.language]} />
+						  style={styles.buyNowButton}
+						  textStyle={styles.buyNowButtonText}
+						  text={buyNowString[props.language]}
+						  onClick={() => {
+							  setBuyNowClicked(true);
+							  setIndex(check(true, false));
+						  }}/>
 					  <OkayButton
-						  style={styles.okaybutton2}
-						  textStyle={styles.okaybutton2Text}
-						  onClick={() => {setAddToCartClicked(true);setIndex(check(false, true)); }}
-						  text={addToCartString[props.language]} />
+						  style={styles.addToCartButton}
+						  textStyle={styles.addToCartButtonText}
+						  text={addToCartString[props.language]}
+						  onClick={() => {
+							  setAddToCartClicked(true);
+							  setIndex(check(false, true));
+						  }}/>
 					</View>
+
 				</View>
 			</View>
 		);
@@ -579,11 +603,45 @@ const ProductPreviewModal = props => {
 		return "eye-off";
 	};
 
+    const onShare = async () => {
+
+		// Setup the share message
+		const text = forOnlyString[props.language] + " "
+			+ props.productPreviewed.data.cost + " " + dinarString[props.language] + " "
+			+ youCanGetString[props.language] + " " + props.productPreviewed.data.title + " "
+			+ atTheString[props.language] + " " + appString[props.language] + " " + storeNameString[props.language]
+			+ "\n\n" + downloadTheAppString[props.language] + "\n" + linkString[props.language];
+
+        try {
+          const result = await Share.share({message: text});
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
+              // shared
+              console.log("shared");
+            }
+          } else if (result.action === Share.dismissedAction) {
+            // dismissed
+            console.log("dismissed");
+          }
+        } catch (error) {
+          console.log("sharing error", error.message);
+        }
+    };
+
 	const adminControls = () => {
+		const shareBotton =
+			<TouchableOpacity
+				onPress={onShare}>
+				<MaterialCommunityIcons name={"share-variant"} color={"white"} size={32} />
+			</TouchableOpacity>;
+
       	if(props.adminList.includes(props.uid) && !editMode){
 	  		// continue here continue here continue here continue here continue here
 			return(
 				<View style={styles.horizontal}>
+					{shareBotton}
 					<TouchableOpacity
 						style={styles.adminbotton}
 						onPress={editConfirmation}>
@@ -602,7 +660,9 @@ const ProductPreviewModal = props => {
 				</View>
 			);
 	  	}
-	  	return;
+	  	return(
+			shareBotton
+		);
 	};
 
 	return(editmodo());
@@ -675,7 +735,7 @@ const styles = StyleSheet.create({
 		backgroundColor:Colors.lowPrimary,
 		color:"white",
 	},
-	okaybuttonText: {
+	nextButtonText: {
 		fontSize: 16
 	},
 	description: {
@@ -683,23 +743,40 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		flex: 1,
 	},
-	okaybutton: {
+	nextButton: {
 		marginBottom:10,
 		marginTop: 30,
 		width: "80%"
 	},
-	okaybutton2: {
+	buyNowButton: {
 		marginTop:10,
+		fontWeight:"bold",
 		flex: 1,
 		paddingVertical: 8,
 		marginStart:4,
 	},
-	okaybutton2Holder: {
+	addToCartButton: {
+		marginTop:10,
+		borderWidth: 2,
+		borderColor: Colors.Primary,
+		backgroundColor: "white",
+		flex: 1,
+		paddingVertical: 8,
+		marginStart:4,
+	},
+	bottomButtonsHolder: {
 		flexDirection:"row",
 		marginBottom: 10,
 		paddingHorizontal: 8,
 	},
-	okaybutton2Text: {
+	addToCartButtonText: {
+		fontSize: 16,
+		fontWeight:"bold",
+		color: Colors.Accent,
+		textAlign:"center"
+	},
+	buyNowButtonText: {
+		fontWeight:"bold",
 		fontSize: 16,
 		textAlign:"center"
 	},
