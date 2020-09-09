@@ -5,7 +5,12 @@ import ArrowedHeader from '../ArrowedHeader';
 import OkayButton from '../OkayButton';
 import Colors from '../../constants/Colors';
 import moment from 'moment';
-import { orderString, ordersString, clientsString } from '../../constants/strings';
+import {
+    chatString,
+    orderString,
+    ordersString,
+    clientsString
+} from '../../constants/strings';
 
 const Clients = props => {
 
@@ -81,7 +86,7 @@ const Clients = props => {
                 style={styles.list}
                 data={addNumbersToUsersLatest()}
                 renderItem={clientLatestData =>
-                    <TouchableOpacity style={styles.holder} onPress={() => {props.setClientSelected(clientLatestData.item); props.setPage("Chat"); }} activeOpacity={0.50}>
+                    <TouchableOpacity style={styles.holder} onPress={() => {props.setClientSelected(clientLatestData.item); props.setPage(chatString[props.language]); }} activeOpacity={0.50}>
                         <Text style={styles.count}>#{clientLatestData.item.count}</Text>
                         <View style={styles.men}>
                             <Text style={styles.title}>{clientLatestData.item.f}</Text>

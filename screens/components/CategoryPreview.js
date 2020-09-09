@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet, BackHandler } from 'react-native';
-import SideItem from './SideItem';
+import MainProductItem from './MainProductItem';
 
 
 const CategoryPreview = props => {
@@ -33,16 +33,29 @@ const CategoryPreview = props => {
         return products;
     };
 
+	const setProductPreviewed = item => {
+		item.category = {key: props.item.key, name: props.item.category};
+		props.setProductPreviewed(item);
+	};
+
+    const setCategoryPreviewed = () => {
+        props.setCategoryPreviewed(props.item);
+    };
+
     return(
         <FlatList
 			numColumns={2}
             style={styles.list}
             data={data()}
             renderItem={productData =>
-                <SideItem
-					language={props.language}
-                    setProductPreviewed={props.setProductPreviewed}
-                    item={productData.item} />
+
+            <MainProductItem
+                language={props.language}
+                adminList={props.adminList}
+                uid={props.uid}
+                setCategoryPreviewed={setCategoryPreviewed}
+                setProductPreviewed={setProductPreviewed}
+                item={productData.item}/>
             }/>
     );
 };

@@ -289,15 +289,14 @@ const CheckOut = props => {
 		    path: 'images',
 		  },
 		};
-		ImagePicker.launchImageLibrary(options, (response) => {
+		ImagePicker.launchImageLibrary(options, (result) => {
 		  //console.log('Response = ', response);
-
-		  if (response.didCancel) {
-		  } else if (response.error) {
-		  } else if (response.customButton) {
-		  } else {
-			setImageUri(response.uri);
-		  }
+          if (result.didCancel) {
+          } else if (result.error) {
+          } else if (result.customButton) {
+          } else {
+             uploadImage(result.uri);
+          }
 		});
 
     };
@@ -306,14 +305,13 @@ const CheckOut = props => {
 		const options = {
 		};
 
-		ImagePicker.launchCamera(options, (response) => {
-		  //console.log('Response = ', response);
-
-		  if (response.didCancel) {
-		  } else if (response.error) {
-		  } else if (response.customButton) {
+		ImagePicker.launchCamera(options, (result) => {
+		  //console.log('Response = ', result);
+		  if (result.didCancel) {
+		  } else if (result.error) {
+		  } else if (result.customButton) {
 		  } else {
-			setImageUri(response.uri);
+			setImageUri(result.uri);
 		  }
 		});
 	};

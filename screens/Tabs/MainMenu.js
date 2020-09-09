@@ -109,7 +109,9 @@ const MainMenu = props => {
                     <View style={styles.headertitleholder}><Text style={styles.headertitle}>{categoryPreviewedTitle()}</Text></View>
                 </Header>
                 <CategoryPreview
+                    adminList={props.adminList}
                     setSearch={props.setSearch}
+                    uid={props.uid}
                     language={props.language}
   	                setCategoryPreviewed={props.setCategoryPreviewed}
                     item={props.categoryPreviewed}

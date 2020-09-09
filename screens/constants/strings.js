@@ -151,6 +151,11 @@ export const clientsString = {
     french: "Clients",
     english: "Clients"
 };
+export const rootString = {
+    arabic: "Root",
+    french: "Root",
+    english: "Root"
+};
 export const setStateString = {
     arabic: "تعيين المرحلة لهته الطلبية" + " ",
     french: "définir l'état de cet ordre à" + " ",
@@ -161,16 +166,17 @@ export const chatString = {
     french: "Conversations",
     english: "Chat"
 };
-export const sendString = {
-    arabic: "ارسال",
-    french: "Envoyer",
-    english: "Send"
-};
 export const typeString = {
     arabic: "Aa",
     french: "Aa",
     english: "Aa"
 };
+export const uploadingString = {
+    arabic: "يجرى إرسال الصورة",
+    french: "Transfert de la photo..",
+    english: "Uploading.."
+};
+
 export const removeCartItemConfirmString = {
     arabic: "أنت على وشك إزالة المنتجات المحددة من عربة التسوق الخاصة بك",
     french: "Vous êtes sur le point de supprimer les produits sélectionnés de votre panier",
@@ -492,7 +498,7 @@ export const previewString = {
     english: "Preview"
 };
 export const pressToPreviewString = {
-    arabic: 3اضغط على البطاقة لمعاينة المنتج,
+    arabic: "اضغط على البطاقة لمعاينة المنتج",
     french: "Appuyez sur la carte pour prévisualiser votre produit",
     english: "Press the card to preview your product!"
 };
@@ -601,8 +607,8 @@ export const moreString = {
     english: "More"
 };
 export const shareAppWithFriends = {
-    arabic: "شارك التطبيق مع الأصدقاء",
-    french: "Partager l'application avec des amis",
+    arabic: "شارك التطبيق مع أصدقائك",
+    french: "Partager l'application avec vos amis",
     english: "Share app with friends"
 };
 export const callUsString = {
@@ -611,8 +617,8 @@ export const callUsString = {
     english: "Call Us"
 };
 export const emailUsString = {
-    arabic: "ارسل لنا بريد الإلكتروني",
-    french: "Envoyez-nous un email",
+    arabic: "البريد الإلكتروني",
+    french: "Email",
     english: "Email Us"
 };
 export const logoutAlertString = {
@@ -711,7 +717,7 @@ export const backToString = {
     english: "Back to"
 };
 export const pressToViewPictureString = {
-    arabic: "ضغط لعرض الصورة",
+    arabic: "إضغط لعرض الصورة",
     french: "Appuyez pour voir la photo",
     english: "Press to view photo"
 };

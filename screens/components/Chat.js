@@ -1,12 +1,26 @@
 import React, {useState} from 'react';
-import { View, FlatList, TextInput, StyleSheet, SafeAreaView, Text, BackHandler, Alert } from 'react-native';
+import { View, FlatList, ActivityIndicator, TextInput, StyleSheet, SafeAreaView, Text, BackHandler, TouchableOpacity, Alert } from 'react-native';
 import firebase from 'firebase';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ArrowedHeader from './ArrowedHeader';
 import OkayButton from './OkayButton';
+import ImagePicker from 'react-native-image-picker';
 import Colors from '../constants/Colors';
 import moment from 'moment';
 import Banner from './Banner';
-import { pendingString, failedString, successString, areYouSureString, setStateString, chatString, sendString, typeString, yesString, noString } from '../constants/strings';
+import {
+    pendingString,
+    failedString,
+    successString,
+    areYouSureString,
+    setStateString,
+    chatString,
+    typeString,
+    uploadingString,
+    yesString,
+    noString,
+    selectPictureString
+} from '../constants/strings';
 
 // admin
 import StateSelector from './Admins/Product/StateSelector';
@@ -14,9 +28,11 @@ import StateSelector from './Admins/Product/StateSelector';
 const Chat = props => {
     const [previewedImage, setPreviewedImage] = useState();
     const [messageInput, setMessage] = useState("");
+    const [uploading, setUploading] = useState(false);
 
     BackHandler.addEventListener('hardwareBackPress', function() {
-	    back();
+        if(!uploading)
+    	    back();
 	    return true;
 	});
 
@@ -133,13 +149,20 @@ const Chat = props => {
         return {backgroundColor: Colors.Accent};
     };
 
+    const textMessage = (text, admin) => {
+        if(text)
+            return(
+                <View style={{...{borderRadius: 23, maxwidth: "70%", padding: 10}, ...leftOrRight2(admin) }}>
+                    <Text style={styles.prodoct}>{text}</Text>
+                </View>
+            );
+    };
+
     const message = item => {
         item = item.item;
         return(
             <View style={{...{borderRadius: 15, width: "100%"}, ...leftOrRight(item.admin), ...isItTop(item.key)}}>
-                <View style={{...{borderRadius: 23, maxwidth: "70%", padding: 10}, ...leftOrRight2(item.admin) }}>
-                    <Text style={styles.prodoct}>{item.message}</Text>
-                </View>
+                {textMessage(item.message, item.admin)}
                 {picture(item.picture, item.admin)}
                 {stateman(item.admin, item.state, item.key)}
             </View>
@@ -172,8 +195,94 @@ const Chat = props => {
 		});
     };
 
+  	const galery = () => {
+		const options = {
+		  title: selectPictureString[props.language],
+		  storageOptions: {
+		    skipBackup: true,
+		    path: 'images',
+		  },
+		};
+        ImagePicker.launchImageLibrary(options, (result) => {
+          // Same code as in above section!
+          if (result.didCancel) {
+          } else if (result.error) {
+          } else if (result.customButton) {
+          } else {
+             uploadImage(result.uri);
+          }
+        });
+    };
+
+	const uploadImage = async(uri) => {
+
+        setUploading(true);
+
+  		let name = moment().format('YYYYMMDDhhmmssa') + ".png";
+  	  	const response = await fetch(uri);
+  	  	const blob = await response.blob();
+	  	var ref = firebase.storage().ref().child(props.uid).child(name);
+	  	const snapshot = await ref.put(blob);
+
+		//console.log("typeof(snapshot.downloadURL) " + typeof(snapshot.downloadURL));
+	  	snapshot.ref.getDownloadURL().then(function(downloadURL) {
+	    	//console.log("File available at", downloadURL);
+			submitPicture(downloadURL);
+	    });
+	};
+
+	const submitPicture = imageUrl => {
+
+        // Step 1: check if uploader is an admin
+        const is_admin = props.adminList.includes(props.uid);
+
+        // Step 2: if it's an admin then upload on the client's root, else upload on current user root
+        let path = is_admin ? "/users/" + props.clientSelected.key + "/messages" : "/users/" + props.uid + "/messages"
+
+        // Step 3: push record onto firebase
+        let ref = firebase.database().ref(path);
+		ref.push({
+            admin: is_admin,
+			picture: imageUrl,
+			date: moment().format('YYYYMMDDhhmmssa')
+		}).then(function(snapshot) {
+			//console.log('Snapshot', snapshot);
+
+            // Step 4: remove loading screen
+            setUploading(false);
+		});
+	};
+
+    const camera = () => {
+		const options = {
+        };
+        // Launch Camera:
+        ImagePicker.launchCamera(options, (result) => {
+          // Same code as in above section!
+          if (result.didCancel) {
+          } else if (result.error) {
+          } else if (result.customButton) {
+          } else {
+             uploadImage(result.uri);
+          }
+        });
+
+    };
+
+    const uploadingNotice = () => {
+        if(uploading){
+			return(
+				<View style={styles.loadingh}>
+					<Text style={{color:"white", fontSize: 25, fontWeight:"bold"}}>{uploadingString[props.language]}</Text>
+                	<ActivityIndicator size={50}/>
+				</View>
+			);
+        }
+    };
+
     const display = () =>{
-        if(previewedImage){
+
+        if(previewedImage)
             return(
 				<Banner
                     language={props.language}
@@ -182,7 +291,6 @@ const Chat = props => {
 					style={{width: "65%", height: 150, borderRadius: 23, marginTop: 7, borderWidth: 1, borderColor:Colors.Primary}}
 					images={[previewedImage]} />
             );
-        }
 
         return(
             <SafeAreaView style={styles.letout}>
@@ -194,20 +302,41 @@ const Chat = props => {
                     renderItem={message}
                 />
 
-                <View style={{flexDirection:"row", width:"100%", paddingHorizontal: 10, borderTopWidth: 1, borderTopColor:Colors.Primary, paddingVertical: 10}}>
+                <View style={styles.bottomBar}>
+
+                    <TouchableOpacity
+                        style={{marginRight: 4}}
+                        onPress={galery}
+                        activeOpacity={.70}>
+                        <MaterialCommunityIcons name="image" color={Colors.Primary} size={37} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                            onPress={camera}
+                            activeOpacity={.70}>
+                        <MaterialCommunityIcons name="camera" color={Colors.Primary} size={37} />
+                    </TouchableOpacity>
+
                     <TextInput
                         multiline={true}
                         style={styles.quantityInputCurrency}
                         placeholder={typeString[props.language]}
                         onChangeText={setMessage}
                         value={messageInput} />
-                    <OkayButton
-                        style={{ backgroundColor:Colors.Primary, borderRadius: 15, marginStart: 10 }}
-                        onClick={() => {if(messageInput.length>0) submitMessage()}}
-                        textStyle={{ fontSize: 17, color:"white", fontWeight:"bold" }}
-                        text={sendString[props.language]} />
+                    <TouchableOpacity
+                            onPress={() => {
+                                if(messageInput.length>0)
+                                    submitMessage()
+                            }}
+                            style={{
+                                paddingVertical: 6
+                            }}
+                            activeOpacity={.70}>
+                        <MaterialCommunityIcons name="send" color={Colors.Primary} size={35} />
+                    </TouchableOpacity>
                 </View>
 
+                {uploadingNotice()}
             </SafeAreaView>
         );
     };
@@ -253,6 +382,15 @@ const Chat = props => {
 };
 
 const styles = StyleSheet.create({
+    bottomBar: {
+        flexDirection:"row",
+        justifyContent:"center",
+        paddingHorizontal: 5,
+        alignItems:"center",
+        width:"100%",
+        borderTopWidth: 1,
+        borderTopColor:Colors.Primary,
+    },
     page: {
         alignItems:"center",
         justifyContent:"center",
@@ -274,16 +412,24 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
     quantityInputCurrency : {
+        marginHorizontal: 7,
         flex: 1,
         backgroundColor: "white",
         borderRadius: 20,
-        borderWidth: 1,
-        borderColor:Colors.Primary,
         fontWeight: "bold",
-        paddingHorizontal: 15,
-        paddingVertical: 10,
+        paddingHorizontal: 11,
+        paddingVertical: 6,
         fontSize:15,
     },
+	loadingh:{
+		flex: 1,
+		position:"absolute",
+		width:"100%",
+		height:"100%",
+		backgroundColor:"#55666666",
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 });
 
 export default Chat;

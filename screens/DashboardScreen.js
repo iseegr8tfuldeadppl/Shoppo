@@ -18,9 +18,13 @@ import Profile from './Tabs/Profile';
 import {
 	noString,
 	yesString,
+	profileString,
 	logoutAlertString,
+	categoriesString,
 	logoutString,
 	noInternetString,
+	cartString,
+	mainMenuString,
 	loadingString
 } from './constants/strings';
 const Drawer = createDrawerNavigator();
@@ -462,7 +466,7 @@ const DashboardScreen = props =>  {
 							return (
 								<DrawerContentScrollView {...propss}>
 								<DrawerItemList {...propss} />
-								<DrawerItem label="Logout" onPress={() =>
+								<DrawerItem label={logoutString[props.language]} onPress={() =>
 									Alert.alert(
 										logoutString[props.language],
 										logoutAlertString[props.language],
@@ -474,7 +478,7 @@ const DashboardScreen = props =>  {
 							)
 					}}>
 
-					<Drawer.Screen name="Main Menu">{propss =>
+					<Drawer.Screen name={mainMenuString[props.language]}>{propss =>
 	  			  		<MainMenu {...propss}
 							setSearch={setSearch}
 							amount_of_notifications={amount_of_notifications}
@@ -498,7 +502,7 @@ const DashboardScreen = props =>  {
   							finishedLoadingFromFirebase={finishedLoadingFromFirebase}/>}
 					</Drawer.Screen>
 
-					<Drawer.Screen name="Categories" >{propss =>
+					<Drawer.Screen name={categoriesString[props.language]} >{propss =>
 						<Categories {...propss}
 							language={props.language}
 							updateCart={updateCart}
@@ -519,7 +523,7 @@ const DashboardScreen = props =>  {
   						  	productPreviewed={productPreviewed}/>}
 					</Drawer.Screen>
 
-					<Drawer.Screen name="Cart" >{propss =>
+					<Drawer.Screen name={cartString[props.language]} >{propss =>
 						<Cart {...propss}
 							language={props.language}
 							setRemoteOrdersOpen={setRemoteOrdersOpen}
@@ -536,7 +540,7 @@ const DashboardScreen = props =>  {
   							adminList={adminList}/>}
 					</Drawer.Screen>
 
-					<Drawer.Screen name="Profile" >{propss =>
+					<Drawer.Screen name={profileString[props.language]} >{propss =>
 						<Profile {...propss}
 							language={props.language}
 							setRemoteOrdersOpen={setRemoteOrdersOpen}

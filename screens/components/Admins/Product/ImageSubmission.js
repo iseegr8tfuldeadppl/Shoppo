@@ -8,25 +8,45 @@ import {
     previewString,
     selectAnotherPictureString,
     takePictureOrSelectPictureAlertString,
-    orString
+    orString,
+    selectPictureString
 } from '../../../constants/strings';
 
 
 const ImageSubmission = props => {
 
-  	const galery = async () => {
-	    let result = await ImagePicker.launchImageLibraryAsync();
-
-	    if (!result.cancelled) {
-			props.setImageUri(result.uri);
-	    }
+  	const galery = () => {
+		const options = {
+		  title: selectPictureString[props.language],
+		  storageOptions: {
+		    skipBackup: true,
+		    path: 'images',
+		  },
+		};
+        ImagePicker.launchImageLibrary(options, (result) => {
+            // Same code as in above section!
+            if (result.didCancel) {
+	        } else if (result.error) {
+            } else if (result.customButton) {
+	        } else {
+	           uploadImage(result.uri);
+            }
+        });
     };
 
-    const camera = async () => {
-        let result = await ImagePicker.launchCameraAsync();
-
-        if (!result.cancelled)
-          props.setImageUri(result.uri);
+    const camera = () => {
+		const options = {
+		};
+        // Launch Camera:
+        ImagePicker.launchCamera(options, (result) => {
+          // Same code as in above section!
+          if (result.didCancel) {
+          } else if (result.error) {
+          } else if (result.customButton) {
+          } else {
+             uploadImage(result.uri);
+          }
+        });
     };
 
     const previewBotton = () => {

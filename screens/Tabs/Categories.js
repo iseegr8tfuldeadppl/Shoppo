@@ -75,7 +75,8 @@ const Categories = props => {
 				  	setProductPreviewed={props.setProductPreviewed}
 				  	productPreviewed={props.productPreviewed}/>
             );
-        else if(props.categoryPreviewed)
+
+        if(props.categoryPreviewed)
             return(
                 <>
                 <Header style={styles.header}>
@@ -92,6 +93,8 @@ const Categories = props => {
                     <View style={styles.headertitleholder}><Text style={styles.headertitle}>{title()}</Text></View>
                 </Header>
                 <CategoryPreview
+					uid={props.uid}
+                    adminList={props.adminList}
                     language={props.language}
                     setCategoryPreviewed={props.setCategoryPreviewed}
                     item={props.categoryPreviewed}

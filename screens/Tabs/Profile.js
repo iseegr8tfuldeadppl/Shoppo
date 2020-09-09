@@ -23,14 +23,20 @@ import {
     callUsString,
     emailUsString,
     youCanShopString,
+    clientsString,
+    chatString,
     atTheString,
-    storeNameString
+    callString,
+    ordersString,
+    storeNameString,
+    rootString,
+    emailString
 } from '../constants/strings';
 
 
 const Profile = props => {
 
-    const [page, setPage] = useState("Root");
+    const [page, setPage] = useState(rootString[props.language]);
     const [loading, setLoading] = useState(false);
 
     // this is for when they press "go to my orders" from <checkout>
@@ -38,11 +44,11 @@ const Profile = props => {
         if(props.remoteOrdersOpen){
             // admin check
             if(props.adminList.includes(props.uid)){
-                if(page!=="Clients")
-                    setPage("Clients");
+                if(page!==clientsString[props.language])
+                    setPage(clientsString[props.language]);
             } else {
-                if(page!=="Chat")
-                    setPage("Chat");
+                if(page!==chatString[props.language])
+                    setPage(chatString[props.language]);
             }
             props.setRemoteOrdersOpen();
         }
@@ -50,20 +56,20 @@ const Profile = props => {
 
     BackHandler.addEventListener('hardwareBackPress', function() {
         if(loading){
-           setPage("Root");
+           setPage(rootString[props.language]);
            setLoading(false);
-       } else if(page==="Call")
-            setPage("Root");
-        else if(page==="Email")
-            setPage("Root")
-        else if(page==="Clients")
-            setPage("Root");
-        else if(page==="Chat") {
+       } else if(page===callString[props.language])
+            setPage(rootString[props.language]);
+        else if(page===emailString[props.language])
+            setPage(rootString[props.language])
+        else if(page===clientsString[props.language])
+            setPage(rootString[props.language]);
+        else if(page===chatString[props.language]) {
             if(props.adminList.includes(props.uid)){
-                setPage("Clients");
+                setPage(clientsString[props.language]);
                 setClientSelected();
             } else {
-                setPage("Root");
+                setPage(rootString[props.language]);
             }
         }
 
@@ -244,22 +250,22 @@ const Profile = props => {
         if(props.userInfo.orders){
             let orders = Object.keys(props.userInfo.orders).length;
             if(orders>1)
-                return orders + " Orders";
+                return orders + " " + ordersString[props.language];
             else if(orders===1)
-                return orders + " Order";
+                return orders + " " + orderString[props.language];
             else
-                return "0 Orders";
-        } else return "0 Orders";
+                return "0 " + ordersString[props.language];
+        } else return "0 " + ordersString[props.language];
     };
 
     const doubleTabPress = () => {
-        setPage("Root");
+        setPage(rootString[props.language]);
     };
 
     const ordersOrClients = () => {
         if(props.adminList.includes(props.uid))
-            return "Clients";
-        return "Orders";
+            return clientsString[props.language];
+        return ordersString[props.language];
     };
 
     const onShare = async () => {
@@ -288,7 +294,7 @@ const Profile = props => {
 
     const pageDisplay = () => {
         switch(page){
-            case "Chat":
+            case chatString[props.language]:
                 return(
                     <View style={styles.letout}>
                         <Chat
@@ -299,14 +305,14 @@ const Profile = props => {
                             setClientSelected={setClientSelected}
                             uid={props.uid}
                             adminList={props.adminList}
-                            backToRoot={() => {setPage("Root");} }
+                            backToRoot={() => {setPage(rootString[props.language]);} }
                             setMessages={setMessages}
                             turnIntoMessages={turnIntoMessages}
                             messago={messago} />
                     </View>
                 );
                 break;
-            case "Clients":
+            case clientsString[props.language]:
                 return(
                       <View style={styles.letout}>
                         <Clients
@@ -318,27 +324,27 @@ const Profile = props => {
                             uid={props.uid}
         	  				usersLatest={props.usersLatest}
                             adminList={props.adminList}
-                            backToRoot={() => {setPage("Root");} }/>
+                            backToRoot={() => {setPage(rootString[props.language]);} }/>
                           <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                       </View>
                 );
                 break;
-            case "Call":
+            case callString[props.language]:
                 return(
                   <View style={styles.letout}>
                       <Call
-                          backToRoot={() => {setPage("Root");} }
+                          backToRoot={() => {setPage(rootString[props.language]);} }
                           language={props.language}
                           numbers={getNumbers()} />
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
                   </View>
                 );
                 break;
-            case "Email":
+            case emailString[props.language]:
                 return(
                   <View style={styles.letout}>
                     <Email
-                        backToRoot={() => {setPage("Root");} }
+                        backToRoot={() => {setPage(rootString[props.language]);} }
                         language={props.language}
                         emails={getEmail()} />
                       <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
@@ -347,50 +353,55 @@ const Profile = props => {
                 break;
             default:
                 return(
-                  <View style={styles.letout}>
-                      <Header style={styles.header}>
-                          <TouchableOpacity
-                              onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
-                              <MaterialCommunityIcons name="menu" color={"white"} size={30} />
-                          </TouchableOpacity>
-                          <View style={styles.headertitleholder}><Text style={styles.headertitle}>{profileString[props.language]}</Text></View>
-                      </Header>
+                    <View style={styles.letout}>
+                        <Header style={styles.header}>
+                            <TouchableOpacity
+                                onPress={() => {props.navigation.dispatch(DrawerActions.openDrawer());} }>
+                                <MaterialCommunityIcons name="menu" color={"white"} size={30} />
+                            </TouchableOpacity>
+                            <View style={styles.headertitleholder}><Text style={styles.headertitle}>{profileString[props.language]}</Text></View>
+                        </Header>
 
-                      <ScrollView>
-                          <View style={styles.topBar}>
-                              <View style={styles.topBarInner}>
-                                  <View style={styles.topbarLeftTextsHolder}>
-                                      <Text style={styles.name} numberOfLines={1} ellipsizeMode='tail'>{first_last_name()}</Text>
-                                      <Text style={styles.orderCount} numberOfLines={1} ellipsizeMode='tail'>{ordersCounted()}</Text>
-                                  </View>
-                                  <CachedImage
-                                      source={profile_pic()}
-                                      style={styles.image}/>
-                              </View>
-                          </View>
+                        <ScrollView>
+                            <View style={styles.topBar}>
+                                <View style={styles.topBarInner}>
+                                    <View style={styles.topbarLeftTextsHolder}>
+                                        <Text style={styles.name} numberOfLines={1} ellipsizeMode='tail'>{first_last_name()}</Text>
+                                    <Text style={styles.orderCount} numberOfLines={1} ellipsizeMode='tail'>{ordersCounted()}</Text>
+                                </View>
+                                <CachedImage
+                                    source={profile_pic()}
+                                    style={styles.image}/>
+                                </View>
+                            </View>
 
-                          <ProfilePageItem
-                              name={"menu"}
-                              onEsspresso={() => {if(props.adminList.includes(props.uid)) setPage("Clients"); else setPage("Chat");}}
-                              text={ordersOrClients()} />
+                            <ProfilePageItem
+                                name={"menu"}
+                                onEsspresso={() => {
+                                    if(props.adminList.includes(props.uid))
+                                        setPage(clientsString[props.language]);
+                                    else
+                                        setPage(chatString[props.language]);
+                                }}
+                                text={ordersOrClients()} />
 
-                          <ProfilePageItem
-                              name={"share-variant"}
-                              onEsspresso={onShare}
-                              text={shareAppWithFriends[props.language]} />
+                            <ProfilePageItem
+                                name={"share-variant"}
+                                onEsspresso={onShare}
+                                text={shareAppWithFriends[props.language]} />
 
-                          <ProfilePageItem
-                              name={"phone"}
-                              onEsspresso={() => {setPage("Call");}}
-                              text={callUsString[props.language]} />
+                            <ProfilePageItem
+                                name={"phone"}
+                                onEsspresso={() => {setPage(callString[props.language]);}}
+                                text={callUsString[props.language]} />
 
-                          <ProfilePageItem
-                              name={"email"}
-                              onEsspresso={() => {setPage("Email");}}
-                              text={emailUsString[props.language]} />
-                      </ScrollView>
-                      <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
-                  </View>
+                            <ProfilePageItem
+                                name={"email"}
+                                onEsspresso={() => {setPage(emailString[props.language]);}}
+                                text={emailUsString[props.language]} />
+                        </ScrollView>
+                        <Taboo language={props.language} focus={profileString[props.language]} navigation={props.navigation} doubleTabPress={doubleTabPress}/>
+                    </View>
                 );
                 break;
         }
@@ -473,6 +484,8 @@ const styles = StyleSheet.create({
     },
     orderCount: {
         color: "white",
+        width: "100%",
+        textAlign:"left",
     },
 });
 export default Profile;
